@@ -3,6 +3,11 @@
 //  Edición MAÑANA (8am AR) + Edición TARDE (19pm AR)
 // ══════════════════════════════════════════════════════════
 
+// ══════════════════════════════════════════════════════════
+//  MARKET TERMINAL — Daily Report Generator v2
+//  Edición MAÑANA (8am AR) + Edición TARDE (19pm AR)
+// ══════════════════════════════════════════════════════════
+
 import Anthropic from '@anthropic-ai/sdk';
 import { writeFileSync } from 'fs';
 
