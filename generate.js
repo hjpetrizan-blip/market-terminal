@@ -24,7 +24,7 @@ async function getEditorialContent() {
 
   const response = await client.messages.create({
     model: 'claude-sonnet-4-20250514',
-    max_tokens: 4000,
+    max_tokens: 6000,
     messages: [{
       role: 'user',
       content: `Sos un analista financiero senior especializado en mercados argentinos y globales. 
@@ -76,17 +76,23 @@ Respondé SOLO con JSON válido, sin texto extra, sin markdown, sin backticks:
     }
   ],
   "calendario_eventos": [
+    GENERA entre 10 y 14 eventos ordenados cronologicamente para los proximos 7 dias habiles.
+    INCLUIR OBLIGATORIAMENTE:
+    - Minimo 4 datos USA: IPC/PPI/PCE, nominas, jobless claims, GDP, ventas minoristas, ISM, confianza consumidor, decisiones Fed, balances corporativos (NVDA/AAPL/MSFT/META/AMZN si corresponde esa semana)
+    - Minimo 3 datos Argentina: IPC INDEC, reservas BCRA semanales, licitaciones Tesoro, balanza comercial, recaudacion, REM, vencimientos deuda
+    - Minimo 2 datos internacionales: BCE/BOJ/BOE tasas, IPC Europa, PMI China, OPEP, datos UK/Alemania/Japon
+    Formato de cada evento:
     {
       "dia": "Hoy|Mañana|Lun DD|Mar DD|Mie DD|Jue DD|Vie DD",
       "hora": "HH:MM NY|HH:MM AR|HH:MM UE",
-      "flag": "🇺🇸|🇦🇷|🇪🇺|🇨🇳|🇬🇧|🇯🇵|🇧🇷",
-      "evento": "nombre EN ESPAÑOL (ej: IPC EEUU Febrero, Nóminas no agrícolas, Decisión BCE, Reservas BCRA, Balanza comercial)",
+      "flag": "🇺🇸|🇦🇷|🇪🇺|🇨🇳|🇬🇧|🇯🇵|🇧🇷|🏢",
+      "evento": "nombre EN ESPAÑOL especifico con mes y año (ej: IPC EE.UU. Febrero 2026, Nominas no agricolas Febrero, Reservas BCRA semana 07/03, Balance NVIDIA Q4 2025)",
       "impacto": "CRÍTICO|ALTO|MEDIO",
       "impacto_color": "#ff4060|#ff8c00|#4a9eff",
       "impacto_bg": "rgba(255,64,96,.12)|rgba(255,140,0,.12)|rgba(74,158,255,.12)",
-      "descripcion": "descripción EN ESPAÑOL con el consenso del mercado si existe (ej: Consenso: 2.9%. Un dato mayor podría...). Sé específico.",
-      "previo": "valor anterior del dato si lo sabés (ej: 3.0%)",
-      "consenso": "estimado consenso si existe (ej: 2.8%)"
+      "descripcion": "2 oraciones EN ESPAÑOL: que mide el dato + impacto esperado en mercados segun consenso",
+      "previo": "valor anterior si lo conoces (ej: 3.0% | $45.200M | 200k empleos)",
+      "consenso": "estimado consenso si existe (ej: 2.8% | 185k)"
     }
   ],
   "bonos_arg": [
