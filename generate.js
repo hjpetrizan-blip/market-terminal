@@ -78,13 +78,25 @@ Respondé SOLO con JSON válido, sin texto extra, sin markdown, sin backticks:
   "calendario_eventos": [
     {
       "dia": "Hoy|Mañana|Lun DD|Mar DD|Mie DD|Jue DD|Vie DD",
-      "hora": "HH:MM ET|HH:MM AR|HH:MM EU",
-      "flag": "🇺🇸|🇦🇷|🇪🇺|🇨🇳|🇬🇧",
-      "evento": "nombre del evento económico",
+      "hora": "HH:MM NY|HH:MM AR|HH:MM UE",
+      "flag": "🇺🇸|🇦🇷|🇪🇺|🇨🇳|🇬🇧|🇯🇵|🇧🇷",
+      "evento": "nombre EN ESPAÑOL (ej: IPC EEUU Febrero, Nóminas no agrícolas, Decisión BCE, Reservas BCRA, Balanza comercial)",
       "impacto": "CRÍTICO|ALTO|MEDIO",
       "impacto_color": "#ff4060|#ff8c00|#4a9eff",
       "impacto_bg": "rgba(255,64,96,.12)|rgba(255,140,0,.12)|rgba(74,158,255,.12)",
-      "descripcion": "descripción breve del impacto esperado"
+      "descripcion": "descripción EN ESPAÑOL con el consenso del mercado si existe (ej: Consenso: 2.9%. Un dato mayor podría...). Sé específico.",
+      "previo": "valor anterior del dato si lo sabés (ej: 3.0%)",
+      "consenso": "estimado consenso si existe (ej: 2.8%)"
+    }
+  ],
+  "bonos_arg": [
+    {
+      "ticker": "GD30|GD35|GD38|GD41|GD46|AL30|AL35|AL41",
+      "nombre": "nombre del bono",
+      "precio_usd": 68.50,
+      "tir": 11.5,
+      "duracion": 4.2,
+      "ley": "NY|ARG"
     }
   ],
   "analisis_global": "análisis HTML del mercado global hoy, 4-5 oraciones",
@@ -141,6 +153,7 @@ function generateHTML(d) {
       <div class="cal-body">
         <div class="cal-event"><span class="cal-flag">${e.flag}</span> ${e.evento}</div>
         <span class="impact-badge" style="color:${e.impacto_color};background:${e.impacto_bg}">${e.impacto}</span>
+        ${e.previo || e.consenso ? `<div style="display:flex;gap:12px;margin-top:5px;">${e.previo?`<span style="font-size:9px;color:var(--dim)">Prev: <strong style="color:var(--text)">${e.previo}</strong></span>`:''}${e.consenso?`<span style="font-size:9px;color:var(--dim)">Consenso: <strong style="color:var(--up)">${e.consenso}</strong></span>`:''}</div>` : ''}
         <div style="font-size:10px;color:var(--dim);margin-top:4px">${e.descripcion}</div>
       </div>
     </div>`).join('\n');
@@ -296,6 +309,7 @@ function generateHTML(d) {
     <button class="tab-btn active" onclick="showTab('contexto',this)">📊 Contexto</button>
     <button class="tab-btn" onclick="showTab('usa',this)">🇺🇸 USA</button>
     <button class="tab-btn" onclick="showTab('argentina',this)">🇦🇷 Argentina</button>
+    <button class="tab-btn" onclick="showTab('monedas',this)">💱 Monedas</button>
     <button class="tab-btn" onclick="showTab('mundo',this)">🌍 Mundo</button>
     <button class="tab-btn" onclick="showTab('commodities',this)">⚡ Commodities</button>
     <button class="tab-btn" onclick="showTab('geo',this)">🎖️ Geopolítica</button>
@@ -352,6 +366,28 @@ function generateHTML(d) {
       <div style="font-size:13px;color:${d.fear_greed_color};letter-spacing:3px;margin-top:4px;">${d.fear_greed_label}</div>
       <a href="https://edition.cnn.com/markets/fear-and-greed" target="_blank" style="display:inline-block;margin-top:10px;font-size:9px;color:var(--accent);letter-spacing:1px;text-decoration:none;border:1px solid var(--accent);padding:3px 10px;border-radius:3px;">VER EN CNN →</a>
     </div>
+
+    <div class="sec-title">VOLATILIDAD — VIX & VVIX</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;">
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;text-align:center;">
+        <div style="font-size:9px;color:var(--dim);letter-spacing:2px;margin-bottom:6px;">VIX — ÍNDICE DE VOLATILIDAD</div>
+        <div id="vix-val" style="font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:var(--warn);">—</div>
+        <div id="vix-chg" style="font-size:11px;margin-top:4px;">⏳</div>
+        <div style="font-size:9px;color:var(--dim);margin-top:8px;line-height:1.6;">
+          &lt;15 Calma · 15-20 Normal<br/>20-30 ⚠ Alerta · &gt;30 🚨 Pánico
+        </div>
+        <div id="vix-zona" style="font-size:10px;margin-top:6px;padding:3px 8px;border-radius:10px;display:inline-block;">—</div>
+      </div>
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;text-align:center;">
+        <div style="font-size:9px;color:var(--dim);letter-spacing:2px;margin-bottom:6px;">VVIX — VIX DEL VIX</div>
+        <div id="vvix-val" style="font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:var(--purple);">—</div>
+        <div id="vvix-chg" style="font-size:11px;margin-top:4px;">⏳</div>
+        <div style="font-size:9px;color:var(--dim);margin-top:8px;line-height:1.6;">
+          Mide la volatilidad del VIX.<br/>&gt;100 señala pánico extremo inminente
+        </div>
+        <div id="vvix-zona" style="font-size:10px;margin-top:6px;padding:3px 8px;border-radius:10px;display:inline-block;">—</div>
+      </div>
+    </div>
     <div class="alert alert-blue">
       <strong>Ganadores:</strong> ${d.ganadores_dia}<br/>
       <strong>Perdedores:</strong> ${d.perdedores_dia}
@@ -384,10 +420,40 @@ function generateHTML(d) {
     <div class="sec-title">ADRs ARGENTINOS — TIEMPO REAL</div>
     <div style="font-size:9px;color:var(--accent);letter-spacing:1px;margin-bottom:8px;">⚡ YAHOO FINANCE API</div>
     <div id="tbl-adrs"><div class="live-loading">Cargando precios...</div></div>
-    <div class="sec-title">BONOS SOBERANOS</div>
-    <div id="tbl-bonos-arg"><div class="live-loading">Cargando precios...</div></div>
+    <div class="sec-title">BONOS SOBERANOS — PRECIO & TIR</div>
+    <div style="font-size:9px;color:var(--dim);letter-spacing:1px;margin-bottom:8px;">Precios estimados al cierre · TIR = Tasa Interna de Retorno anual en USD</div>
+    <table class="mkt-table">
+      <thead><tr><th>BONO</th><th>LEY</th><th>PRECIO USD</th><th>TIR</th><th>DURACIÓN</th></tr></thead>
+      <tbody>
+        ${(d.bonos_arg||[]).map(b => `
+        <tr>
+          <td><div class="name">${b.ticker}</div><div class="sym">${b.nombre}</div></td>
+          <td><span style="font-size:9px;padding:2px 6px;border-radius:3px;background:${b.ley==='NY'?'rgba(74,158,255,.15)':'rgba(139,92,246,.15)'};color:${b.ley==='NY'?'#4a9eff':'#8b5cf6'}">${b.ley}</span></td>
+          <td class="price">$${b.precio_usd}</td>
+          <td class="${b.tir < 10 ? 'chg-up' : b.tir > 15 ? 'chg-dn' : 'warn'}">${b.tir}%</td>
+          <td style="font-size:11px;color:var(--dim)">${b.duracion} años</td>
+        </tr>`).join('')}
+      </tbody>
+    </table>
+    <div style="font-size:9px;color:var(--dim);text-align:right;margin-top:4px;letter-spacing:1px;">Datos estimados al cierre · Para precios en tiempo real ver <a href="https://rava.com/cotizaciones/bonos" target="_blank" style="color:var(--accent)">Rava.com</a></div>
     <div class="sec-title">CRIPTO</div>
     <div id="tbl-cripto"><div class="live-loading">Cargando precios...</div></div>
+  </div>
+
+  <!-- ══ MONEDAS ══ -->
+  <div id="tab-monedas" class="tab-panel">
+    <div class="alert alert-blue" style="margin-bottom:16px;">
+      <div class="alert-title">💱 Divisas vs. USD — Tiempo Real</div>
+      Precios actualizados al momento de carga. <strong>Un valor mayor = moneda local más débil frente al dólar.</strong> Ideal para monitorear devaluaciones en LatAm.
+    </div>
+
+    <div class="sec-title">🌎 LATINOAMÉRICA vs. USD</div>
+    <div style="font-size:9px;color:var(--accent);letter-spacing:1px;margin-bottom:8px;">⚡ YAHOO FINANCE API · Cuántos pesos/reales/soles vale 1 dólar</div>
+    <div id="tbl-monedas-latam"><div class="live-loading">Cargando...</div></div>
+
+    <div class="sec-title">🌍 G10 — PRINCIPALES DIVISAS MUNDIALES</div>
+    <div style="font-size:9px;color:var(--accent);letter-spacing:1px;margin-bottom:8px;">⚡ EUR/GBP/AUD muestran cuántos dólares vale 1 unidad · Resto cuántas unidades vale 1 dólar</div>
+    <div id="tbl-monedas-g10"><div class="live-loading">Cargando...</div></div>
   </div>
 
   <!-- ══ MUNDO ══ -->
@@ -542,6 +608,34 @@ async function updateHero() {
     if (el) el.textContent = (h.t.startsWith('CG:') ? '$' : (h.t==='^VIX'?'':'$')) + fmt(p.price);
     if (elc) { elc.innerHTML = chgHtml(p.chg); }
   }));
+
+  // VIX card en Fear & Greed tab
+  const vix = await fetchPrice('^VIX');
+  if (vix) {
+    const vv = document.getElementById('vix-val');
+    const vc = document.getElementById('vix-chg');
+    const vz = document.getElementById('vix-zona');
+    if (vv) { vv.textContent = fmt(vix.price); vv.style.color = vix.price > 30 ? '#ff4060' : vix.price > 20 ? '#ffaa00' : '#00d49a'; }
+    if (vc) vc.innerHTML = chgHtml(vix.chg);
+    if (vz) {
+      const [txt,bg,clr] = vix.price > 30 ? ['🚨 PÁNICO','rgba(255,64,96,.2)','#ff4060'] : vix.price > 20 ? ['⚠️ ALERTA','rgba(255,170,0,.2)','#ffaa00'] : vix.price > 15 ? ['😐 NORMAL','rgba(74,158,255,.2)','#4a9eff'] : ['😌 CALMA','rgba(0,212,154,.2)','#00d49a'];
+      vz.textContent = txt; vz.style.background = bg; vz.style.color = clr;
+    }
+  }
+
+  // VVIX card
+  const vvix = await fetchPrice('^VVIX');
+  if (vvix) {
+    const vv = document.getElementById('vvix-val');
+    const vc = document.getElementById('vvix-chg');
+    const vz = document.getElementById('vvix-zona');
+    if (vv) { vv.textContent = fmt(vvix.price); vv.style.color = vvix.price > 120 ? '#ff4060' : vvix.price > 100 ? '#ffaa00' : '#8b5cf6'; }
+    if (vc) vc.innerHTML = chgHtml(vvix.chg);
+    if (vz) {
+      const [txt,bg,clr] = vvix.price > 120 ? ['🚨 EXTREMO','rgba(255,64,96,.2)','#ff4060'] : vvix.price > 100 ? ['⚠️ ELEVADO','rgba(255,170,0,.2)','#ffaa00'] : ['✅ NORMAL','rgba(139,92,246,.2)','#8b5cf6'];
+      vz.textContent = txt; vz.style.background = bg; vz.style.color = clr;
+    }
+  }
 }
 
 // Ticker groups
@@ -553,7 +647,33 @@ const GROUPS = {
   'tbl-usa-defensa':  [{label:'Lockheed Martin',ticker:'LMT',sector:'Defensa'},{label:'Northrop Grumman',ticker:'NOC',sector:'Defensa'},{label:'RTX Corp',ticker:'RTX',sector:'Defensa'},{label:'General Dynamics',ticker:'GD',sector:'Defensa'},{label:'AeroVironment',ticker:'AVAV',sector:'Drones'}],
   'tbl-usa-tech':     [{label:'Nvidia',ticker:'NVDA',sector:'Semis'},{label:'Apple',ticker:'AAPL',sector:'Tech'},{label:'Microsoft',ticker:'MSFT',sector:'Tech'},{label:'Alphabet',ticker:'GOOGL',sector:'Tech'},{label:'Meta',ticker:'META',sector:'Tech'},{label:'Amazon',ticker:'AMZN',sector:'Tech'},{label:'Tesla',ticker:'TSLA',sector:'EV'},{label:'ExxonMobil',ticker:'XOM',sector:'Energía'},{label:'Chevron',ticker:'CVX',sector:'Energía'}],
   'tbl-adrs':         [{label:'Grupo Galicia',ticker:'GGAL',sector:'Banco·NASDAQ'},{label:'Banco Macro',ticker:'BMA',sector:'Banco·NYSE'},{label:'BBVA Argentina',ticker:'BBAR',sector:'Banco·NYSE'},{label:'Supervielle',ticker:'SUPV',sector:'Banco·NYSE'},{label:'YPF',ticker:'YPF',sector:'Energía·NYSE'},{label:'Vista Energy',ticker:'VIST',sector:'Vaca Muerta·NYSE'},{label:'Pampa Energía',ticker:'PAM',sector:'Energía·NYSE'},{label:'TGS',ticker:'TGS',sector:'Gas·NYSE'},{label:'Central Puerto',ticker:'CEPU',sector:'Energía·NYSE'},{label:'MercadoLibre',ticker:'MELI',sector:'Tech·NASDAQ'},{label:'Globant',ticker:'GLOB',sector:'Tech·NYSE'},{label:'Telecom',ticker:'TEO',sector:'Telecom·NYSE'},{label:'Edenor',ticker:'EDN',sector:'Utilities·NYSE'},{label:'Tenaris',ticker:'TS',sector:'Acero·NYSE'},{label:'Corp. Américas',ticker:'CAAP',sector:'Infra·NYSE'},{label:'IRSA',ticker:'IRS',sector:'Real Estate·NYSE'},{label:'Loma Negra',ticker:'LOMA',sector:'Cemento·NYSE'},{label:'Cresud',ticker:'CRESY',sector:'Agro·NASDAQ'}],
-  'tbl-bonos-arg':    [{label:'GD30·Global 2030',ticker:'GD30=F',sector:'Ley NY'},{label:'GD35·Global 2035',ticker:'GD35=F',sector:'Ley NY'},{label:'AL30·Bonar 2030',ticker:'AL30=F',sector:'Ley ARG'},{label:'AL35·Bonar 2035',ticker:'AL35=F',sector:'Ley ARG'}],
+  'tbl-bonos-arg':    [
+    {label:'GD30·Global 2030',ticker:'GD30=F',sector:'Ley NY', isin:'US040114HS26'},
+    {label:'GD35·Global 2035',ticker:'GD35=F',sector:'Ley NY', isin:'US040114HT09'},
+    {label:'GD38·Global 2038',ticker:'GD38=F',sector:'Ley NY', isin:'US040114HU71'},
+    {label:'GD41·Global 2041',ticker:'GD41=F',sector:'Ley NY', isin:'US040114HV54'},
+    {label:'GD46·Global 2046',ticker:'GD46=F',sector:'Ley NY', isin:'US040114HW38'},
+    {label:'AL30·Bonar 2030', ticker:'AL30=F',sector:'Ley ARG'},
+    {label:'AL35·Bonar 2035', ticker:'AL35=F',sector:'Ley ARG'},
+    {label:'AL41·Bonar 2041', ticker:'AL41=F',sector:'Ley ARG'},
+  ],
+  'tbl-monedas-latam':[
+    {label:'🇧🇷 Real Brasileño', ticker:'BRL=X',  sector:'USD/BRL · devaluación'},
+    {label:'🇲🇽 Peso Mexicano',  ticker:'MXN=X',  sector:'USD/MXN'},
+    {label:'🇨🇱 Peso Chileno',   ticker:'CLP=X',  sector:'USD/CLP'},
+    {label:'🇨🇴 Peso Colombiano',ticker:'COP=X',  sector:'USD/COP'},
+    {label:'🇵🇪 Sol Peruano',    ticker:'PEN=X',  sector:'USD/PEN'},
+    {label:'🇺🇾 Peso Uruguayo',  ticker:'UYU=X',  sector:'USD/UYU'},
+  ],
+  'tbl-monedas-g10':[
+    {label:'🇪🇺 Euro',           ticker:'EURUSD=X',sector:'EUR/USD'},
+    {label:'🇬🇧 Libra Esterlina',ticker:'GBPUSD=X',sector:'GBP/USD'},
+    {label:'🇯🇵 Yen Japonés',    ticker:'JPY=X',   sector:'USD/JPY'},
+    {label:'🇨🇳 Yuan Chino',     ticker:'CNY=X',   sector:'USD/CNY'},
+    {label:'🇨🇭 Franco Suizo',   ticker:'CHF=X',   sector:'USD/CHF'},
+    {label:'🇦🇺 Dólar Australiano',ticker:'AUDUSD=X',sector:'AUD/USD'},
+    {label:'🇨🇦 Dólar Canadiense',ticker:'CAD=X',  sector:'USD/CAD'},
+  ],
   'tbl-cripto':       [{label:'Bitcoin',ticker:'CG:bitcoin',sector:'Cripto'},{label:'Ethereum',ticker:'CG:ethereum',sector:'Cripto'},{label:'Solana',ticker:'CG:solana',sector:'Cripto'},{label:'BNB',ticker:'CG:binancecoin',sector:'Cripto'},{label:'XRP',ticker:'CG:ripple',sector:'Cripto'}],
   'tbl-mundo-indices':[{label:'Euro Stoxx 50',ticker:'^STOXX50E',sector:'Europa 🇪🇺'},{label:'DAX',ticker:'^GDAXI',sector:'Alemania 🇩🇪'},{label:'FTSE 100',ticker:'^FTSE',sector:'UK 🇬🇧'},{label:'CAC 40',ticker:'^FCHI',sector:'Francia 🇫🇷'},{label:'Nikkei 225',ticker:'^N225',sector:'Japón 🇯🇵'},{label:'Hang Seng',ticker:'^HSI',sector:'HK 🇭🇰'},{label:'Bovespa',ticker:'^BVSP',sector:'Brasil 🇧🇷'},{label:'MERVAL',ticker:'^MERV',sector:'Argentina 🇦🇷'}],
   'tbl-mundo-fx':     [{label:'EUR/USD',ticker:'EURUSD=X',sector:'Forex'},{label:'USD/JPY',ticker:'JPY=X',sector:'Forex'},{label:'USD/BRL',ticker:'BRL=X',sector:'Forex'},{label:'GBP/USD',ticker:'GBPUSD=X',sector:'Forex'},{label:'USD/CNY',ticker:'CNY=X',sector:'Forex'}],
@@ -566,7 +686,7 @@ const loaded = new Set();
 const TAB_GROUPS = {
   usa: ['tbl-usa-indices','tbl-usa-futuros','tbl-usa-bonos','tbl-usa-sectores','tbl-usa-defensa','tbl-usa-tech'],
   argentina: ['tbl-adrs','tbl-bonos-arg','tbl-cripto'],
-  mundo: ['tbl-mundo-indices','tbl-mundo-fx'],
+  monedas: ['tbl-monedas-latam','tbl-monedas-g10'],
   commodities: ['tbl-commodities','tbl-agricolas'],
 };
 
