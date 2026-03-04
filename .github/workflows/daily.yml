@@ -2,9 +2,11 @@ name: 📊 Generar Informe Diario de Mercado
 
 on:
   schedule:
-    # 9:00 AM Argentina (UTC-3) = 12:00 UTC
-    - cron: '0 12 * * 1-5'  # Lunes a Viernes
-  workflow_dispatch:          # También permite correrlo a mano
+    # 8:00 AM Argentina (UTC-3) = 11:00 UTC — Edición Mañana
+    - cron: '0 11 * * 1-5'
+    # 19:00 Argentina (UTC-3) = 22:00 UTC — Edición Cierre
+    - cron: '0 22 * * 1-5'
+  workflow_dispatch:  # También permite correrlo a mano
 
 jobs:
   generate:
@@ -29,10 +31,10 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: node generate.js
 
-      - name: Commit and push report
+      - name: Commit and push
         run: |
           git config user.name "Market Terminal Bot"
           git config user.email "bot@market-terminal"
           git add informe-mercado-*.html index.html
-          git diff --staged --quiet || git commit -m "📊 Informe $(date +'%d-%b-%Y') generado automáticamente"
+          git diff --staged --quiet || git commit -m "📊 Informe $(date +'%d-%b-%Y %H:%M') AR generado"
           git push
