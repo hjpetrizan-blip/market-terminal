@@ -1,0 +1,38 @@
+name: 📊 Generar Informe Diario de Mercado
+
+on:
+  schedule:
+    # 9:00 AM Argentina (UTC-3) = 12:00 UTC
+    - cron: '0 12 * * 1-5'  # Lunes a Viernes
+  workflow_dispatch:          # También permite correrlo a mano
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install @anthropic-ai/sdk node-fetch
+
+      - name: Generate report
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: node generate.js
+
+      - name: Commit and push report
+        run: |
+          git config user.name "Market Terminal Bot"
+          git config user.email "bot@market-terminal"
+          git add informe-mercado-*.html index.html
+          git diff --staged --quiet || git commit -m "📊 Informe $(date +'%d-%b-%Y') generado automáticamente"
+          git push
