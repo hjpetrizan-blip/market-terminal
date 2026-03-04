@@ -333,8 +333,8 @@ function generateHTML(d) {
     <div class="hero-chip"><span class="chip-label">S&P 500</span><span class="chip-val" id="hs-sp500">—</span><span class="chip-chg" id="hs-sp500c">⏳</span></div>
     <div class="hero-chip"><span class="chip-label">NASDAQ</span><span class="chip-val" id="hs-nq">—</span><span class="chip-chg" id="hs-nqc">⏳</span></div>
     <div class="hero-chip"><span class="chip-label">VIX</span><span class="chip-val" id="hs-vix">—</span><span class="chip-chg" id="hs-vixc">⏳</span></div>
-    <div class="hero-chip"><span class="chip-label">DÓLAR BLUE</span><span class="chip-val">$${d.dolar_blue_venta}</span><span class="chip-chg up">ARS</span></div>
-    <div class="hero-chip"><span class="chip-label">CCL</span><span class="chip-val">$${d.dolar_ccl_venta}</span><span class="chip-chg up">ARS</span></div>
+    <div class="hero-chip"><span class="chip-label">DÓLAR BLUE</span><span class="chip-val" id="hs-blue-val">⏳</span><span class="chip-chg up">ARS</span></div>
+    <div class="hero-chip"><span class="chip-label">CCL</span><span class="chip-val" id="hs-ccl-val">⏳</span><span class="chip-chg up">ARS</span></div>
     <div class="hero-chip"><span class="chip-label">MERVAL</span><span class="chip-val" id="hs-merv">—</span><span class="chip-chg" id="hs-mervc">⏳</span></div>
     <div class="hero-chip"><span class="chip-label">WTI</span><span class="chip-val" id="hs-wti">—</span><span class="chip-chg" id="hs-wtic">⏳</span></div>
     <div class="hero-chip"><span class="chip-label">ORO</span><span class="chip-val" id="hs-gold">—</span><span class="chip-chg" id="hs-goldc">⏳</span></div>
@@ -430,16 +430,17 @@ function generateHTML(d) {
   <!-- ══ ARGENTINA ══ -->
   <div id="tab-argentina" class="tab-panel">
     <div class="sec-title">TIPO DE CAMBIO</div>
-    <div class="fx-grid">
-      <div class="fx-card" style="border-color:#4a9eff"><div class="fx-pair">OFICIAL BNA</div><div class="fx-name">Dólar Oficial</div><div class="fx-price">$${d.dolar_oficial_venta} <span style="font-size:11px;color:#4a9eff">venta</span></div></div>
-      <div class="fx-card" style="border-color:#ff8c00"><div class="fx-pair">INFORMAL</div><div class="fx-name">Dólar Blue</div><div class="fx-price">$${d.dolar_blue_venta} <span style="font-size:11px;color:#ff8c00">venta</span></div></div>
-      <div class="fx-card" style="border-color:#00d49a"><div class="fx-pair">MEP / BOLSA</div><div class="fx-name">Dólar MEP</div><div class="fx-price">$${d.dolar_mep_venta} <span style="font-size:11px;color:#00d49a">venta</span></div></div>
-      <div class="fx-card" style="border-color:#8b5cf6"><div class="fx-pair">CONTADO CON LIQUI</div><div class="fx-name">Dólar CCL</div><div class="fx-price">$${d.dolar_ccl_venta} <span style="font-size:11px;color:#8b5cf6">venta</span></div></div>
-      <div class="fx-card" style="border-color:#f0c040"><div class="fx-pair">USDT / CRIPTO</div><div class="fx-name">Dólar Cripto</div><div class="fx-price">$${d.dolar_cripto_venta} <span style="font-size:11px;color:#f0c040">venta</span></div></div>
-      <div class="fx-card" style="border-color:#ff4060"><div class="fx-pair">OFICIAL + IMPUESTOS</div><div class="fx-name">Dólar Tarjeta</div><div class="fx-price">$${d.dolar_tarjeta_venta} <span style="font-size:11px;color:#ff4060">venta</span></div></div>
+    <div style="font-size:9px;color:var(--accent);letter-spacing:1px;margin-bottom:8px;">⚡ DOLARAPI.COM — TIEMPO REAL</div>
+    <div class="fx-grid" id="fx-dolar-grid">
+      <div class="fx-card" style="border-color:#4a9eff"><div class="fx-pair">OFICIAL BNA</div><div class="fx-name">Dólar Oficial</div><div class="fx-price" id="fx-oficial">⏳</div><div style="font-size:9px;color:var(--dim)" id="fx-oficial-comp">cargando...</div></div>
+      <div class="fx-card" style="border-color:#ff8c00"><div class="fx-pair">INFORMAL</div><div class="fx-name">Dólar Blue</div><div class="fx-price" id="fx-blue">⏳</div><div style="font-size:9px;color:var(--dim)" id="fx-blue-comp">cargando...</div></div>
+      <div class="fx-card" style="border-color:#00d49a"><div class="fx-pair">MEP / BOLSA</div><div class="fx-name">Dólar MEP</div><div class="fx-price" id="fx-mep">⏳</div><div style="font-size:9px;color:var(--dim)" id="fx-mep-comp">cargando...</div></div>
+      <div class="fx-card" style="border-color:#8b5cf6"><div class="fx-pair">CONTADO CON LIQUI</div><div class="fx-name">Dólar CCL</div><div class="fx-price" id="fx-ccl">⏳</div><div style="font-size:9px;color:var(--dim)" id="fx-ccl-comp">cargando...</div></div>
+      <div class="fx-card" style="border-color:#f0c040"><div class="fx-pair">USDT / CRIPTO</div><div class="fx-name">Dólar Cripto</div><div class="fx-price" id="fx-cripto">⏳</div><div style="font-size:9px;color:var(--dim)" id="fx-cripto-comp">cargando...</div></div>
+      <div class="fx-card" style="border-color:#ff4060"><div class="fx-pair">OFICIAL + IMPUESTOS</div><div class="fx-name">Dólar Tarjeta</div><div class="fx-price" id="fx-tarjeta">⏳</div><div style="font-size:9px;color:var(--dim)" id="fx-tarjeta-comp">cargando...</div></div>
     </div>
-    <div class="alert alert-blue" style="margin-top:16px;">
-      <strong>📊 Brecha Blue/Oficial:</strong> ${d.brecha_blue} · <strong>MERVAL USD (CCL):</strong> ~${d.merval_usd} pts
+    <div class="alert alert-blue" style="margin-top:16px;" id="fx-brecha-alert">
+      <strong>📊 Brecha Blue/Oficial:</strong> <span id="fx-brecha">calculando...</span> · <strong>MERVAL USD (CCL):</strong> ~${d.merval_usd} pts
     </div>
     <div class="sec-title">MERVAL & ACTIVOS LOCALES</div>
     <table class="mkt-table">
@@ -590,20 +591,60 @@ const GROUPS={
 };
 const loaded=new Set();
 const TAB_GROUPS={
-  usa:['tbl-usa-indices','tbl-usa-futuros','tbl-usa-bonos','tbl-usa-sectores','tbl-usa-defensa','tbl-usa-tech'],
-  argentina:['tbl-adrs','tbl-cripto'],
-  monedas:['tbl-monedas-latam','tbl-monedas-g10'],
-  mundo:['tbl-mundo-indices','tbl-mundo-fx'],
+  usa:       ['tbl-usa-indices','tbl-usa-futuros','tbl-usa-bonos','tbl-usa-sectores','tbl-usa-defensa','tbl-usa-tech'],
+  argentina: ['tbl-adrs','tbl-cripto'],
+  monedas:   ['tbl-monedas-latam','tbl-monedas-g10'],
+  mundo:     ['tbl-mundo-indices','tbl-mundo-fx'],
   commodities:['tbl-commodities','tbl-agricolas'],
 };
 function showTab(id,btn){
-  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-  document.getElementById('tab-'+id).classList.add('active');
-  if(btn){btn.classList.add('active');btn.scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'});}
-  if(!loaded.has(id)&&TAB_GROUPS[id]){loaded.add(id);TAB_GROUPS[id].forEach(g=>loadGroup(g,GROUPS[g]));}
+  try {
+    document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    const panel = document.getElementById('tab-'+id);
+    if(panel) panel.classList.add('active');
+    if(btn){btn.classList.add('active');btn.scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'});}
+    if(!loaded.has(id) && TAB_GROUPS[id]){
+      loaded.add(id);
+      TAB_GROUPS[id].forEach(g => { if(GROUPS[g]) loadGroup(g, GROUPS[g]); });
+    }
+  } catch(e) { console.error('showTab error:', e); }
 }
 updateHero();
+fetchDolares();
+
+// ── DolarAPI — cotizaciones en tiempo real ─────────────────
+async function fetchDolares() {
+  try {
+    const r = await fetch('https://dolarapi.com/v1/dolares', {signal: AbortSignal.timeout(8000)});
+    const data = await r.json();
+    const map = {};
+    data.forEach(d => { map[d.casa] = d; });
+    const set = (id, compId, d) => {
+      const el = document.getElementById(id);
+      const elc = document.getElementById(compId);
+      if (el && d) { el.textContent = '$' + Math.round(d.venta).toLocaleString('es-AR'); }
+      if (elc && d) { elc.textContent = 'Compra: $' + Math.round(d.compra).toLocaleString('es-AR'); }
+    };
+    set('fx-oficial','fx-oficial-comp', map['oficial']);
+    set('fx-blue',   'fx-blue-comp',    map['blue']);
+    set('fx-mep',    'fx-mep-comp',     map['bolsa']);
+    set('fx-ccl',    'fx-ccl-comp',     map['contadoconliqui']);
+    set('fx-cripto', 'fx-cripto-comp',  map['cripto']);
+    set('fx-tarjeta','fx-tarjeta-comp', map['tarjeta']);
+    // brecha
+    if (map['oficial'] && map['blue']) {
+      const brecha = ((map['blue'].venta - map['oficial'].venta) / map['oficial'].venta * 100).toFixed(1);
+      const el = document.getElementById('fx-brecha');
+      if (el) el.textContent = brecha + '%';
+    }
+    // también actualizar hero strip con blue y ccl reales
+    const hBlue = document.getElementById('hs-blue-val');
+    const hCcl  = document.getElementById('hs-ccl-val');
+    if (hBlue && map['blue'])  hBlue.textContent  = '$' + Math.round(map['blue'].venta).toLocaleString('es-AR');
+    if (hCcl  && map['contadoconliqui']) hCcl.textContent = '$' + Math.round(map['contadoconliqui'].venta).toLocaleString('es-AR');
+  } catch(e) { console.warn('DolarAPI error:', e); }
+}
 </script>
 </body>
 </html>`;
