@@ -1,11 +1,7 @@
 // ══════════════════════════════════════════════════════════
-//  MARKET TERMINAL — Daily Report Generator v2
-//  Edición MAÑANA (8am AR) + Edición TARDE (19pm AR)
-// ══════════════════════════════════════════════════════════
-
-// ══════════════════════════════════════════════════════════
-//  MARKET TERMINAL — Daily Report Generator v2
-//  Edición MAÑANA (8am AR) + Edición TARDE (19pm AR)
+//  MARKET TERMINAL — Daily Report Generator v3
+//  Horarios AR: Mañana < 10:30 · Rueda 10:30-18:00 · Cierre > 18:00
+//  Wall Street: 11:30-18:00 AR · BYMA: 10:30-17:00 AR
 // ══════════════════════════════════════════════════════════
 
 import Anthropic from '@anthropic-ai/sdk';
@@ -20,9 +16,11 @@ const meses  = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto
 const fechaLarga = `${dias[now.getDay()]} ${now.getDate()} de ${meses[now.getMonth()]}, ${now.getFullYear()}`;
 const fechaCorta = `${String(now.getDate()).padStart(2,'0')}${meses[now.getMonth()].slice(0,3).toLowerCase()}${now.getFullYear()}`;
 const hora       = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+
+// Horarios correctos en AR: Wall St 11:30-18:00 / BYMA 10:30-17:00
 const horaNum    = now.getHours() + now.getMinutes() / 60;
-const esManana   = horaNum < 10.5;          // antes de 10:30 AR = edición mañana
-const esCierre   = horaNum >= 18;           // después de 18:00 AR = edición cierre
+const esManana   = horaNum < 10.5;
+const esCierre   = horaNum >= 18;
 const EDICION    = esCierre ? 'CIERRE' : esManana ? 'MAÑANA' : 'RUEDA';
 const EDICION_EMOJI = esCierre ? '🌆' : esManana ? '🌅' : '📈';
 
@@ -78,20 +76,19 @@ Es la EDICIÓN MAÑANA (pre-apertura). Generá el JSON con foco en:
 - Noticias overnight bélicas/geopolíticas
 - Datos económicos que salen HOY
 - Qué hay que mirar durante la jornada
-- Contexto: qué pasó en los mercados globales esta madrugada
 
 {
   "edicion": "MAÑANA",
-  "asia_resumen": "HTML con resumen de cierres de Asia de anoche: Nikkei, Hang Seng, Shanghai, ASX. Incluí variaciones y qué las movió.",
-  "premarket_resumen": "HTML con estado de futuros pre-market USA al momento y qué implica para la apertura.",
-  "overnight_geo": "HTML con noticias geopolíticas/bélicas overnight más importantes.",
-  "que_mirar_hoy": "HTML con lista de 3-4 cosas clave a monitorear durante la jornada de hoy.",
+  "asia_resumen": "HTML con resumen de cierres de Asia de anoche",
+  "premarket_resumen": "HTML con estado de futuros pre-market USA",
+  "overnight_geo": "HTML con noticias geopolíticas overnight",
+  "que_mirar_hoy": "HTML con lista de 3-4 cosas clave a monitorear hoy",
   ${camposComunes}
 }`;
-  } else {
+  } else if (esCierre) {
     return `${base}
 
-Es la EDICIÓN CIERRE (post-cierre NYSE). Generá el JSON con foco en:
+Es la EDICIÓN CIERRE (post-cierre NYSE 18hs AR). Generá el JSON con foco en:
 - Resumen del cierre de Wall Street de hoy
 - Ganadores y perdedores del día con porcentajes
 - Cómo reaccionó el mercado a los datos que salieron hoy
@@ -100,12 +97,31 @@ Es la EDICIÓN CIERRE (post-cierre NYSE). Generá el JSON con foco en:
 
 {
   "edicion": "CIERRE",
-  "cierre_resumen": "HTML con resumen del cierre de Wall Street hoy: S&P, Nasdaq, Dow con variaciones y qué los movió.",
-  "ganadores_detalle": "HTML con top 5 ganadores del día con empresa, sector y % de suba.",
-  "perdedores_detalle": "HTML con top 5 perdedores del día con empresa, sector y % de baja.",
-  "reaccion_datos": "HTML explicando cómo reaccionó el mercado a los datos económicos que salieron hoy.",
-  "argentina_cierre": "HTML con resumen de la jornada argentina: MERVAL, ADRs destacados, dólar.",
-  "outlook_manana": "HTML con outlook concreto para mañana: qué datos salen, qué niveles técnicos mirar.",
+  "cierre_resumen": "HTML con resumen del cierre de Wall Street hoy",
+  "ganadores_detalle": "HTML con top 5 ganadores del día con empresa, sector y % de suba",
+  "perdedores_detalle": "HTML con top 5 perdedores del día con empresa, sector y % de baja",
+  "reaccion_datos": "HTML explicando cómo reaccionó el mercado a los datos de hoy",
+  "argentina_cierre": "HTML con resumen de la jornada argentina: MERVAL, ADRs, dólar",
+  "outlook_manana": "HTML con outlook concreto para mañana: datos y niveles técnicos",
+  ${camposComunes}
+}`;
+  } else {
+    return `${base}
+
+Es la EDICIÓN RUEDA (mercados abiertos, 10:30-18:00 AR). Generá el JSON con foco en:
+- Qué está moviendo al mercado AHORA
+- Performance en tiempo real de índices y sectores
+- Datos económicos que ya salieron hoy
+- Niveles técnicos clave a monitorear
+- Qué esperar para el cierre
+
+{
+  "edicion": "RUEDA",
+  "rueda_resumen": "HTML con resumen de lo que está pasando en la rueda ahora",
+  "sectores_resumen": "HTML con qué sectores lideran y cuáles caen en la rueda",
+  "datos_hoy": "HTML con datos económicos que ya salieron hoy y cómo reaccionó el mercado",
+  "niveles_tecnicos": "HTML con niveles técnicos clave del S&P 500 y MERVAL para hoy",
+  "outlook_cierre": "HTML con qué esperar para el cierre de hoy",
   ${camposComunes}
 }`;
   }
@@ -152,35 +168,34 @@ function generateHTML(d) {
     </div>`).join('\n');
 
   // Sección especial según edición
-  const seccionEdicion = esManana ? `
-  <!-- ══ EDICIÓN MAÑANA ══ -->
+  let seccionEdicion = '';
+  let tabEdicionBtn = '';
+
+  if (esManana) {
+    tabEdicionBtn = `<button class="tab-btn" onclick="showTab('edicion',this)">🌅 Pre-Market</button>`;
+    seccionEdicion = `
   <div id="tab-edicion" class="tab-panel">
     <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(0,212,154,.1);border:1px solid rgba(0,212,154,.3);border-radius:20px;padding:4px 14px;margin-bottom:16px;">
       <span style="font-size:11px;color:var(--up);letter-spacing:1px;font-weight:700;">🌅 EDICIÓN MAÑANA · ${hora} AR</span>
     </div>
-
     <div class="sec-title">🌏 CIERRES DE ASIA — ANOCHE</div>
     <div class="context-box">${d.asia_resumen||'Sin datos'}</div>
-
     <div class="sec-title">🔮 PRE-MARKET USA — FUTUROS AHORA</div>
     <div class="context-box">${d.premarket_resumen||'Sin datos'}</div>
-    <div id="tbl-premarket"></div>
-
     <div class="sec-title">⚔️ NOTICIAS OVERNIGHT</div>
     <div class="context-box">${d.overnight_geo||'Sin datos'}</div>
-
     <div class="sec-title">👁️ QUÉ MIRAR HOY</div>
     <div class="alert alert-yellow">${d.que_mirar_hoy||'Sin datos'}</div>
-  </div>` : `
-  <!-- ══ EDICIÓN CIERRE ══ -->
+  </div>`;
+  } else if (esCierre) {
+    tabEdicionBtn = `<button class="tab-btn" onclick="showTab('edicion',this)">🌆 Cierre</button>`;
+    seccionEdicion = `
   <div id="tab-edicion" class="tab-panel">
     <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(74,158,255,.1);border:1px solid rgba(74,158,255,.3);border-radius:20px;padding:4px 14px;margin-bottom:16px;">
       <span style="font-size:11px;color:var(--info);letter-spacing:1px;font-weight:700;">🌆 EDICIÓN CIERRE · ${hora} AR</span>
     </div>
-
     <div class="sec-title">📊 CIERRE WALL STREET</div>
     <div class="context-box">${d.cierre_resumen||'Sin datos'}</div>
-
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;">
       <div>
         <div class="sec-title">🏆 GANADORES</div>
@@ -191,17 +206,32 @@ function generateHTML(d) {
         <div class="context-box" style="border-color:var(--dn)">${d.perdedores_detalle||'Sin datos'}</div>
       </div>
     </div>
-
     <div class="sec-title">🇦🇷 ARGENTINA — CIERRE LOCAL</div>
     <div class="context-box">${d.argentina_cierre||'Sin datos'}</div>
-
     <div class="sec-title">🔭 OUTLOOK MAÑANA</div>
     <div class="alert alert-blue">${d.outlook_manana||'Sin datos'}</div>
   </div>`;
+  } else {
+    tabEdicionBtn = `<button class="tab-btn" onclick="showTab('edicion',this)">📈 Rueda</button>`;
+    seccionEdicion = `
+  <div id="tab-edicion" class="tab-panel">
+    <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(0,212,154,.1);border:1px solid rgba(0,212,154,.3);border-radius:20px;padding:4px 14px;margin-bottom:16px;">
+      <span style="font-size:11px;color:var(--up);letter-spacing:1px;font-weight:700;">📈 EN RUEDA · ${hora} AR · Wall St 11:30-18:00 · BYMA 10:30-17:00</span>
+    </div>
+    <div class="sec-title">🔴 MERCADOS EN VIVO AHORA</div>
+    <div class="context-box">${d.rueda_resumen||'Sin datos'}</div>
+    <div class="sec-title">📊 SECTORES</div>
+    <div class="context-box">${d.sectores_resumen||'Sin datos'}</div>
+    <div class="sec-title">📋 DATOS DE HOY</div>
+    <div class="context-box">${d.datos_hoy||'Sin datos'}</div>
+    <div class="sec-title">📐 NIVELES TÉCNICOS</div>
+    <div class="alert alert-blue">${d.niveles_tecnicos||'Sin datos'}</div>
+    <div class="sec-title">🔭 OUTLOOK CIERRE</div>
+    <div class="alert alert-yellow">${d.outlook_cierre||'Sin datos'}</div>
+  </div>`;
+  }
 
-  const tabEdicionBtn = esManana
-    ? `<button class="tab-btn" onclick="showTab('edicion',this)">🌅 Pre-Market</button>`
-    : `<button class="tab-btn" onclick="showTab('edicion',this)">🌆 Cierre</button>`;
+  const PASSWORD_SCRIPT = `<script>(function(){var P='290585',K='mkt_auth';if(sessionStorage.getItem(K)!==P){document.addEventListener('DOMContentLoaded',function(){document.body.innerHTML='';var o=document.createElement('div');o.style.cssText='position:fixed;inset:0;background:#05080f;display:flex;align-items:center;justify-content:center;z-index:9999;font-family:Space Mono,monospace;';o.innerHTML='<div style="text-align:center;padding:40px;background:#0a1020;border:1px solid #1a2a40;border-radius:12px;max-width:320px;width:90%;"><div style="font-size:28px;margin-bottom:8px;">&#x1F510;</div><div style="font-family:Syne,sans-serif;font-size:20px;font-weight:800;color:#e8f4ff;margin-bottom:4px;">MARKET TERMINAL</div><div style="font-size:10px;color:#4a6a8a;letter-spacing:2px;margin-bottom:24px;">ACCESO RESTRINGIDO</div><input id="pi" type="password" placeholder="Ingres&#225; la clave..." autofocus style="width:100%;background:#0d1828;border:1px solid #1a2a40;border-radius:6px;padding:12px;color:#c8d8e8;font-size:14px;outline:none;text-align:center;margin-bottom:10px;" onkeydown="if(event.key===\'Enter\')cp()"/><div id="pe" style="color:#ff4060;font-size:11px;height:16px;margin-bottom:10px;"></div><button onclick="cp()" style="width:100%;background:linear-gradient(135deg,#8b5cf6,#4a9eff);border:none;border-radius:6px;padding:12px;color:#fff;font-size:13px;font-weight:700;cursor:pointer;">ENTRAR &#x2192;</button></div>';document.body.appendChild(o);window.cp=function(){var v=document.getElementById('pi').value;if(v===P){sessionStorage.setItem(K,P);location.reload();}else{document.getElementById('pe').textContent='&#x26A0;&#xFE0F; Clave incorrecta';document.getElementById('pi').value='';document.getElementById('pi').focus();}};});}})();<\/script>`;
 
   return `<!DOCTYPE html>
 <html lang="es">
@@ -210,9 +240,10 @@ function generateHTML(d) {
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Market Terminal — ${fechaLarga} · ${EDICION_EMOJI} ${EDICION}</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;700;800&display=swap" rel="stylesheet"/>
-</script>
+${PASSWORD_SCRIPT}
 <style>
-  :root{--bg:#05080f;
+  :root{--bg:#05080f;--bg2:#0a1020;--bg3:#0d1828;--border:#1a2a40;--up:#00d49a;--dn:#ff4060;--warn:#ffaa00;--info:#4a9eff;--purple:#8b5cf6;--text:#c8d8e8;--dim:#4a6a8a;--bright:#e8f4ff;--accent:#00d49a;}
+  *{box-sizing:border-box;margin:0;padding:0;}
   body{background:var(--bg);color:var(--text);font-family:'Space Mono',monospace;min-height:100vh;overflow-x:hidden;}
   body::before{content:'';position:fixed;inset:0;z-index:1000;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(0,212,154,.018) 0px,rgba(0,212,154,.018) 1px,transparent 1px,transparent 3px);}
   .header{background:linear-gradient(180deg,#0d1828 0%,#05080f 100%);border-bottom:1px solid #1a3a5a;padding:20px 24px 0;position:sticky;top:0;z-index:100;}
@@ -228,6 +259,7 @@ function generateHTML(d) {
   .edicion-badge{display:inline-flex;align-items:center;gap:5px;font-size:9px;letter-spacing:1px;font-weight:700;padding:3px 10px;border-radius:20px;margin-top:4px;}
   .edicion-manana{background:rgba(0,212,154,.1);color:var(--up);border:1px solid rgba(0,212,154,.3);}
   .edicion-cierre{background:rgba(74,158,255,.1);color:var(--info);border:1px solid rgba(74,158,255,.3);}
+  .edicion-rueda{background:rgba(255,64,96,.1);color:var(--dn);border:1px solid rgba(255,64,96,.3);}
   .hero-strip{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:10px 0 6px;flex-wrap:nowrap;}
   .hero-strip::-webkit-scrollbar{display:none;}
   .hero-chip{flex-shrink:0;background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:7px 12px;display:flex;flex-direction:column;gap:1px;min-width:90px;}
@@ -331,7 +363,7 @@ function generateHTML(d) {
     </div>
     <div class="header-stats">
       <div class="market-badge ${d.badge_clase}">⚡ ${d.badge_mercado}</div>
-      <div class="edicion-badge ${esManana ? 'edicion-manana' : 'edicion-cierre'}">${EDICION_EMOJI} EDICIÓN ${EDICION}</div>
+      <div class="edicion-badge ${esCierre ? 'edicion-cierre' : esManana ? 'edicion-manana' : 'edicion-rueda'}">${EDICION_EMOJI} EDICIÓN ${EDICION}</div>
       <div style="font-size:11px;color:#4a9eff;margin-top:4px;">Riesgo geopolítico: <strong style="color:${d.riesgo_geopolitico==='MÁXIMO'?'#ff4060':d.riesgo_geopolitico==='ALTO'?'#ff8c00':'#ffaa00'}">${d.riesgo_geopolitico}</strong></div>
     </div>
   </div>
@@ -364,7 +396,7 @@ function generateHTML(d) {
 
 <div class="content">
 
-  <!-- ══ CONTEXTO ══ -->
+  <!-- CONTEXTO -->
   <div id="tab-contexto" class="tab-panel active">
     <div class="sec-title">DRIVER CENTRAL DEL DÍA</div>
     <div class="alert alert-${d.driver_alerta_tipo}">
@@ -386,7 +418,7 @@ function generateHTML(d) {
 
   ${seccionEdicion}
 
-  <!-- ══ USA ══ -->
+  <!-- USA -->
   <div id="tab-usa" class="tab-panel">
     <div class="sec-title">ÍNDICES & FUTUROS — TIEMPO REAL</div>
     <div id="tbl-usa-indices"></div>
@@ -434,11 +466,11 @@ function generateHTML(d) {
     </div>
   </div>
 
-  <!-- ══ ARGENTINA ══ -->
+  <!-- ARGENTINA -->
   <div id="tab-argentina" class="tab-panel">
     <div class="sec-title">TIPO DE CAMBIO</div>
     <div style="font-size:9px;color:var(--accent);letter-spacing:1px;margin-bottom:8px;">⚡ DOLARAPI.COM — TIEMPO REAL</div>
-    <div class="fx-grid" id="fx-dolar-grid">
+    <div class="fx-grid">
       <div class="fx-card" style="border-color:#4a9eff"><div class="fx-pair">OFICIAL BNA</div><div class="fx-name">Dólar Oficial</div><div class="fx-price" id="fx-oficial">⏳</div><div style="font-size:9px;color:var(--dim)" id="fx-oficial-comp">cargando...</div></div>
       <div class="fx-card" style="border-color:#ff8c00"><div class="fx-pair">INFORMAL</div><div class="fx-name">Dólar Blue</div><div class="fx-price" id="fx-blue">⏳</div><div style="font-size:9px;color:var(--dim)" id="fx-blue-comp">cargando...</div></div>
       <div class="fx-card" style="border-color:#00d49a"><div class="fx-pair">MEP / BOLSA</div><div class="fx-name">Dólar MEP</div><div class="fx-price" id="fx-mep">⏳</div><div style="font-size:9px;color:var(--dim)" id="fx-mep-comp">cargando...</div></div>
@@ -446,7 +478,7 @@ function generateHTML(d) {
       <div class="fx-card" style="border-color:#f0c040"><div class="fx-pair">USDT / CRIPTO</div><div class="fx-name">Dólar Cripto</div><div class="fx-price" id="fx-cripto">⏳</div><div style="font-size:9px;color:var(--dim)" id="fx-cripto-comp">cargando...</div></div>
       <div class="fx-card" style="border-color:#ff4060"><div class="fx-pair">OFICIAL + IMPUESTOS</div><div class="fx-name">Dólar Tarjeta</div><div class="fx-price" id="fx-tarjeta">⏳</div><div style="font-size:9px;color:var(--dim)" id="fx-tarjeta-comp">cargando...</div></div>
     </div>
-    <div class="alert alert-blue" style="margin-top:16px;" id="fx-brecha-alert">
+    <div class="alert alert-blue" style="margin-top:16px;">
       <strong>📊 Brecha Blue/Oficial:</strong> <span id="fx-brecha">calculando...</span> · <strong>MERVAL USD (CCL):</strong> ~${d.merval_usd} pts
     </div>
     <div class="sec-title">MERVAL & ACTIVOS LOCALES</div>
@@ -461,7 +493,6 @@ function generateHTML(d) {
     <div class="sec-title">ADRs ARGENTINOS — TIEMPO REAL</div>
     <div id="tbl-adrs"><div class="live-loading">Cargando...</div></div>
     <div class="sec-title">BONOS SOBERANOS — PRECIO & TIR</div>
-    <div style="font-size:9px;color:var(--dim);letter-spacing:1px;margin-bottom:8px;">Estimados al cierre · TIR = Tasa Interna de Retorno anual en USD</div>
     <table class="mkt-table">
       <thead><tr><th>BONO</th><th>LEY</th><th>PRECIO USD</th><th>TIR</th><th>DURACIÓN</th></tr></thead>
       <tbody>
@@ -475,16 +506,15 @@ function generateHTML(d) {
         </tr>`).join('')}
       </tbody>
     </table>
-    <div style="font-size:9px;color:var(--dim);text-align:right;margin-top:4px;">Precios en tiempo real: <a href="https://rava.com/cotizaciones/bonos" target="_blank" style="color:var(--accent)">Rava.com</a></div>
     <div class="sec-title">CRIPTO</div>
     <div id="tbl-cripto"><div class="live-loading">Cargando...</div></div>
   </div>
 
-  <!-- ══ MONEDAS ══ -->
+  <!-- MONEDAS -->
   <div id="tab-monedas" class="tab-panel">
     <div class="alert alert-blue" style="margin-bottom:16px;">
       <div class="alert-title">💱 Divisas vs. USD — Tiempo Real</div>
-      <strong>Valor mayor = moneda local más débil frente al dólar.</strong> Ideal para monitorear devaluaciones.
+      <strong>Valor mayor = moneda local más débil frente al dólar.</strong>
     </div>
     <div class="sec-title">🌎 LATINOAMÉRICA</div>
     <div id="tbl-monedas-latam"><div class="live-loading">Cargando...</div></div>
@@ -492,7 +522,7 @@ function generateHTML(d) {
     <div id="tbl-monedas-g10"><div class="live-loading">Cargando...</div></div>
   </div>
 
-  <!-- ══ MUNDO ══ -->
+  <!-- MUNDO -->
   <div id="tab-mundo" class="tab-panel">
     <div class="sec-title">ÍNDICES GLOBALES — TIEMPO REAL</div>
     <div id="tbl-mundo-indices"><div class="live-loading">Cargando...</div></div>
@@ -500,7 +530,7 @@ function generateHTML(d) {
     <div id="tbl-mundo-fx"><div class="live-loading">Cargando...</div></div>
   </div>
 
-  <!-- ══ COMMODITIES ══ -->
+  <!-- COMMODITIES -->
   <div id="tab-commodities" class="tab-panel">
     <div class="alert alert-${d.commodities_tipo}" style="margin-bottom:12px;">
       <div class="alert-title">⚡ Commodities · ${fechaLarga}</div>
@@ -512,20 +542,20 @@ function generateHTML(d) {
     <div id="tbl-agricolas"><div class="live-loading">Cargando...</div></div>
   </div>
 
-  <!-- ══ GEOPOLÍTICA ══ -->
+  <!-- GEOPOLÍTICA -->
   <div id="tab-geo" class="tab-panel">
     <div class="alert alert-red" style="margin-bottom:16px;">⚠ EVENTOS DE RIESGO EN MONITOREO — Clic para ver análisis</div>
     ${geoCards}
   </div>
 
-  <!-- ══ CALENDARIO ══ -->
+  <!-- CALENDARIO -->
   <div id="tab-calendario" class="tab-panel">
     <div class="sec-title">AGENDA ECONÓMICA — PRÓXIMOS 7 DÍAS</div>
     <div style="font-size:9px;color:var(--dim);margin-bottom:16px;letter-spacing:1px;">🇺🇸 EE.UU. · 🇦🇷 Argentina · 🌍 Internacional · 🏢 Corporativos</div>
     ${calItems}
   </div>
 
-  <!-- ══ ANÁLISIS ══ -->
+  <!-- ANÁLISIS -->
   <div id="tab-analisis" class="tab-panel">
     <div class="sec-title">COMENTARIOS — ${fechaLarga.toUpperCase()}</div>
     <div class="comment-card" style="border-color:#ff4060">
@@ -537,136 +567,191 @@ function generateHTML(d) {
       <div class="comment-body">${d.analisis_argentina}</div>
     </div>
     <div class="comment-card" style="border-color:#ffaa00">
-      <div class="comment-header"><div class="comment-icon">📊</div><div><div class="comment-author" style="color:#ffaa00">Técnico S&P 500</div></div></div>
+      <div class="comment-header"><div class="comment-icon">📊</div><div><div class="comment-author" style="color:#ffaa00">Análisis Técnico S&P</div><div class="comment-time">Niveles clave</div></div></div>
       <div class="comment-body">${d.analisis_tecnico_sp}</div>
     </div>
     <div class="comment-card" style="border-color:#4a9eff">
-      <div class="comment-header"><div class="comment-icon">🇧🇷</div><div><div class="comment-author" style="color:#4a9eff">Brasil & LatAm</div></div></div>
+      <div class="comment-header"><div class="comment-icon">🌎</div><div><div class="comment-author" style="color:#4a9eff">LatAm & Brasil</div><div class="comment-time">Mercados regionales</div></div></div>
       <div class="comment-body">${d.analisis_latam}</div>
-    </div>
-    <div style="margin-top:16px;padding:14px;border-radius:8px;background:rgba(26,42,64,.4);border:1px solid var(--border);font-size:10px;color:var(--dim);line-height:1.7;text-align:center;">
-      ⚡ Editorial: Claude AI · Precios: Yahoo Finance · CoinGecko<br/>
-      ${EDICION_EMOJI} Edición ${EDICION} · ${fechaLarga} · ${hora} hs AR
     </div>
   </div>
 
 </div>
 
-<div class="footer">MARKET TERMINAL · ${EDICION_EMOJI} EDICIÓN ${EDICION} · ${fechaLarga.toUpperCase()}</div>
+<div class="footer">MARKET TERMINAL · ${fechaLarga.toUpperCase()} · ${EDICION_EMOJI} EDICIÓN ${EDICION} · Datos en tiempo real vía Yahoo Finance & DolarAPI</div>
 
 <script>
-const YF='https://query1.finance.yahoo.com/v8/finance/chart/';
-const PROXIES=[u=>\`https://corsproxy.io/?\${encodeURIComponent(u)}\`,u=>\`https://api.allorigins.win/raw?url=\${encodeURIComponent(u)}\`];
-async function fetchPrice(ticker){
-  if(ticker.startsWith('CG:'))return fetchCG(ticker.slice(3));
-  const url=YF+encodeURIComponent(ticker)+'?interval=1d&range=2d';
-  for(const proxy of PROXIES){try{const r=await fetch(proxy(url),{signal:AbortSignal.timeout(7000)});if(!r.ok)continue;const d=await r.json();const m=d.chart.result[0].meta;const prev=m.chartPreviousClose||m.previousClose;return{price:m.regularMarketPrice,chg:prev?(m.regularMarketPrice-prev)/prev*100:0,mktState:m.marketState,currency:m.currency};}catch(e){continue;}}return null;
+function showTab(id, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  btn.classList.add('active');
 }
-async function fetchCG(id){try{const r=await fetch(\`https://api.coingecko.com/api/v3/simple/price?ids=\${id}&vs_currencies=usd&include_24hr_change=true\`,{signal:AbortSignal.timeout(7000)});const d=await r.json();return{price:d[id].usd,chg:d[id].usd_24h_change,mktState:'REGULAR',currency:'USD'};}catch(e){return null;}}
-function fmt(n,cur='USD'){if(!n&&n!==0)return'—';if(cur==='ARS')return n.toLocaleString('es-AR',{maximumFractionDigits:0});if(n>=10000)return n.toLocaleString('en-US',{maximumFractionDigits:0});if(n>=1)return n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});return n.toLocaleString('en-US',{minimumFractionDigits:4,maximumFractionDigits:4});}
-function chgHtml(chg){if(chg==null)return'<span style="color:var(--dim)">—</span>';const cls=chg>0.05?'lv-up':chg<-0.05?'lv-dn':'lv-flat';const arrow=chg>0.05?'▲':chg<-0.05?'▼':'=';return\`<span class="\${cls}">\${arrow} \${Math.abs(chg).toFixed(2)}%</span>\`;}
-function buildTable(rows){const body=rows.map(r=>{const p=r.data;if(!p)return\`<tr><td><span class="lv-name">\${r.label}</span></td><td class="lv-sym">\${r.ticker}</td><td class="lv-err" colspan="2">⚠ Sin datos</td></tr>\`;const badge=p.mktState==='REGULAR'?'<span class="live-badge badge-live">● LIVE</span>':'<span class="live-badge badge-closed">Cierre</span>';const sym=r.ticker.startsWith('CG:')?r.ticker.slice(3):r.ticker;return\`<tr><td><div class="lv-name">\${r.label}\${badge}</div><div class="lv-sym">\${r.sector||''}</div></td><td class="lv-sym">\${sym}</td><td class="lv-price">$\${fmt(p.price,p.currency)}</td><td>\${chgHtml(p.chg)}</td></tr>\`;}).join('');return\`<table class="live-tbl"><thead><tr><th>ACTIVO</th><th>SÍMBOLO</th><th>PRECIO</th><th>VAR. DÍA</th></tr></thead><tbody>\${body}</tbody></table>\`;}
-async function loadGroup(divId,items){const el=document.getElementById(divId);if(!el)return;el.innerHTML='<div class="live-loading">⏳ Cargando...</div>';const results=await Promise.all(items.map(async i=>({...i,data:await fetchPrice(i.ticker)})));el.innerHTML=buildTable(results);}
-async function updateHero(){
-  const heroes=[{id:'hs-sp500',idc:'hs-sp500c',t:'^GSPC'},{id:'hs-nq',idc:'hs-nqc',t:'^NDX'},{id:'hs-vix',idc:'hs-vixc',t:'^VIX'},{id:'hs-merv',idc:'hs-mervc',t:'^MERV'},{id:'hs-wti',idc:'hs-wtic',t:'CL=F'},{id:'hs-gold',idc:'hs-goldc',t:'GC=F'},{id:'hs-btc',idc:'hs-btcc',t:'CG:bitcoin'}];
-  await Promise.all(heroes.map(async h=>{const p=await fetchPrice(h.t);if(!p)return;const el=document.getElementById(h.id);const elc=document.getElementById(h.idc);if(el)el.textContent=(h.t.startsWith('CG:')?'$':(h.t==='^VIX'?'':'$'))+fmt(p.price);if(elc)elc.innerHTML=chgHtml(p.chg);}));
-  // MERVAL
-  const merv=await fetchPrice('^MERV');
-  if(merv){const el=document.getElementById('merval-live');const elc=document.getElementById('merval-chg');if(el)el.textContent=fmt(merv.price,'ARS');if(elc)elc.innerHTML=chgHtml(merv.chg);}
-  // VIX card
-  const vix=await fetchPrice('^VIX');
-  if(vix){const vv=document.getElementById('vix-val');const vc=document.getElementById('vix-chg');const vz=document.getElementById('vix-zona');if(vv){vv.textContent=fmt(vix.price);vv.style.color=vix.price>30?'#ff4060':vix.price>20?'#ffaa00':'#00d49a';}if(vc)vc.innerHTML=chgHtml(vix.chg);if(vz){const[txt,bg,clr]=vix.price>30?['🚨 PÁNICO','rgba(255,64,96,.2)','#ff4060']:vix.price>20?['⚠️ ALERTA','rgba(255,170,0,.2)','#ffaa00']:vix.price>15?['😐 NORMAL','rgba(74,158,255,.2)','#4a9eff']:['😌 CALMA','rgba(0,212,154,.2)','#00d49a'];vz.textContent=txt;vz.style.background=bg;vz.style.color=clr;}}
-  // VVIX card
-  const vvix=await fetchPrice('^VVIX');
-  if(vvix){const vv=document.getElementById('vvix-val');const vc=document.getElementById('vvix-chg');const vz=document.getElementById('vvix-zona');if(vv){vv.textContent=fmt(vvix.price);vv.style.color=vvix.price>120?'#ff4060':vvix.price>100?'#ffaa00':'#8b5cf6';}if(vc)vc.innerHTML=chgHtml(vvix.chg);if(vz){const[txt,bg,clr]=vvix.price>120?['🚨 EXTREMO','rgba(255,64,96,.2)','#ff4060']:vvix.price>100?['⚠️ ELEVADO','rgba(255,170,0,.2)','#ffaa00']:['✅ NORMAL','rgba(139,92,246,.2)','#8b5cf6'];vz.textContent=txt;vz.style.background=bg;vz.style.color=clr;}}
-}
-const GROUPS={
-  'tbl-usa-indices':[{label:'S&P 500',ticker:'^GSPC',sector:'Índice EEUU'},{label:'Nasdaq 100',ticker:'^NDX',sector:'Tech'},{label:'Dow Jones',ticker:'^DJI',sector:'Industrial'},{label:'Russell 2000',ticker:'^RUT',sector:'Small Caps'},{label:'VIX',ticker:'^VIX',sector:'Volatilidad 😱'}],
-  'tbl-usa-futuros':[{label:'S&P Fut.',ticker:'ES=F',sector:'CME'},{label:'Nasdaq Fut.',ticker:'NQ=F',sector:'CME'},{label:'Dow Fut.',ticker:'YM=F',sector:'CME'},{label:'Gold Fut.',ticker:'GC=F',sector:'COMEX'}],
-  'tbl-usa-bonos':[{label:'T-Note 10Y',ticker:'^TNX',sector:'Tesoro'},{label:'T-Bond 30Y',ticker:'^TYX',sector:'Tesoro'},{label:'T-Note 2Y',ticker:'^IRX',sector:'Tesoro'},{label:'Dólar Index',ticker:'DX-Y.NYB',sector:'DXY'}],
-  'tbl-usa-sectores':[{label:'🖥️ Tech',ticker:'XLK',sector:'ETF'},{label:'🛢️ Energía',ticker:'XLE',sector:'ETF'},{label:'🏦 Financiero',ticker:'XLF',sector:'ETF'},{label:'🏥 Salud',ticker:'XLV',sector:'ETF'},{label:'🏗️ Industrial',ticker:'XLI',sector:'ETF'},{label:'⚙️ Materiales',ticker:'XLB',sector:'ETF'},{label:'🛒 Cons. Básico',ticker:'XLP',sector:'ETF'},{label:'🛍️ Cons. Discr.',ticker:'XLY',sector:'ETF'},{label:'📡 Comunic.',ticker:'XLC',sector:'ETF'},{label:'💡 Utilities',ticker:'XLU',sector:'ETF'}],
-  'tbl-usa-defensa':[{label:'Lockheed Martin',ticker:'LMT',sector:'Defensa'},{label:'Northrop Grumman',ticker:'NOC',sector:'Defensa'},{label:'RTX Corp',ticker:'RTX',sector:'Defensa'},{label:'General Dynamics',ticker:'GD',sector:'Defensa'},{label:'AeroVironment',ticker:'AVAV',sector:'Drones'}],
-  'tbl-usa-tech':[{label:'Nvidia',ticker:'NVDA',sector:'Semis'},{label:'Apple',ticker:'AAPL',sector:'Tech'},{label:'Microsoft',ticker:'MSFT',sector:'Tech'},{label:'Alphabet',ticker:'GOOGL',sector:'Tech'},{label:'Meta',ticker:'META',sector:'Tech'},{label:'Amazon',ticker:'AMZN',sector:'Tech'},{label:'Tesla',ticker:'TSLA',sector:'EV'},{label:'ExxonMobil',ticker:'XOM',sector:'Energía'},{label:'Chevron',ticker:'CVX',sector:'Energía'}],
-  'tbl-adrs':[{label:'Grupo Galicia',ticker:'GGAL',sector:'Banco·NASDAQ'},{label:'Banco Macro',ticker:'BMA',sector:'Banco·NYSE'},{label:'BBVA Argentina',ticker:'BBAR',sector:'Banco·NYSE'},{label:'Supervielle',ticker:'SUPV',sector:'Banco·NYSE'},{label:'YPF',ticker:'YPF',sector:'Energía·NYSE'},{label:'Vista Energy',ticker:'VIST',sector:'Vaca Muerta·NYSE'},{label:'Pampa Energía',ticker:'PAM',sector:'Energía·NYSE'},{label:'TGS',ticker:'TGS',sector:'Gas·NYSE'},{label:'Central Puerto',ticker:'CEPU',sector:'Energía·NYSE'},{label:'MercadoLibre',ticker:'MELI',sector:'Tech·NASDAQ'},{label:'Globant',ticker:'GLOB',sector:'Tech·NYSE'},{label:'Telecom',ticker:'TEO',sector:'Telecom·NYSE'},{label:'Edenor',ticker:'EDN',sector:'Utilities·NYSE'},{label:'Tenaris',ticker:'TS',sector:'Acero·NYSE'},{label:'Corp. Américas',ticker:'CAAP',sector:'Infra·NYSE'},{label:'IRSA',ticker:'IRS',sector:'Real Estate·NYSE'},{label:'Loma Negra',ticker:'LOMA',sector:'Cemento·NYSE'},{label:'Cresud',ticker:'CRESY',sector:'Agro·NASDAQ'}],
-  'tbl-cripto':[{label:'Bitcoin',ticker:'CG:bitcoin',sector:'Cripto'},{label:'Ethereum',ticker:'CG:ethereum',sector:'Cripto'},{label:'Solana',ticker:'CG:solana',sector:'Cripto'},{label:'BNB',ticker:'CG:binancecoin',sector:'Cripto'},{label:'XRP',ticker:'CG:ripple',sector:'Cripto'}],
-  'tbl-monedas-latam':[{label:'🇧🇷 Real Brasileño',ticker:'BRL=X',sector:'USD/BRL'},{label:'🇲🇽 Peso Mexicano',ticker:'MXN=X',sector:'USD/MXN'},{label:'🇨🇱 Peso Chileno',ticker:'CLP=X',sector:'USD/CLP'},{label:'🇨🇴 Peso Colombiano',ticker:'COP=X',sector:'USD/COP'},{label:'🇵🇪 Sol Peruano',ticker:'PEN=X',sector:'USD/PEN'},{label:'🇺🇾 Peso Uruguayo',ticker:'UYU=X',sector:'USD/UYU'}],
-  'tbl-monedas-g10':[{label:'🇪🇺 Euro',ticker:'EURUSD=X',sector:'EUR/USD'},{label:'🇬🇧 Libra Esterlina',ticker:'GBPUSD=X',sector:'GBP/USD'},{label:'🇯🇵 Yen Japonés',ticker:'JPY=X',sector:'USD/JPY'},{label:'🇨🇳 Yuan Chino',ticker:'CNY=X',sector:'USD/CNY'},{label:'🇨🇭 Franco Suizo',ticker:'CHF=X',sector:'USD/CHF'},{label:'🇦🇺 Dólar Australiano',ticker:'AUDUSD=X',sector:'AUD/USD'},{label:'🇨🇦 Dólar Canadiense',ticker:'CAD=X',sector:'USD/CAD'}],
-  'tbl-mundo-indices':[{label:'Euro Stoxx 50',ticker:'^STOXX50E',sector:'Europa 🇪🇺'},{label:'DAX',ticker:'^GDAXI',sector:'Alemania 🇩🇪'},{label:'FTSE 100',ticker:'^FTSE',sector:'UK 🇬🇧'},{label:'CAC 40',ticker:'^FCHI',sector:'Francia 🇫🇷'},{label:'Nikkei 225',ticker:'^N225',sector:'Japón 🇯🇵'},{label:'Hang Seng',ticker:'^HSI',sector:'HK 🇭🇰'},{label:'Bovespa',ticker:'^BVSP',sector:'Brasil 🇧🇷'},{label:'MERVAL',ticker:'^MERV',sector:'Argentina 🇦🇷'}],
-  'tbl-mundo-fx':[{label:'EUR/USD',ticker:'EURUSD=X',sector:'Forex'},{label:'USD/JPY',ticker:'JPY=X',sector:'Forex'},{label:'USD/BRL',ticker:'BRL=X',sector:'Forex'},{label:'GBP/USD',ticker:'GBPUSD=X',sector:'Forex'},{label:'USD/CNY',ticker:'CNY=X',sector:'Forex'}],
-  'tbl-commodities':[{label:'WTI Crude',ticker:'CL=F',sector:'NYMEX'},{label:'Brent Crude',ticker:'BZ=F',sector:'ICE'},{label:'Gas Natural',ticker:'NG=F',sector:'NYMEX'},{label:'Oro',ticker:'GC=F',sector:'COMEX'},{label:'Plata',ticker:'SI=F',sector:'COMEX'},{label:'Cobre',ticker:'HG=F',sector:'COMEX'}],
-  'tbl-agricolas':[{label:'Soja',ticker:'ZS=F',sector:'CBOT 🇦🇷'},{label:'Maíz',ticker:'ZC=F',sector:'CBOT 🇦🇷'},{label:'Trigo',ticker:'ZW=F',sector:'CBOT 🇦🇷'}],
-};
-const loaded=new Set();
-const TAB_GROUPS={
-  usa:       ['tbl-usa-indices','tbl-usa-futuros','tbl-usa-bonos','tbl-usa-sectores','tbl-usa-defensa','tbl-usa-tech'],
-  argentina: ['tbl-adrs','tbl-cripto'],
-  monedas:   ['tbl-monedas-latam','tbl-monedas-g10'],
-  mundo:     ['tbl-mundo-indices','tbl-mundo-fx'],
-  commodities:['tbl-commodities','tbl-agricolas'],
-};
-function showTab(id,btn){
-  try {
-    document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
-    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-    const panel = document.getElementById('tab-'+id);
-    if(panel) panel.classList.add('active');
-    if(btn){btn.classList.add('active');btn.scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'});}
-    if(!loaded.has(id) && TAB_GROUPS[id]){
-      loaded.add(id);
-      TAB_GROUPS[id].forEach(g => { if(GROUPS[g]) loadGroup(g, GROUPS[g]); });
-    }
-  } catch(e) { console.error('showTab error:', e); }
-}
-updateHero();
-fetchDolares();
 
-// ── DolarAPI — cotizaciones en tiempo real ─────────────────
-async function fetchDolares() {
-  try {
-    const r = await fetch('https://dolarapi.com/v1/dolares', {signal: AbortSignal.timeout(8000)});
-    const data = await r.json();
-    const map = {};
-    data.forEach(d => { map[d.casa] = d; });
-    const set = (id, compId, d) => {
-      const el = document.getElementById(id);
-      const elc = document.getElementById(compId);
-      if (el && d) { el.textContent = '$' + Math.round(d.venta).toLocaleString('es-AR'); }
-      if (elc && d) { elc.textContent = 'Compra: $' + Math.round(d.compra).toLocaleString('es-AR'); }
-    };
-    set('fx-oficial','fx-oficial-comp', map['oficial']);
-    set('fx-blue',   'fx-blue-comp',    map['blue']);
-    set('fx-mep',    'fx-mep-comp',     map['bolsa']);
-    set('fx-ccl',    'fx-ccl-comp',     map['contadoconliqui']);
-    set('fx-cripto', 'fx-cripto-comp',  map['cripto']);
-    set('fx-tarjeta','fx-tarjeta-comp', map['tarjeta']);
-    // brecha
-    if (map['oficial'] && map['blue']) {
-      const brecha = ((map['blue'].venta - map['oficial'].venta) / map['oficial'].venta * 100).toFixed(1);
-      const el = document.getElementById('fx-brecha');
-      if (el) el.textContent = brecha + '%';
-    }
-    // también actualizar hero strip con blue y ccl reales
-    const hBlue = document.getElementById('hs-blue-val');
-    const hCcl  = document.getElementById('hs-ccl-val');
-    if (hBlue && map['blue'])  hBlue.textContent  = '$' + Math.round(map['blue'].venta).toLocaleString('es-AR');
-    if (hCcl  && map['contadoconliqui']) hCcl.textContent = '$' + Math.round(map['contadoconliqui'].venta).toLocaleString('es-AR');
-  } catch(e) { console.warn('DolarAPI error:', e); }
+// ── Live Data ──────────────────────────────────────────────
+function fmtN(n, dec=2) { return n != null ? n.toLocaleString('en-US', {minimumFractionDigits:dec,maximumFractionDigits:dec}) : '—'; }
+function chgHtml(c) {
+  if (c == null) return '<span style="color:var(--dim)">—</span>';
+  const cls = c > 0 ? 'lv-up' : c < 0 ? 'lv-dn' : 'lv-flat';
+  return '<span class="'+cls+'">'+(c>0?'+':'')+c.toFixed(2)+'%</span>';
 }
+function liveTbl(rows) {
+  return '<table class="live-tbl"><thead><tr><th>ACTIVO</th><th>NOMBRE</th><th>PRECIO</th><th>VAR. %</th></tr></thead><tbody>'
+    + rows.map(r => '<tr><td><div class="lv-sym">'+r.s+'</div></td><td><div class="lv-name">'+r.n+'</div></td><td class="lv-price">$'+fmtN(r.p)+'</td><td>'+chgHtml(r.c)+'</td></tr>').join('')
+    + '</tbody></table>';
+}
+
+async function loadYahoo(symbols) {
+  try {
+    const r = await fetch('https://query1.finance.yahoo.com/v7/finance/quote?symbols='+symbols.join(','));
+    const d = await r.json();
+    return (d.quoteResponse?.result || []).map(q => ({
+      s: q.symbol, n: q.shortName||q.symbol,
+      p: q.regularMarketPrice, c: q.regularMarketChangePercent,
+      v: q.regularMarketVolume
+    }));
+  } catch { return []; }
+}
+
+async function loadDolar() {
+  try {
+    const r = await fetch('https://dolarapi.com/v1/dolares');
+    return await r.json();
+  } catch { return []; }
+}
+
+async function loadCrypto() {
+  try {
+    const r = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana,binancecoin,ripple&vs_currencies=usd&include_24hr_change=true');
+    return await r.json();
+  } catch { return {}; }
+}
+
+function setEl(id, html) { const e = document.getElementById(id); if(e) e.innerHTML = html; }
+
+async function loadAll() {
+  // Hero chips — índices
+  const idx = await loadYahoo(['SPY','QQQ','^VIX','GC=F','CL=F','BTC-USD','^MERV']);
+  idx.forEach(q => {
+    const pf = (p, dec=2) => p != null ? (p > 1000 ? '$'+p.toLocaleString('en-US',{maximumFractionDigits:0}) : '$'+p.toFixed(dec)) : '—';
+    const cf = c => c != null ? '<span style="color:'+(c>0?'var(--up)':c<0?'var(--dn)':'var(--dim)')+';">'+(c>0?'+':'')+c.toFixed(2)+'%</span>' : '⏳';
+    if(q.s==='SPY')    { setEl('hs-sp500',pf(q.p)); setEl('hs-sp500c',cf(q.c)); }
+    if(q.s==='QQQ')    { setEl('hs-nq',pf(q.p)); setEl('hs-nqc',cf(q.c)); }
+    if(q.s==='^VIX')   { setEl('hs-vix',q.p?.toFixed(2)||'—'); setEl('hs-vixc',cf(q.c));
+                         setEl('vix-val',q.p?.toFixed(2)||'—'); setEl('vix-chg',cf(q.c));
+                         const zona = q.p<15?'Calma 😌':q.p<20?'Normal':'⚠️ Alerta';
+                         setEl('vix-zona','<span style="background:rgba(255,170,0,.1);color:var(--warn);padding:2px 8px;border-radius:8px;">'+zona+'</span>'); }
+    if(q.s==='GC=F')   { setEl('hs-gold',pf(q.p,0)); setEl('hs-goldc',cf(q.c)); }
+    if(q.s==='CL=F')   { setEl('hs-wti',pf(q.p)); setEl('hs-wtic',cf(q.c)); }
+    if(q.s==='BTC-USD') { setEl('hs-btc',pf(q.p,0)); setEl('hs-btcc',cf(q.c)); }
+    if(q.s==='^MERV')  { setEl('hs-merv',pf(q.p,0)); setEl('hs-mervc',cf(q.c));
+                         setEl('merval-live',pf(q.p,0)); setEl('merval-chg',cf(q.c)); }
+  });
+
+  // Dólar AR
+  const dolar = await loadDolar();
+  dolar.forEach(d => {
+    const v = '$'+Math.round(d.venta).toLocaleString('es-AR');
+    const comp = 'C: $'+Math.round(d.compra)+' · V: $'+Math.round(d.venta);
+    if(d.casa==='oficial')  { setEl('fx-oficial',v); setEl('fx-oficial-comp',comp); setEl('hs-blue-val','$'+Math.round(d.venta)); }
+    if(d.casa==='blue')     { setEl('fx-blue',v); setEl('fx-blue-comp',comp); }
+    if(d.casa==='mep')      { setEl('fx-mep',v); setEl('fx-mep-comp',comp); }
+    if(d.casa==='contadoconliqui') { setEl('fx-ccl',v); setEl('fx-ccl-comp',comp); setEl('hs-ccl-val','$'+Math.round(d.venta)); }
+    if(d.casa==='cripto')   { setEl('fx-cripto',v); setEl('fx-cripto-comp',comp); }
+    if(d.casa==='tarjeta')  { setEl('fx-tarjeta',v); setEl('fx-tarjeta-comp',comp); }
+  });
+  const of = dolar.find(d=>d.casa==='oficial')?.venta;
+  const bl = dolar.find(d=>d.casa==='blue')?.venta;
+  if(of&&bl) setEl('fx-brecha', ((bl/of-1)*100).toFixed(1)+'%');
+
+  // USA Indices
+  const usa = await loadYahoo(['SPY','QQQ','DIA','IWM','^VIX']);
+  setEl('tbl-usa-indices', liveTbl(usa.map(q=>({s:q.s,n:q.n,p:q.p,c:q.c}))));
+
+  // Futuros
+  const fut = await loadYahoo(['ES=F','NQ=F','YM=F','RTY=F']);
+  setEl('tbl-usa-futuros', fut.length ? liveTbl(fut.map(q=>({s:q.s,n:q.n,p:q.p,c:q.c}))) : '');
+
+  // Bonos USA
+  const bonos = await loadYahoo(['^TNX','^TYX','^IRX']);
+  setEl('tbl-usa-bonos', bonos.length ? liveTbl(bonos.map(q=>({s:q.s,n:q.n,p:q.p,c:q.c}))) : '');
+
+  // Sectores
+  const sect = await loadYahoo(['XLK','XLF','XLE','XLV','XLC','XLI','XLB','XLY','XLP','XLU','XLRE']);
+  setEl('tbl-usa-sectores', liveTbl(sect.map(q=>({s:q.s,n:q.n,p:q.p,c:q.c}))));
+
+  // Defensa
+  const def = await loadYahoo(['LMT','RTX','NOC','GD','BA']);
+  setEl('tbl-usa-defensa', liveTbl(def.map(q=>({s:q.s,n:q.n,p:q.p,c:q.c}))));
+
+  // Mega Tech
+  const tech = await loadYahoo(['AAPL','MSFT','NVDA','GOOGL','AMZN','META','TSLA','NFLX','AMD']);
+  setEl('tbl-usa-tech', liveTbl(tech.map(q=>({s:q.s,n:q.n,p:q.p,c:q.c}))));
+
+  // ADRs AR
+  const adrs = await loadYahoo(['MELI','GLOB','YPF','BMA','GGAL','SUPV','BBAR','CEPU','LOMA','IRCP','PAM','TGS']);
+  setEl('tbl-adrs', liveTbl(adrs.map(q=>({s:q.s,n:q.n,p:q.p,c:q.c}))));
+
+  // Crypto
+  const crypto = await loadCrypto();
+  const cNames = {bitcoin:'Bitcoin',ethereum:'Ethereum',solana:'Solana',binancecoin:'BNB',ripple:'XRP'};
+  const cSyms = {bitcoin:'BTC',ethereum:'ETH',solana:'SOL',binancecoin:'BNB',ripple:'XRP'};
+  const cRows = Object.entries(crypto).map(([id,v])=>({s:cSyms[id],n:cNames[id],p:v.usd,c:v.usd_24h_change}));
+  setEl('tbl-cripto', liveTbl(cRows));
+
+  // Commodities
+  const comm = await loadYahoo(['GC=F','SI=F','CL=F','NG=F','HG=F','ZW=F','ZC=F','ZS=F']);
+  setEl('tbl-commodities', liveTbl(comm.map(q=>({s:q.s,n:q.n,p:q.p,c:q.c}))));
+  setEl('tbl-agricolas', '');
+
+  // Monedas LATAM
+  const latam = await loadYahoo(['BRL=X','CLP=X','COP=X','PEN=X','MXN=X','UYU=X']);
+  setEl('tbl-monedas-latam', liveTbl(latam.map(q=>({s:q.s,n:q.n,p:q.p,c:q.c}))));
+
+  // G10
+  const g10 = await loadYahoo(['EURUSD=X','GBPUSD=X','JPY=X','CHF=X','AUD=X','CAD=X']);
+  setEl('tbl-monedas-g10', liveTbl(g10.map(q=>({s:q.s,n:q.n,p:q.p,c:q.c}))));
+
+  // Mundo
+  const mundo = await loadYahoo(['^N225','^HSI','^FTSE','^GDAXI','^FCHI','^BVSP','^MXX']);
+  setEl('tbl-mundo-indices', liveTbl(mundo.map(q=>({s:q.s,n:q.n,p:q.p,c:q.c}))));
+}
+
+loadAll();
+setInterval(loadAll, 60000);
 </script>
 </body>
 </html>`;
 }
 
-// ── Main ──────────────────────────────────────────────────
+// ── Main ───────────────────────────────────────────────────
 async function main() {
-  const data = await getEditorialContent();
-  const html = generateHTML(data);
-  const filename = `informe-mercado-${fechaCorta}.html`;
-  writeFileSync(filename, html, 'utf-8');
-  console.log(`✅ ${filename} guardado`);
-  const index = `<!DOCTYPE html><html><head><meta charset="UTF-8"/><meta http-equiv="refresh" content="0;url=${filename}"/><title>Market Terminal</title></head><body><a href="${filename}">${fechaLarga} · ${EDICION_EMOJI} ${EDICION}</a></body></html>`;
-  writeFileSync('index.html', index, 'utf-8');
-  console.log(`✅ index.html → ${filename}`);
+  try {
+    const data = await getEditorialContent();
+    const html = generateHTML(data);
+    const filename = `informe-mercado-${fechaCorta}.html`;
+    writeFileSync(filename, html, 'utf8');
+    console.log(`✅ Generado: ${filename}`);
+
+    // Actualizar index.html
+    const indexHTML = `<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Market Terminal</title>
+<script>(function(){var P='290585',K='mkt_auth';if(sessionStorage.getItem(K)!==P){document.addEventListener('DOMContentLoaded',function(){document.body.style.cssText='margin:0;background:#05080f;display:flex;align-items:center;justify-content:center;min-height:100vh;font-family:Space Mono,monospace;';var o=document.createElement('div');o.style.cssText='text-align:center;padding:40px;background:#0a1020;border:1px solid #1a2a40;border-radius:12px;max-width:320px;width:90%;';o.innerHTML='<div style="font-size:28px;margin-bottom:8px;">&#x1F510;</div><div style="font-family:Syne,sans-serif;font-size:20px;font-weight:800;color:#e8f4ff;margin-bottom:4px;">MARKET TERMINAL</div><div style="font-size:10px;color:#4a6a8a;letter-spacing:2px;margin-bottom:24px;">ACCESO RESTRINGIDO</div><input id="pi" type="password" placeholder="Ingres&#225; la clave..." autofocus style="width:100%;background:#0d1828;border:1px solid #1a2a40;border-radius:6px;padding:12px;color:#c8d8e8;font-size:14px;outline:none;text-align:center;margin-bottom:10px;" onkeydown="if(event.key===\'Enter\')cp()"/><div id="pe" style="color:#ff4060;font-size:11px;height:16px;margin-bottom:10px;"></div><button onclick="cp()" style="width:100%;background:linear-gradient(135deg,#8b5cf6,#4a9eff);border:none;border-radius:6px;padding:12px;color:#fff;font-size:13px;font-weight:700;cursor:pointer;">ENTRAR &#x2192;</button>';document.body.appendChild(o);window.cp=function(){var v=document.getElementById('pi').value;if(v===P){sessionStorage.setItem(K,P);location.reload();}else{document.getElementById('pe').textContent='&#x26A0;&#xFE0F; Clave incorrecta';document.getElementById('pi').value='';document.getElementById('pi').focus();}};});}})();<\/script>
+<meta http-equiv="refresh" content="0;url=${filename}"/>
+<style>body{margin:0;background:#05080f;}</style>
+</head>
+<body></body>
+</html>`;
+    writeFileSync('index.html', indexHTML, 'utf8');
+    console.log('✅ index.html actualizado → ' + filename);
+  } catch (e) {
+    console.error('❌ Error:', e);
+    process.exit(1);
+  }
 }
 
-main().catch(e=>{console.error('❌ Error:',e);process.exit(1);});
+main();
