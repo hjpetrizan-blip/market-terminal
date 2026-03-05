@@ -5,9 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Market Terminal — Jueves 5 de Marzo, 2026 · 🌅 MAÑANA</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;700;800&display=swap" rel="stylesheet"/>
-</script>
+<script>(function(){var P='290585',K='mkt_auth';if(sessionStorage.getItem(K)!==P){document.addEventListener('DOMContentLoaded',function(){document.body.innerHTML='';var o=document.createElement('div');o.style.cssText='position:fixed;inset:0;background:#05080f;display:flex;align-items:center;justify-content:center;z-index:9999;font-family:Space Mono,monospace;';o.innerHTML='<div style="text-align:center;padding:40px;background:#0a1020;border:1px solid #1a2a40;border-radius:12px;max-width:320px;width:90%;"><div style="font-size:28px;margin-bottom:8px;">&#x1F510;</div><div style="font-family:Syne,sans-serif;font-size:20px;font-weight:800;color:#e8f4ff;margin-bottom:4px;">MARKET TERMINAL</div><div style="font-size:10px;color:#4a6a8a;letter-spacing:2px;margin-bottom:24px;">ACCESO RESTRINGIDO</div><input id="pi" type="password" placeholder="Ingres&#225; la clave..." autofocus style="width:100%;background:#0d1828;border:1px solid #1a2a40;border-radius:6px;padding:12px;color:#c8d8e8;font-size:14px;outline:none;text-align:center;margin-bottom:10px;" onkeydown="if(event.key==='Enter')cp()"/><div id="pe" style="color:#ff4060;font-size:11px;height:16px;margin-bottom:10px;"></div><button onclick="cp()" style="width:100%;background:linear-gradient(135deg,#8b5cf6,#4a9eff);border:none;border-radius:6px;padding:12px;color:#fff;font-size:13px;font-weight:700;cursor:pointer;">ENTRAR &#x2192;</button></div>';document.body.appendChild(o);window.cp=function(){var v=document.getElementById('pi').value;if(v===P){sessionStorage.setItem(K,P);location.reload();}else{document.getElementById('pe').textContent='&#x26A0;&#xFE0F; Clave incorrecta';document.getElementById('pi').value='';document.getElementById('pi').focus();}};});}})();</script>
 <style>
-  :root{--bg:#05080f;
+  :root{--bg:#05080f;--bg2:#0a1020;--bg3:#0d1828;--border:#1a2a40;--up:#00d49a;--dn:#ff4060;--warn:#ffaa00;--info:#4a9eff;--purple:#8b5cf6;--text:#c8d8e8;--dim:#4a6a8a;--bright:#e8f4ff;--accent:#00d49a;}
+  *{box-sizing:border-box;margin:0;padding:0;}
   body{background:var(--bg);color:var(--text);font-family:'Space Mono',monospace;min-height:100vh;overflow-x:hidden;}
   body::before{content:'';position:fixed;inset:0;z-index:1000;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(0,212,154,.018) 0px,rgba(0,212,154,.018) 1px,transparent 1px,transparent 3px);}
   .header{background:linear-gradient(180deg,#0d1828 0%,#05080f 100%);border-bottom:1px solid #1a3a5a;padding:20px 24px 0;position:sticky;top:0;z-index:100;}
@@ -23,6 +24,7 @@
   .edicion-badge{display:inline-flex;align-items:center;gap:5px;font-size:9px;letter-spacing:1px;font-weight:700;padding:3px 10px;border-radius:20px;margin-top:4px;}
   .edicion-manana{background:rgba(0,212,154,.1);color:var(--up);border:1px solid rgba(0,212,154,.3);}
   .edicion-cierre{background:rgba(74,158,255,.1);color:var(--info);border:1px solid rgba(74,158,255,.3);}
+  .edicion-rueda{background:rgba(255,64,96,.1);color:var(--dn);border:1px solid rgba(255,64,96,.3);}
   .hero-strip{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:10px 0 6px;flex-wrap:nowrap;}
   .hero-strip::-webkit-scrollbar{display:none;}
   .hero-chip{flex-shrink:0;background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:7px 12px;display:flex;flex-direction:column;gap:1px;min-width:90px;}
@@ -122,12 +124,12 @@
     <div class="logo-area">
       <div class="logo-tag">▶ MARKET TERMINAL LIVE</div>
       <div class="logo-title">INFORME DE MERCADO</div>
-      <div class="logo-date">Jueves 5 de Marzo, 2026 · 00:12 hs AR</div>
+      <div class="logo-date">Jueves 5 de Marzo, 2026 · 00:33 hs AR</div>
     </div>
     <div class="header-stats">
-      <div class="market-badge badge-open">⚡ PRE-MARKET</div>
+      <div class="market-badge badge-open">⚡ PRE-APERTURA</div>
       <div class="edicion-badge edicion-manana">🌅 EDICIÓN MAÑANA</div>
-      <div style="font-size:11px;color:#4a9eff;margin-top:4px;">Riesgo geopolítico: <strong style="color:#ffaa00">MODERADO</strong></div>
+      <div style="font-size:11px;color:#4a9eff;margin-top:4px;">Riesgo geopolítico: <strong style="color:#ff8c00">ALTO</strong></div>
     </div>
   </div>
 
@@ -159,48 +161,42 @@
 
 <div class="content">
 
-  <!-- ══ CONTEXTO ══ -->
+  <!-- CONTEXTO -->
   <div id="tab-contexto" class="tab-panel active">
     <div class="sec-title">DRIVER CENTRAL DEL DÍA</div>
-    <div class="alert alert-blue">
-      <div class="alert-title">📊 Fed Watch: Datos Servicios Clave</div>
-      El <strong>ISM Servicios</strong> de febrero podría confirmar o desafiar la narrativa de 2 recortes Fed en 2026. Waller habla a las <em>11:30 NY</em> tras datos. Mercado descuenta 65% probabilidad recorte en junio.
+    <div class="alert alert-yellow">
+      <div class="alert-title">📊 DATO CLAVE: Nóminas No Agrícolas 14:30 NY</div>
+      El mercado espera <strong>210k empleos</strong> vs 275k previo. Un dato débil podría <em>acelerar recortes Fed</em>, mientras que uno fuerte sostendría el <strong>dólar</strong> y presionaría emergentes.
     </div>
-    <div class="context-box">Los mercados globales muestran consolidación mientras esperan señales sobre el ritmo de flexibilización monetaria de la Fed. El ISM Servicios es crítico dado que representa 70% del PIB estadounidense. Las tensiones geopolíticas mantienen prima de riesgo en energía. Argentina enfrenta test de demanda en licitación de bonos soberanos.</div>
+    <div class="context-box">El reporte de empleo será crucial tras el ADP de ayer (+198k vs +210k estimado) que mostró desaceleración moderada. La <strong>tasa de desempleo</strong> se espera estable en 4.1%, pero cualquier sorpresa podría impactar las expectativas de política monetaria. Los mercados descuentan 65% de probabilidad de recorte en marzo.</div>
     <div class="stat-grid">
-      <div class="stat-card"><div class="stat-label">ISM Servicios Feb</div><div class="stat-val info">52.8e</div><div class="stat-sub">vs 53.4 ant</div></div>
-      <div class="stat-card"><div class="stat-label">WTI Crude</div><div class="stat-val up">$82.40</div><div class="stat-sub">+1.8%</div></div>
-      <div class="stat-card"><div class="stat-label">Fed Funds</div><div class="stat-val undefined">4.50%</div><div class="stat-sub">65% recorte jun</div></div>
-      <div class="stat-card"><div class="stat-label">DXY</div><div class="stat-val up">103.80</div><div class="stat-sub">+0.2%</div></div>
+      <div class="stat-card"><div class="stat-label">Futuros S&P 500</div><div class="stat-val up">+0.3%</div><div class="stat-sub">Pre-market</div></div>
+      <div class="stat-card"><div class="stat-label">Brent Crude</div><div class="stat-val warn">$78.40</div><div class="stat-sub">+1.2% overnight</div></div>
+      <div class="stat-card"><div class="stat-label">Nikkei 225</div><div class="stat-val dn">-0.4%</div><div class="stat-sub">Cierre Asia</div></div>
+      <div class="stat-card"><div class="stat-label">VIX</div><div class="stat-val info">18.5</div><div class="stat-sub">Cautela moderada</div></div>
     </div>
     <div class="alert alert-yellow">
       <div class="alert-title">📌 Resumen ejecutivo</div>
-      Jornada de <strong>consolidación global</strong> con Asia mixto y futuros USA negativos. El foco está en el <strong>ISM Servicios</strong> y Waller Fed para calibrar expectativas de tasas. Tensiones geopolíticas sostienen el petróleo sobre $82. Argentina enfrenta licitación clave de BOPREAL 2027. <em>Sesión de datos en mercados esperando direccionalidad.</em>
+      La jornada estará dominada por el <strong>reporte de nóminas estadounidenses</strong> tras datos mixtos de empleo durante la semana. Los futuros operan en verde mientras los mercados asiáticos mostraron divergencias. La <em>tensión geopolítica</em> mantiene al petróleo por encima de USD 78, y Argentina vuelve tras feriado con expectativa de <strong>catch-up</strong> con el rally global.
     </div>
   </div>
 
   
-  <!-- ══ EDICIÓN MAÑANA ══ -->
   <div id="tab-edicion" class="tab-panel">
     <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(0,212,154,.1);border:1px solid rgba(0,212,154,.3);border-radius:20px;padding:4px 14px;margin-bottom:16px;">
-      <span style="font-size:11px;color:var(--up);letter-spacing:1px;font-weight:700;">🌅 EDICIÓN MAÑANA · 00:12 AR</span>
+      <span style="font-size:11px;color:var(--up);letter-spacing:1px;font-weight:700;">🌅 EDICIÓN MAÑANA · 00:33 AR</span>
     </div>
-
     <div class="sec-title">🌏 CIERRES DE ASIA — ANOCHE</div>
-    <div class="context-box">Los mercados asiáticos cerraron mixtos tras datos manufactureros dispares. El <strong>Nikkei 225</strong> cayó <em>-0.8%</em> a 28.450 puntos por fortaleza del yen y preocupaciones sobre exportaciones. <strong>Hang Seng</strong> subió <em>+0.6%</em> a 16.890 por optimismo en tecnológicas chinas. <strong>Shanghai Composite</strong> plano <em>-0.1%</em> a 3.125 tras PMI manufacturero en 50.2 vs 49.8 esperado. <strong>ASX 200</strong> avanzó <em>+0.4%</em> a 7.820 impulsado por mineras ante repunte del hierro.</div>
-
+    <div class="context-box">Los mercados asiáticos cerraron con <strong>sesión mixta</strong> tras datos manufactureros dispares. El <strong>Nikkei 225 retrocedió -0.4%</strong> a 28,945 puntos por fortalecimiento del yen, mientras el <strong>Hang Seng subió +0.8%</strong> a 16,780 impulsado por tecnológicas chinas. El <strong>Shanghai Composite</strong> cerró plano (+0.1%) ante expectativas del Congreso Nacional. El <strong>ASX 200</strong> avanzó +0.6% por mineras.</div>
     <div class="sec-title">🔮 PRE-MARKET USA — FUTUROS AHORA</div>
-    <div class="context-box">Los futuros de EE.UU. operan <strong>levemente negativos</strong> en pre-market. <em>S&P 500 futures -0.2%</em>, <em>Dow Jones futures -0.1%</em>, <em>Nasdaq futures -0.3%</em>. La cautela se centra en la publicación del <strong>ISM Servicios</strong> de febrero y declaraciones de Waller (Fed) programadas para hoy. El <strong>VIX</strong> se mantiene estable en 16.8 sugiriendo baja volatilidad esperada para la apertura.</div>
-    <div id="tbl-premarket"></div>
-
+    <div class="context-box">Los <strong>futuros estadounidenses operan en verde</strong> tras datos positivos de empleo ADP. <strong>S&P 500 +0.3%</strong>, <strong>Nasdaq +0.4%</strong> liderado por semiconductoras, y <strong>Dow Jones +0.2%</strong>. <em>NVIDIA (+1.2%)</em> impulsa el sector tecnológico previo al dato de nóminas de mañana. El <strong>VIX</strong> opera en 18.5, reflejando cautela moderada.</div>
     <div class="sec-title">⚔️ NOTICIAS OVERNIGHT</div>
-    <div class="context-box"><strong>Escalada en el Mar Rojo:</strong> Nuevos ataques hutíes a buques comerciales provocaron respuesta militar de la coalición. El petróleo WTI subió +1.8% a $82.40. <strong>Tensiones Rusia-OTAN:</strong> Ejercicios militares conjuntos en Polonia generan declaraciones cruzadas. <strong>China-Taiwán:</strong> Beijing anuncia nuevos ejercicios navales en el Estrecho, Taipei eleva alerta de seguridad.</div>
-
+    <div class="context-box">Tensión en <strong>Mar Rojo</strong> tras nuevo ataque hutí a buque comercial, llevando el petróleo Brent a <strong>USD 78.40</strong>. <em>Rusia</em> amenaza con escalar respuesta tras nuevas sanciones occidentales. <strong>China</strong> anuncia ejercicios militares cerca de Taiwán para este fin de semana. <em>Oriente Medio</em> mantiene alto riesgo geopolítico ante negociaciones estancadas en Gaza.</div>
     <div class="sec-title">👁️ QUÉ MIRAR HOY</div>
-    <div class="alert alert-yellow"><strong>1. ISM Servicios USA febrero</strong> - Clave para Fed, consenso 52.8 vs 53.4 anterior<br><strong>2. Jerome Waller (Fed) habla 11:30 NY</strong> - Señales sobre ritmo recortes tasas<br><strong>3. Licitación Bonos Tesoro Argentina</strong> - BOPREAL 2027 por $800.000M<br><strong>4. Balances trimestrales</strong> - Salesforce, Snowflake post-cierre</div>
+    <div class="alert alert-yellow"><ul><li><strong>Nóminas No Agrícolas EE.UU.</strong> - Expectativa: 210k vs 275k previo</li><li><strong>Apertura Argentina</strong> tras feriado - Posible catch-up con mercados globales</li><li><strong>Precio del petróleo</strong> - Tensión geopolítica sostiene USD 78+</li><li><strong>Yuan chino</strong> - PBOC podría intervenir ante debilidad</li></ul></div>
   </div>
 
-  <!-- ══ USA ══ -->
+  <!-- USA -->
   <div id="tab-usa" class="tab-panel">
     <div class="sec-title">ÍNDICES & FUTUROS — TIEMPO REAL</div>
     <div id="tbl-usa-indices"></div>
@@ -243,16 +239,16 @@
       </div>
     </div>
     <div class="alert alert-blue">
-      <strong>Ganadores:</strong> YPF +2.1%, Banco Macro +1.8%, Pampa Energía +1.5%<br/>
-      <strong>Perdedores:</strong> MercadoLibre -1.2%, Globant -0.9%, Ternium -0.7%
+      <strong>Ganadores:</strong> NVIDIA, AMD, Petrobras, Vale<br/>
+      <strong>Perdedores:</strong> Sony, Toyota, Baidu, Alibaba
     </div>
   </div>
 
-  <!-- ══ ARGENTINA ══ -->
+  <!-- ARGENTINA -->
   <div id="tab-argentina" class="tab-panel">
     <div class="sec-title">TIPO DE CAMBIO</div>
     <div style="font-size:9px;color:var(--accent);letter-spacing:1px;margin-bottom:8px;">⚡ DOLARAPI.COM — TIEMPO REAL</div>
-    <div class="fx-grid" id="fx-dolar-grid">
+    <div class="fx-grid">
       <div class="fx-card" style="border-color:#4a9eff"><div class="fx-pair">OFICIAL BNA</div><div class="fx-name">Dólar Oficial</div><div class="fx-price" id="fx-oficial">⏳</div><div style="font-size:9px;color:var(--dim)" id="fx-oficial-comp">cargando...</div></div>
       <div class="fx-card" style="border-color:#ff8c00"><div class="fx-pair">INFORMAL</div><div class="fx-name">Dólar Blue</div><div class="fx-price" id="fx-blue">⏳</div><div style="font-size:9px;color:var(--dim)" id="fx-blue-comp">cargando...</div></div>
       <div class="fx-card" style="border-color:#00d49a"><div class="fx-pair">MEP / BOLSA</div><div class="fx-name">Dólar MEP</div><div class="fx-price" id="fx-mep">⏳</div><div style="font-size:9px;color:var(--dim)" id="fx-mep-comp">cargando...</div></div>
@@ -260,7 +256,7 @@
       <div class="fx-card" style="border-color:#f0c040"><div class="fx-pair">USDT / CRIPTO</div><div class="fx-name">Dólar Cripto</div><div class="fx-price" id="fx-cripto">⏳</div><div style="font-size:9px;color:var(--dim)" id="fx-cripto-comp">cargando...</div></div>
       <div class="fx-card" style="border-color:#ff4060"><div class="fx-pair">OFICIAL + IMPUESTOS</div><div class="fx-name">Dólar Tarjeta</div><div class="fx-price" id="fx-tarjeta">⏳</div><div style="font-size:9px;color:var(--dim)" id="fx-tarjeta-comp">cargando...</div></div>
     </div>
-    <div class="alert alert-blue" style="margin-top:16px;" id="fx-brecha-alert">
+    <div class="alert alert-blue" style="margin-top:16px;">
       <strong>📊 Brecha Blue/Oficial:</strong> <span id="fx-brecha">calculando...</span> · <strong>MERVAL USD (CCL):</strong> ~1.750 pts
     </div>
     <div class="sec-title">MERVAL & ACTIVOS LOCALES</div>
@@ -275,7 +271,6 @@
     <div class="sec-title">ADRs ARGENTINOS — TIEMPO REAL</div>
     <div id="tbl-adrs"><div class="live-loading">Cargando...</div></div>
     <div class="sec-title">BONOS SOBERANOS — PRECIO & TIR</div>
-    <div style="font-size:9px;color:var(--dim);letter-spacing:1px;margin-bottom:8px;">Estimados al cierre · TIR = Tasa Interna de Retorno anual en USD</div>
     <table class="mkt-table">
       <thead><tr><th>BONO</th><th>LEY</th><th>PRECIO USD</th><th>TIR</th><th>DURACIÓN</th></tr></thead>
       <tbody>
@@ -288,31 +283,37 @@
           <td style="font-size:11px;color:var(--dim)">4.2 años</td>
         </tr>
         <tr>
-          <td><div class="name">AL30</div><div class="sym">Bonar 2030</div></td>
-          <td><span style="font-size:9px;padding:2px 6px;border-radius:3px;background:rgba(139,92,246,.15);color:#8b5cf6">ARG</span></td>
-          <td class="price">$66.8</td>
-          <td class="warn">12.1%</td>
-          <td style="font-size:11px;color:var(--dim)">4.1 años</td>
-        </tr>
-        <tr>
           <td><div class="name">GD35</div><div class="sym">Global 2035</div></td>
           <td><span style="font-size:9px;padding:2px 6px;border-radius:3px;background:rgba(74,158,255,.15);color:#4a9eff">NY</span></td>
-          <td class="price">$72.3</td>
+          <td class="price">$72.2</td>
           <td class="warn">10.8%</td>
-          <td style="font-size:11px;color:var(--dim)">7.5 años</td>
+          <td style="font-size:11px;color:var(--dim)">7.1 años</td>
+        </tr>
+        <tr>
+          <td><div class="name">AL30</div><div class="sym">Argentina 2030</div></td>
+          <td><span style="font-size:9px;padding:2px 6px;border-radius:3px;background:rgba(139,92,246,.15);color:#8b5cf6">ARG</span></td>
+          <td class="price">$65.8</td>
+          <td class="warn">12.1%</td>
+          <td style="font-size:11px;color:var(--dim)">4 años</td>
+        </tr>
+        <tr>
+          <td><div class="name">GD41</div><div class="sym">Global 2041</div></td>
+          <td><span style="font-size:9px;padding:2px 6px;border-radius:3px;background:rgba(74,158,255,.15);color:#4a9eff">NY</span></td>
+          <td class="price">$78.1</td>
+          <td class="chg-up">9.9%</td>
+          <td style="font-size:11px;color:var(--dim)">12.3 años</td>
         </tr>
       </tbody>
     </table>
-    <div style="font-size:9px;color:var(--dim);text-align:right;margin-top:4px;">Precios en tiempo real: <a href="https://rava.com/cotizaciones/bonos" target="_blank" style="color:var(--accent)">Rava.com</a></div>
     <div class="sec-title">CRIPTO</div>
     <div id="tbl-cripto"><div class="live-loading">Cargando...</div></div>
   </div>
 
-  <!-- ══ MONEDAS ══ -->
+  <!-- MONEDAS -->
   <div id="tab-monedas" class="tab-panel">
     <div class="alert alert-blue" style="margin-bottom:16px;">
       <div class="alert-title">💱 Divisas vs. USD — Tiempo Real</div>
-      <strong>Valor mayor = moneda local más débil frente al dólar.</strong> Ideal para monitorear devaluaciones.
+      <strong>Valor mayor = moneda local más débil frente al dólar.</strong>
     </div>
     <div class="sec-title">🌎 LATINOAMÉRICA</div>
     <div id="tbl-monedas-latam"><div class="live-loading">Cargando...</div></div>
@@ -320,7 +321,7 @@
     <div id="tbl-monedas-g10"><div class="live-loading">Cargando...</div></div>
   </div>
 
-  <!-- ══ MUNDO ══ -->
+  <!-- MUNDO -->
   <div id="tab-mundo" class="tab-panel">
     <div class="sec-title">ÍNDICES GLOBALES — TIEMPO REAL</div>
     <div id="tbl-mundo-indices"><div class="live-loading">Cargando...</div></div>
@@ -328,11 +329,11 @@
     <div id="tbl-mundo-fx"><div class="live-loading">Cargando...</div></div>
   </div>
 
-  <!-- ══ COMMODITIES ══ -->
+  <!-- COMMODITIES -->
   <div id="tab-commodities" class="tab-panel">
     <div class="alert alert-yellow" style="margin-bottom:12px;">
       <div class="alert-title">⚡ Commodities · Jueves 5 de Marzo, 2026</div>
-      WTI sube +1.8% por tensiones Mar Rojo. Oro estable $2.035
+      Petróleo en máximos por tensión Mar Rojo. Oro estable en USD 2,020.
     </div>
     <div class="sec-title">ENERGÍA & METALES — TIEMPO REAL</div>
     <div id="tbl-commodities"><div class="live-loading">Cargando...</div></div>
@@ -340,277 +341,324 @@
     <div id="tbl-agricolas"><div class="live-loading">Cargando...</div></div>
   </div>
 
-  <!-- ══ GEOPOLÍTICA ══ -->
+  <!-- GEOPOLÍTICA -->
   <div id="tab-geo" class="tab-panel">
     <div class="alert alert-red" style="margin-bottom:16px;">⚠ EVENTOS DE RIESGO EN MONITOREO — Clic para ver análisis</div>
     
     <div class="geo-card" style="border-color:#ff4060;" onclick="this.classList.toggle('open')">
       <div class="geo-header">
-        <span class="geo-badge" style="color:#ff4060;background:rgba(255,64,96,.15)">CONFLICTO MAR ROJO</span>
-        <span class="geo-region">Medio Oriente</span>
+        <span class="geo-badge" style="color:#ff4060;background:rgba(255,64,96,.15)">CRÍTICO</span>
+        <span class="geo-region">Mar Rojo</span>
       </div>
-      <div class="geo-headline">Nuevos ataques hutíes elevan prima energética</div>
+      <div class="geo-headline">Nuevo ataque hutí eleva tensión comercial</div>
       <div class="geo-toggle"></div>
       <div class="geo-detail">
-        <div class="geo-body">La coalición internacional respondió a ataques contra buques comerciales en el Mar Rojo. Las rutas comerciales siguen bajo presión afectando costos logísticos globales.</div>
-        <div class="geo-impact">📊 IMPACTO: Petróleo +1.8%, fletes marítimos al alza</div>
+        <div class="geo-body">Los rebeldes hutíes atacaron otro buque comercial en el Mar Rojo, intensificando los temores sobre disrupciones en el comercio global. Las navieras evalúan nuevas rutas alternativas.</div>
+        <div class="geo-impact">📊 IMPACTO: Petróleo +1.2%, fletes marítimos al alza</div>
       </div>
     </div>
   </div>
 
-  <!-- ══ CALENDARIO ══ -->
+  <!-- CALENDARIO -->
   <div id="tab-calendario" class="tab-panel">
     <div class="sec-title">AGENDA ECONÓMICA — PRÓXIMOS 7 DÍAS</div>
     <div style="font-size:9px;color:var(--dim);margin-bottom:16px;letter-spacing:1px;">🇺🇸 EE.UU. · 🇦🇷 Argentina · 🌍 Internacional · 🏢 Corporativos</div>
     
     <div class="cal-item">
-      <div class="cal-date"><div class="cal-day">Hoy</div><div class="cal-time">10:00 NY</div></div>
+      <div class="cal-date"><div class="cal-day">Hoy</div><div class="cal-time">14:30 NY</div></div>
       <div class="cal-body">
-        <div class="cal-event"><span class="cal-flag">🇺🇸</span> ISM Servicios Febrero 2026</div>
-        <span class="impact-badge" style="color:#ff8c00;background:rgba(255,140,0,.12)">ALTO</span>
-        <div style="display:flex;gap:12px;margin-top:5px;"><span style="font-size:9px;color:var(--dim)">Prev: <strong style="color:var(--text)">53.4</strong></span><span style="font-size:9px;color:var(--dim)">Consenso: <strong style="color:var(--up)">52.8</strong></span></div>
-        <div style="font-size:10px;color:var(--dim);margin-top:4px">Índice de actividad del sector servicios, clave por representar 70% del PIB. Lectura bajo 50 indicaría contracción sectorial.</div>
+        <div class="cal-event"><span class="cal-flag">🇺🇸</span> Nóminas No Agrícolas Febrero 2026</div>
+        <span class="impact-badge" style="color:#ff4060;background:rgba(255,64,96,.12)">CRÍTICO</span>
+        <div style="display:flex;gap:12px;margin-top:5px;"><span style="font-size:9px;color:var(--dim)">Prev: <strong style="color:var(--text)">275k</strong></span><span style="font-size:9px;color:var(--dim)">Consenso: <strong style="color:var(--up)">210k</strong></span></div>
+        <div style="font-size:10px;color:var(--dim);margin-top:4px">Mide la creación de empleo mensual excluendo sector agrícola. Dato clave para política Fed y fortaleza económica estadounidense.</div>
       </div>
     </div>
 
     <div class="cal-item">
-      <div class="cal-date"><div class="cal-day">Hoy</div><div class="cal-time">11:30 NY</div></div>
+      <div class="cal-date"><div class="cal-day">Hoy</div><div class="cal-time">14:30 NY</div></div>
       <div class="cal-body">
-        <div class="cal-event"><span class="cal-flag">🏢</span> Discurso Jerome Waller (Fed)</div>
+        <div class="cal-event"><span class="cal-flag">🇺🇸</span> Tasa Desempleo Febrero 2026</div>
         <span class="impact-badge" style="color:#ff8c00;background:rgba(255,140,0,.12)">ALTO</span>
-        <div style="display:flex;gap:12px;margin-top:5px;"><span style="font-size:9px;color:var(--dim)">Prev: <strong style="color:var(--text)">-</strong></span><span style="font-size:9px;color:var(--dim)">Consenso: <strong style="color:var(--up)">-</strong></span></div>
-        <div style="font-size:10px;color:var(--dim);margin-top:4px">Miembro votante del FOMC podría dar señales sobre timing de recortes de tasas. Mercado descuenta 2 recortes en 2026.</div>
+        <div style="display:flex;gap:12px;margin-top:5px;"><span style="font-size:9px;color:var(--dim)">Prev: <strong style="color:var(--text)">4.1%</strong></span><span style="font-size:9px;color:var(--dim)">Consenso: <strong style="color:var(--up)">4.1%</strong></span></div>
+        <div style="font-size:10px;color:var(--dim);margin-top:4px">Porcentaje de población activa sin empleo. Indicador crucial para evaluar la salud del mercado laboral estadounidense.</div>
       </div>
     </div>
 
     <div class="cal-item">
       <div class="cal-date"><div class="cal-day">Hoy</div><div class="cal-time">11:00 AR</div></div>
       <div class="cal-body">
-        <div class="cal-event"><span class="cal-flag">🇦🇷</span> Licitación BOPREAL 2027</div>
-        <span class="impact-badge" style="color:#ff8c00;background:rgba(255,140,0,.12)">ALTO</span>
-        <div style="display:flex;gap:12px;margin-top:5px;"><span style="font-size:9px;color:var(--dim)">Prev: <strong style="color:var(--text)">TIR 12.5%</strong></span><span style="font-size:9px;color:var(--dim)">Consenso: <strong style="color:var(--up)">Demanda 1.8x</strong></span></div>
-        <div style="font-size:10px;color:var(--dim);margin-top:4px">Tesoro Nacional licita hasta $800.000 millones en bonos ajustables. Test de apetito inversor por deuda soberana local.</div>
-      </div>
-    </div>
-
-    <div class="cal-item">
-      <div class="cal-date"><div class="cal-day">Mañana</div><div class="cal-time">08:30 NY</div></div>
-      <div class="cal-body">
-        <div class="cal-event"><span class="cal-flag">🇺🇸</span> Solicitudes Seguro Desempleo</div>
+        <div class="cal-event"><span class="cal-flag">🇦🇷</span> Reservas BCRA Semanales Mar 2026</div>
         <span class="impact-badge" style="color:#4a9eff;background:rgba(74,158,255,.12)">MEDIO</span>
-        <div style="display:flex;gap:12px;margin-top:5px;"><span style="font-size:9px;color:var(--dim)">Prev: <strong style="color:var(--text)">215K</strong></span><span style="font-size:9px;color:var(--dim)">Consenso: <strong style="color:var(--up)">218K</strong></span></div>
-        <div style="font-size:10px;color:var(--dim);margin-top:4px">Indicador semanal del mercado laboral estadounidense. Lecturas elevadas sugieren debilidad en empleo y presión a Fed.</div>
+        <div style="display:flex;gap:12px;margin-top:5px;"><span style="font-size:9px;color:var(--dim)">Prev: <strong style="color:var(--text)">USD 45,566M</strong></span><span style="font-size:9px;color:var(--dim)">Consenso: <strong style="color:var(--up)">USD 45,800M</strong></span></div>
+        <div style="font-size:10px;color:var(--dim);margin-top:4px">Nivel semanal de reservas internacionales del Banco Central. Clave para sostenibilidad cambiaria y confianza en política monetaria.</div>
       </div>
     </div>
 
     <div class="cal-item">
-      <div class="cal-date"><div class="cal-day">Lun 09</div><div class="cal-time">16:00 AR</div></div>
+      <div class="cal-date"><div class="cal-day">Mañana</div><div class="cal-time">09:00 NY</div></div>
       <div class="cal-body">
-        <div class="cal-event"><span class="cal-flag">🇦🇷</span> Reservas BCRA Semanales</div>
+        <div class="cal-event"><span class="cal-flag">🇺🇸</span> Pedidos de Subsidio por Desempleo</div>
         <span class="impact-badge" style="color:#4a9eff;background:rgba(74,158,255,.12)">MEDIO</span>
-        <div style="display:flex;gap:12px;margin-top:5px;"><span style="font-size:9px;color:var(--dim)">Prev: <strong style="color:var(--text)">$45.566M</strong></span><span style="font-size:9px;color:var(--dim)">Consenso: <strong style="color:var(--up)">$45.400M</strong></span></div>
-        <div style="font-size:10px;color:var(--dim);margin-top:4px">Evolución de reservas internacionales del Banco Central. Clave para sostenibilidad del tipo de cambio oficial.</div>
+        <div style="display:flex;gap:12px;margin-top:5px;"><span style="font-size:9px;color:var(--dim)">Prev: <strong style="color:var(--text)">215k</strong></span><span style="font-size:9px;color:var(--dim)">Consenso: <strong style="color:var(--up)">220k</strong></span></div>
+        <div style="font-size:10px;color:var(--dim);margin-top:4px">Solicitudes semanales de seguro de desempleo. Indicador temprano de fortaleza del mercado laboral estadounidense.</div>
       </div>
     </div>
 
     <div class="cal-item">
-      <div class="cal-date"><div class="cal-day">Mar 10</div><div class="cal-time">08:30 NY</div></div>
+      <div class="cal-date"><div class="cal-day">Lun 09</div><div class="cal-time">10:00 UE</div></div>
       <div class="cal-body">
-        <div class="cal-event"><span class="cal-flag">🇺🇸</span> IPC Febrero 2026</div>
-        <span class="impact-badge" style="color:#ff4060;background:rgba(255,64,96,.12)">CRÍTICO</span>
-        <div style="display:flex;gap:12px;margin-top:5px;"><span style="font-size:9px;color:var(--dim)">Prev: <strong style="color:var(--text)">2.4% a/a</strong></span><span style="font-size:9px;color:var(--dim)">Consenso: <strong style="color:var(--up)">2.3% a/a</strong></span></div>
-        <div style="font-size:10px;color:var(--dim);margin-top:4px">Inflación mensual y anual, determinante para política Fed. Aceleración podría retrasar recortes de tasas esperados.</div>
-      </div>
-    </div>
-
-    <div class="cal-item">
-      <div class="cal-date"><div class="cal-day">Mie 11</div><div class="cal-time">14:00 NY</div></div>
-      <div class="cal-body">
-        <div class="cal-event"><span class="cal-flag">🏢</span> Decisión Tasas Fed Marzo</div>
-        <span class="impact-badge" style="color:#ff4060;background:rgba(255,64,96,.12)">CRÍTICO</span>
-        <div style="display:flex;gap:12px;margin-top:5px;"><span style="font-size:9px;color:var(--dim)">Prev: <strong style="color:var(--text)">4.75%-5.00%</strong></span><span style="font-size:9px;color:var(--dim)">Consenso: <strong style="color:var(--up)">Sin cambios</strong></span></div>
-        <div style="font-size:10px;color:var(--dim);margin-top:4px">FOMC define tasas de interés y publica dot plot actualizado. Mercado descuenta pausa en 4.75%-5.00%.</div>
-      </div>
-    </div>
-
-    <div class="cal-item">
-      <div class="cal-date"><div class="cal-day">Jue 12</div><div class="cal-time">09:00 UE</div></div>
-      <div class="cal-body">
-        <div class="cal-event"><span class="cal-flag">🇪🇺</span> Decisión BCE Marzo</div>
+        <div class="cal-event"><span class="cal-flag">🇪🇺</span> IPC Eurozona Febrero 2026</div>
         <span class="impact-badge" style="color:#ff8c00;background:rgba(255,140,0,.12)">ALTO</span>
-        <div style="display:flex;gap:12px;margin-top:5px;"><span style="font-size:9px;color:var(--dim)">Prev: <strong style="color:var(--text)">4.00%</strong></span><span style="font-size:9px;color:var(--dim)">Consenso: <strong style="color:var(--up)">4.00%</strong></span></div>
-        <div style="font-size:10px;color:var(--dim);margin-top:4px">Banco Central Europeo decide sobre tasas de depósito. Expectativa de pausa tras ciclo alcista completado.</div>
+        <div style="display:flex;gap:12px;margin-top:5px;"><span style="font-size:9px;color:var(--dim)">Prev: <strong style="color:var(--text)">2.8%</strong></span><span style="font-size:9px;color:var(--dim)">Consenso: <strong style="color:var(--up)">2.6%</strong></span></div>
+        <div style="font-size:10px;color:var(--dim);margin-top:4px">Inflación anual de la zona euro. Determinante clave para decisiones de política monetaria del Banco Central Europeo.</div>
       </div>
     </div>
 
     <div class="cal-item">
-      <div class="cal-date"><div class="cal-day">Vie 13</div><div class="cal-time">08:30 NY</div></div>
+      <div class="cal-date"><div class="cal-day">Mar 10</div><div class="cal-time">14:30 NY</div></div>
       <div class="cal-body">
-        <div class="cal-event"><span class="cal-flag">🇺🇸</span> Ventas Minoristas Febrero</div>
-        <span class="impact-badge" style="color:#ff8c00;background:rgba(255,140,0,.12)">ALTO</span>
-        <div style="display:flex;gap:12px;margin-top:5px;"><span style="font-size:9px;color:var(--dim)">Prev: <strong style="color:var(--text)">+0.6% m/m</strong></span><span style="font-size:9px;color:var(--dim)">Consenso: <strong style="color:var(--up)">+0.4% m/m</strong></span></div>
-        <div style="font-size:10px;color:var(--dim);margin-top:4px">Consumo estadounidense mensual, motor del crecimiento económico. Fortaleza sostiene narrativa de aterrizaje suave.</div>
+        <div class="cal-event"><span class="cal-flag">🇺🇸</span> IPC Estados Unidos Febrero 2026</div>
+        <span class="impact-badge" style="color:#ff4060;background:rgba(255,64,96,.12)">CRÍTICO</span>
+        <div style="display:flex;gap:12px;margin-top:5px;"><span style="font-size:9px;color:var(--dim)">Prev: <strong style="color:var(--text)">3.1% anual</strong></span><span style="font-size:9px;color:var(--dim)">Consenso: <strong style="color:var(--up)">2.9% anual</strong></span></div>
+        <div style="font-size:10px;color:var(--dim);margin-top:4px">undefined</div>
       </div>
     </div>
 
     <div class="cal-item">
-      <div class="cal-date"><div class="cal-day">Lun 16</div><div class="cal-time">16:00 AR</div></div>
+      <div class="cal-date"><div class="cal-day">Mar 10</div><div class="cal-time">16:00 AR</div></div>
+      <div class="cal-body">
+        <div class="cal-event"><span class="cal-flag">🇦🇷</span> Licitación Tesoro Nacional Marzo 2026</div>
+        <span class="impact-badge" style="color:#ff8c00;background:rgba(255,140,0,.12)">ALTO</span>
+        <div style="display:flex;gap:12px;margin-top:5px;"><span style="font-size:9px;color:var(--dim)">Prev: <strong style="color:var(--text)">USD 800M adjudicado</strong></span><span style="font-size:9px;color:var(--dim)">Consenso: <strong style="color:var(--up)">USD 900M objetivo</strong></span></div>
+        <div style="font-size:10px;color:var(--dim);margin-top:4px">Subasta de bonos y letras del Tesoro argentino. Refleja demanda de inversores y costo de financiamiento del Estado.</div>
+      </div>
+    </div>
+
+    <div class="cal-item">
+      <div class="cal-date"><div class="cal-day">Mie 11</div><div class="cal-time">09:45 UE</div></div>
+      <div class="cal-body">
+        <div class="cal-event"><span class="cal-flag">🇪🇺</span> Decisión Tasas BCE Marzo 2026</div>
+        <span class="impact-badge" style="color:#ff4060;background:rgba(255,64,96,.12)">CRÍTICO</span>
+        <div style="display:flex;gap:12px;margin-top:5px;"><span style="font-size:9px;color:var(--dim)">Prev: <strong style="color:var(--text)">3.50%</strong></span><span style="font-size:9px;color:var(--dim)">Consenso: <strong style="color:var(--up)">3.25%</strong></span></div>
+        <div style="font-size:10px;color:var(--dim);margin-top:4px">Banco Central Europeo define tasa de referencia. Impacta tipo de cambio euro y flujos hacia mercados emergentes.</div>
+      </div>
+    </div>
+
+    <div class="cal-item">
+      <div class="cal-date"><div class="cal-day">Mie 11</div><div class="cal-time">09:30 AR</div></div>
       <div class="cal-body">
         <div class="cal-event"><span class="cal-flag">🇦🇷</span> IPC INDEC Febrero 2026</div>
         <span class="impact-badge" style="color:#ff4060;background:rgba(255,64,96,.12)">CRÍTICO</span>
-        <div style="display:flex;gap:12px;margin-top:5px;"><span style="font-size:9px;color:var(--dim)">Prev: <strong style="color:var(--text)">3.2% m/m</strong></span><span style="font-size:9px;color:var(--dim)">Consenso: <strong style="color:var(--up)">2.8% m/m</strong></span></div>
-        <div style="font-size:10px;color:var(--dim);margin-top:4px">Inflación mensual y anual argentina. Clave para política monetaria y sostenibilidad plan económico gobierno.</div>
+        <div style="display:flex;gap:12px;margin-top:5px;"><span style="font-size:9px;color:var(--dim)">Prev: <strong style="color:var(--text)">3.2% mensual</strong></span><span style="font-size:9px;color:var(--dim)">Consenso: <strong style="color:var(--up)">2.8% mensual</strong></span></div>
+        <div style="font-size:10px;color:var(--dim);margin-top:4px">Inflación mensual argentina medida por INDEC. Clave para política monetaria del BCRA y expectativas cambiarias.</div>
       </div>
     </div>
 
     <div class="cal-item">
-      <div class="cal-date"><div class="cal-day">Mar 17</div><div class="cal-time">21:00 NY</div></div>
+      <div class="cal-date"><div class="cal-day">Jue 12</div><div class="cal-time">05:00 NY</div></div>
       <div class="cal-body">
-        <div class="cal-event"><span class="cal-flag">🇨🇳</span> PMI Manufacturero China Marzo</div>
+        <div class="cal-event"><span class="cal-flag">🇨🇳</span> PMI Manufacturero China Marzo 2026</div>
         <span class="impact-badge" style="color:#ff8c00;background:rgba(255,140,0,.12)">ALTO</span>
-        <div style="display:flex;gap:12px;margin-top:5px;"><span style="font-size:9px;color:var(--dim)">Prev: <strong style="color:var(--text)">50.2</strong></span><span style="font-size:9px;color:var(--dim)">Consenso: <strong style="color:var(--up)">50.0</strong></span></div>
-        <div style="font-size:10px;color:var(--dim);margin-top:4px">Actividad industrial china, termómetro de segunda economía mundial. Impacta commodities y mercados emergentes.</div>
+        <div style="display:flex;gap:12px;margin-top:5px;"><span style="font-size:9px;color:var(--dim)">Prev: <strong style="color:var(--text)">49.8</strong></span><span style="font-size:9px;color:var(--dim)">Consenso: <strong style="color:var(--up)">50.2</strong></span></div>
+        <div style="font-size:10px;color:var(--dim);margin-top:4px">Índice de actividad manufacturera china. Refleja salud de la segunda economía mundial y demanda de commodities.</div>
       </div>
     </div>
 
     <div class="cal-item">
-      <div class="cal-date"><div class="cal-day">Mie 18</div><div class="cal-time">Post-cierre</div></div>
+      <div class="cal-date"><div class="cal-day">Jue 12</div><div class="cal-time">14:30 NY</div></div>
       <div class="cal-body">
-        <div class="cal-event"><span class="cal-flag">🇺🇸</span> Resultados NVIDIA Q4 2025</div>
-        <span class="impact-badge" style="color:#ff4060;background:rgba(255,64,96,.12)">CRÍTICO</span>
-        <div style="display:flex;gap:12px;margin-top:5px;"><span style="font-size:9px;color:var(--dim)">Prev: <strong style="color:var(--text)">EPS $0.68</strong></span><span style="font-size:9px;color:var(--dim)">Consenso: <strong style="color:var(--up)">EPS $0.72</strong></span></div>
-        <div style="font-size:10px;color:var(--dim);margin-top:4px">Balance trimestral del líder en chips IA. Sus resultados marcan tendencia para todo el sector tecnológico.</div>
+        <div class="cal-event"><span class="cal-flag">🇺🇸</span> PPI Estados Unidos Febrero 2026</div>
+        <span class="impact-badge" style="color:#ff8c00;background:rgba(255,140,0,.12)">ALTO</span>
+        <div style="display:flex;gap:12px;margin-top:5px;"><span style="font-size:9px;color:var(--dim)">Prev: <strong style="color:var(--text)">0.3% mensual</strong></span><span style="font-size:9px;color:var(--dim)">Consenso: <strong style="color:var(--up)">0.2% mensual</strong></span></div>
+        <div style="font-size:10px;color:var(--dim);margin-top:4px">Inflación a nivel productor en EE.UU. Anticipa presiones inflacionarias futuras y complementa lectura del IPC.</div>
+      </div>
+    </div>
+
+    <div class="cal-item">
+      <div class="cal-date"><div class="cal-day">Vie 13</div><div class="cal-time">14:30 NY</div></div>
+      <div class="cal-body">
+        <div class="cal-event"><span class="cal-flag">🇺🇸</span> Ventas Minoristas Febrero 2026</div>
+        <span class="impact-badge" style="color:#4a9eff;background:rgba(74,158,255,.12)">MEDIO</span>
+        <div style="display:flex;gap:12px;margin-top:5px;"><span style="font-size:9px;color:var(--dim)">Prev: <strong style="color:var(--text)">0.8% mensual</strong></span><span style="font-size:9px;color:var(--dim)">Consenso: <strong style="color:var(--up)">0.5% mensual</strong></span></div>
+        <div style="font-size:10px;color:var(--dim);margin-top:4px">Consumo mensual de los hogares estadounidenses. Mide fortaleza del consumidor que representa 70% del PIB americano.</div>
+      </div>
+    </div>
+
+    <div class="cal-item">
+      <div class="cal-date"><div class="cal-day">Vie 13</div><div class="cal-time">17:00 AR</div></div>
+      <div class="cal-body">
+        <div class="cal-event"><span class="cal-flag">🇦🇷</span> Balanza Comercial Febrero 2026</div>
+        <span class="impact-badge" style="color:#4a9eff;background:rgba(74,158,255,.12)">MEDIO</span>
+        <div style="display:flex;gap:12px;margin-top:5px;"><span style="font-size:9px;color:var(--dim)">Prev: <strong style="color:var(--text)">USD 1,450M superávit</strong></span><span style="font-size:9px;color:var(--dim)">Consenso: <strong style="color:var(--up)">USD 1,200M superávit</strong></span></div>
+        <div style="font-size:10px;color:var(--dim);margin-top:4px">Diferencia entre exportaciones e importaciones argentinas. Crucial para acumulación de reservas internacionales del BCRA.</div>
       </div>
     </div>
   </div>
 
-  <!-- ══ ANÁLISIS ══ -->
+  <!-- ANÁLISIS -->
   <div id="tab-analisis" class="tab-panel">
     <div class="sec-title">COMENTARIOS — JUEVES 5 DE MARZO, 2026</div>
     <div class="comment-card" style="border-color:#ff4060">
       <div class="comment-header"><div class="comment-icon">🌍</div><div><div class="comment-author" style="color:#ff8080">Mercados Globales</div><div class="comment-time">Análisis de sesión</div></div></div>
-      <div class="comment-body">Los mercados desarrollados navegan entre datos económicos dispares y expectativas de política monetaria. La <strong>Fed mantiene cautela</strong> mientras el mercado laboral se enfría gradualmente. Europa enfrenta crecimiento lento pero inflación controlada. <em>China muestra signos mixtos</em> con manufacturero estabilizándose pero consumo interno débil. Las tensiones geopolíticas añaden volatilidad a commodities energéticos.</div>
+      <div class="comment-body">Los mercados globales muestran <strong>optimismo cauteloso</strong> previo al dato de nóminas estadounidenses. La <em>divergencia en Asia</em> refleja incertidumbre sobre el crecimiento chino, mientras Europa anticipa recortes del BCE. El <strong>dólar</strong> consolida en máximos ante expectativas de Fed menos agresiva, presionando emergentes. La <strong>tensión geopolítica</strong> sostiene primas de riesgo en energía y materias primas.</div>
     </div>
     <div class="comment-card" style="border-color:#00d49a">
       <div class="comment-header"><div class="comment-icon">🇦🇷</div><div><div class="comment-author" style="color:#00d49a">Argentina</div><div class="comment-time">Cierre BYMA</div></div></div>
-      <div class="comment-body">El mercado local aguarda la <strong>licitación de BOPREAL 2027</strong> como test de confianza inversor. El dólar blue mantiene estabilidad en torno a los $1.425 mientras el BCRA acumula reservas lentamente. <em>Riesgo país en 573 pb</em> refleja expectativa positiva por rumores de acuerdo con FMI. El Merval en pesos muestra fortaleza relativa ante sector bancario y energético.</div>
+      <div class="comment-body">Argentina retorna tras feriado con expectativa de <strong>catch-up alcista</strong> tras el rally global de ayer. El <em>riesgo país</em> se mantiene estable en 573 puntos básicos mientras se aguarda la licitación del Tesoro del martes. Las <strong>reservas del BCRA</strong> podrían mostrar leve mejora por liquidación exportadora. El <em>dólar blue</em> sin cambios en la brecha ante estabilidad política.</div>
     </div>
     <div class="comment-card" style="border-color:#ffaa00">
-      <div class="comment-header"><div class="comment-icon">📊</div><div><div class="comment-author" style="color:#ffaa00">Técnico S&P 500</div></div></div>
-      <div class="comment-body">El <strong>S&P 500</strong> opera en rango 5.180-5.220 buscando direccionalidad tras romper máximos históricos. RSI en zona neutral (52) permite movimientos alcistas. <em>Soporte clave en 5.150</em>, resistencia en 5.250. Volumen por debajo de promedio sugiere consolidación antes del próximo impulso.</div>
+      <div class="comment-header"><div class="comment-icon">📊</div><div><div class="comment-author" style="color:#ffaa00">Análisis Técnico S&P</div><div class="comment-time">Niveles clave</div></div></div>
+      <div class="comment-body">El <strong>S&P 500</strong> consolida en zona de resistencia <em>5,180-5,200 puntos</em>, con soporte clave en 5,120. Los futuros sugieren apertura por encima de máximos, pero el dato de nóminas será determinante para confirmar ruptura. <strong>RSI en 65</strong> indica espacio alcista limitado. Volumen por debajo de promedio señala cautela institucional.</div>
     </div>
     <div class="comment-card" style="border-color:#4a9eff">
-      <div class="comment-header"><div class="comment-icon">🇧🇷</div><div><div class="comment-author" style="color:#4a9eff">Brasil & LatAm</div></div></div>
-      <div class="comment-body"><strong>Brasil</strong> mantiene fortaleza relativa con Bovespa en máximos locales impulsado por commodities y bancos. El real se aprecia ante expectativas de pausa en Selic. <em>México bajo presión</em> por incertidumbre regulatoria. Colombia y Chile beneficiados por repunte en cobre y petróleo respectivamente.</div>
-    </div>
-    <div style="margin-top:16px;padding:14px;border-radius:8px;background:rgba(26,42,64,.4);border:1px solid var(--border);font-size:10px;color:var(--dim);line-height:1.7;text-align:center;">
-      ⚡ Editorial: Claude AI · Precios: Yahoo Finance · CoinGecko<br/>
-      🌅 Edición MAÑANA · Jueves 5 de Marzo, 2026 · 00:12 hs AR
+      <div class="comment-header"><div class="comment-icon">🌎</div><div><div class="comment-author" style="color:#4a9eff">LatAm & Brasil</div><div class="comment-time">Mercados regionales</div></div></div>
+      <div class="comment-body">Brasil lidera la región con <strong>Bovespa +0.8%</strong> impulsado por Petrobras ante alza del crudo. México bajo presión por fortaleza del dólar, mientras <em>Chile</em> se beneficia del rally en cobre. Colombia y Perú estables a la espera de señales de Fed. <strong>Flujos regionales</strong> dependientes del apetito por riesgo post-nóminas estadounidenses.</div>
     </div>
   </div>
 
 </div>
 
-<div class="footer">MARKET TERMINAL · 🌅 EDICIÓN MAÑANA · JUEVES 5 DE MARZO, 2026</div>
+<div class="footer">MARKET TERMINAL · JUEVES 5 DE MARZO, 2026 · 🌅 EDICIÓN MAÑANA · Datos en tiempo real vía Yahoo Finance & DolarAPI</div>
 
 <script>
-const YF='https://query1.finance.yahoo.com/v8/finance/chart/';
-const PROXIES=[u=>`https://corsproxy.io/?${encodeURIComponent(u)}`,u=>`https://api.allorigins.win/raw?url=${encodeURIComponent(u)}`];
-async function fetchPrice(ticker){
-  if(ticker.startsWith('CG:'))return fetchCG(ticker.slice(3));
-  const url=YF+encodeURIComponent(ticker)+'?interval=1d&range=2d';
-  for(const proxy of PROXIES){try{const r=await fetch(proxy(url),{signal:AbortSignal.timeout(7000)});if(!r.ok)continue;const d=await r.json();const m=d.chart.result[0].meta;const prev=m.chartPreviousClose||m.previousClose;return{price:m.regularMarketPrice,chg:prev?(m.regularMarketPrice-prev)/prev*100:0,mktState:m.marketState,currency:m.currency};}catch(e){continue;}}return null;
+function showTab(id, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  btn.classList.add('active');
 }
-async function fetchCG(id){try{const r=await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${id}&vs_currencies=usd&include_24hr_change=true`,{signal:AbortSignal.timeout(7000)});const d=await r.json();return{price:d[id].usd,chg:d[id].usd_24h_change,mktState:'REGULAR',currency:'USD'};}catch(e){return null;}}
-function fmt(n,cur='USD'){if(!n&&n!==0)return'—';if(cur==='ARS')return n.toLocaleString('es-AR',{maximumFractionDigits:0});if(n>=10000)return n.toLocaleString('en-US',{maximumFractionDigits:0});if(n>=1)return n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});return n.toLocaleString('en-US',{minimumFractionDigits:4,maximumFractionDigits:4});}
-function chgHtml(chg){if(chg==null)return'<span style="color:var(--dim)">—</span>';const cls=chg>0.05?'lv-up':chg<-0.05?'lv-dn':'lv-flat';const arrow=chg>0.05?'▲':chg<-0.05?'▼':'=';return`<span class="${cls}">${arrow} ${Math.abs(chg).toFixed(2)}%</span>`;}
-function buildTable(rows){const body=rows.map(r=>{const p=r.data;if(!p)return`<tr><td><span class="lv-name">${r.label}</span></td><td class="lv-sym">${r.ticker}</td><td class="lv-err" colspan="2">⚠ Sin datos</td></tr>`;const badge=p.mktState==='REGULAR'?'<span class="live-badge badge-live">● LIVE</span>':'<span class="live-badge badge-closed">Cierre</span>';const sym=r.ticker.startsWith('CG:')?r.ticker.slice(3):r.ticker;return`<tr><td><div class="lv-name">${r.label}${badge}</div><div class="lv-sym">${r.sector||''}</div></td><td class="lv-sym">${sym}</td><td class="lv-price">$${fmt(p.price,p.currency)}</td><td>${chgHtml(p.chg)}</td></tr>`;}).join('');return`<table class="live-tbl"><thead><tr><th>ACTIVO</th><th>SÍMBOLO</th><th>PRECIO</th><th>VAR. DÍA</th></tr></thead><tbody>${body}</tbody></table>`;}
-async function loadGroup(divId,items){const el=document.getElementById(divId);if(!el)return;el.innerHTML='<div class="live-loading">⏳ Cargando...</div>';const results=await Promise.all(items.map(async i=>({...i,data:await fetchPrice(i.ticker)})));el.innerHTML=buildTable(results);}
-async function updateHero(){
-  const heroes=[{id:'hs-sp500',idc:'hs-sp500c',t:'^GSPC'},{id:'hs-nq',idc:'hs-nqc',t:'^NDX'},{id:'hs-vix',idc:'hs-vixc',t:'^VIX'},{id:'hs-merv',idc:'hs-mervc',t:'^MERV'},{id:'hs-wti',idc:'hs-wtic',t:'CL=F'},{id:'hs-gold',idc:'hs-goldc',t:'GC=F'},{id:'hs-btc',idc:'hs-btcc',t:'CG:bitcoin'}];
-  await Promise.all(heroes.map(async h=>{const p=await fetchPrice(h.t);if(!p)return;const el=document.getElementById(h.id);const elc=document.getElementById(h.idc);if(el)el.textContent=(h.t.startsWith('CG:')?'$':(h.t==='^VIX'?'':'$'))+fmt(p.price);if(elc)elc.innerHTML=chgHtml(p.chg);}));
-  // MERVAL
-  const merv=await fetchPrice('^MERV');
-  if(merv){const el=document.getElementById('merval-live');const elc=document.getElementById('merval-chg');if(el)el.textContent=fmt(merv.price,'ARS');if(elc)elc.innerHTML=chgHtml(merv.chg);}
-  // VIX card
-  const vix=await fetchPrice('^VIX');
-  if(vix){const vv=document.getElementById('vix-val');const vc=document.getElementById('vix-chg');const vz=document.getElementById('vix-zona');if(vv){vv.textContent=fmt(vix.price);vv.style.color=vix.price>30?'#ff4060':vix.price>20?'#ffaa00':'#00d49a';}if(vc)vc.innerHTML=chgHtml(vix.chg);if(vz){const[txt,bg,clr]=vix.price>30?['🚨 PÁNICO','rgba(255,64,96,.2)','#ff4060']:vix.price>20?['⚠️ ALERTA','rgba(255,170,0,.2)','#ffaa00']:vix.price>15?['😐 NORMAL','rgba(74,158,255,.2)','#4a9eff']:['😌 CALMA','rgba(0,212,154,.2)','#00d49a'];vz.textContent=txt;vz.style.background=bg;vz.style.color=clr;}}
-  // VVIX card
-  const vvix=await fetchPrice('^VVIX');
-  if(vvix){const vv=document.getElementById('vvix-val');const vc=document.getElementById('vvix-chg');const vz=document.getElementById('vvix-zona');if(vv){vv.textContent=fmt(vvix.price);vv.style.color=vvix.price>120?'#ff4060':vvix.price>100?'#ffaa00':'#8b5cf6';}if(vc)vc.innerHTML=chgHtml(vvix.chg);if(vz){const[txt,bg,clr]=vvix.price>120?['🚨 EXTREMO','rgba(255,64,96,.2)','#ff4060']:vvix.price>100?['⚠️ ELEVADO','rgba(255,170,0,.2)','#ffaa00']:['✅ NORMAL','rgba(139,92,246,.2)','#8b5cf6'];vz.textContent=txt;vz.style.background=bg;vz.style.color=clr;}}
-}
-const GROUPS={
-  'tbl-usa-indices':[{label:'S&P 500',ticker:'^GSPC',sector:'Índice EEUU'},{label:'Nasdaq 100',ticker:'^NDX',sector:'Tech'},{label:'Dow Jones',ticker:'^DJI',sector:'Industrial'},{label:'Russell 2000',ticker:'^RUT',sector:'Small Caps'},{label:'VIX',ticker:'^VIX',sector:'Volatilidad 😱'}],
-  'tbl-usa-futuros':[{label:'S&P Fut.',ticker:'ES=F',sector:'CME'},{label:'Nasdaq Fut.',ticker:'NQ=F',sector:'CME'},{label:'Dow Fut.',ticker:'YM=F',sector:'CME'},{label:'Gold Fut.',ticker:'GC=F',sector:'COMEX'}],
-  'tbl-usa-bonos':[{label:'T-Note 10Y',ticker:'^TNX',sector:'Tesoro'},{label:'T-Bond 30Y',ticker:'^TYX',sector:'Tesoro'},{label:'T-Note 2Y',ticker:'^IRX',sector:'Tesoro'},{label:'Dólar Index',ticker:'DX-Y.NYB',sector:'DXY'}],
-  'tbl-usa-sectores':[{label:'🖥️ Tech',ticker:'XLK',sector:'ETF'},{label:'🛢️ Energía',ticker:'XLE',sector:'ETF'},{label:'🏦 Financiero',ticker:'XLF',sector:'ETF'},{label:'🏥 Salud',ticker:'XLV',sector:'ETF'},{label:'🏗️ Industrial',ticker:'XLI',sector:'ETF'},{label:'⚙️ Materiales',ticker:'XLB',sector:'ETF'},{label:'🛒 Cons. Básico',ticker:'XLP',sector:'ETF'},{label:'🛍️ Cons. Discr.',ticker:'XLY',sector:'ETF'},{label:'📡 Comunic.',ticker:'XLC',sector:'ETF'},{label:'💡 Utilities',ticker:'XLU',sector:'ETF'}],
-  'tbl-usa-defensa':[{label:'Lockheed Martin',ticker:'LMT',sector:'Defensa'},{label:'Northrop Grumman',ticker:'NOC',sector:'Defensa'},{label:'RTX Corp',ticker:'RTX',sector:'Defensa'},{label:'General Dynamics',ticker:'GD',sector:'Defensa'},{label:'AeroVironment',ticker:'AVAV',sector:'Drones'}],
-  'tbl-usa-tech':[{label:'Nvidia',ticker:'NVDA',sector:'Semis'},{label:'Apple',ticker:'AAPL',sector:'Tech'},{label:'Microsoft',ticker:'MSFT',sector:'Tech'},{label:'Alphabet',ticker:'GOOGL',sector:'Tech'},{label:'Meta',ticker:'META',sector:'Tech'},{label:'Amazon',ticker:'AMZN',sector:'Tech'},{label:'Tesla',ticker:'TSLA',sector:'EV'},{label:'ExxonMobil',ticker:'XOM',sector:'Energía'},{label:'Chevron',ticker:'CVX',sector:'Energía'}],
-  'tbl-adrs':[{label:'Grupo Galicia',ticker:'GGAL',sector:'Banco·NASDAQ'},{label:'Banco Macro',ticker:'BMA',sector:'Banco·NYSE'},{label:'BBVA Argentina',ticker:'BBAR',sector:'Banco·NYSE'},{label:'Supervielle',ticker:'SUPV',sector:'Banco·NYSE'},{label:'YPF',ticker:'YPF',sector:'Energía·NYSE'},{label:'Vista Energy',ticker:'VIST',sector:'Vaca Muerta·NYSE'},{label:'Pampa Energía',ticker:'PAM',sector:'Energía·NYSE'},{label:'TGS',ticker:'TGS',sector:'Gas·NYSE'},{label:'Central Puerto',ticker:'CEPU',sector:'Energía·NYSE'},{label:'MercadoLibre',ticker:'MELI',sector:'Tech·NASDAQ'},{label:'Globant',ticker:'GLOB',sector:'Tech·NYSE'},{label:'Telecom',ticker:'TEO',sector:'Telecom·NYSE'},{label:'Edenor',ticker:'EDN',sector:'Utilities·NYSE'},{label:'Tenaris',ticker:'TS',sector:'Acero·NYSE'},{label:'Corp. Américas',ticker:'CAAP',sector:'Infra·NYSE'},{label:'IRSA',ticker:'IRS',sector:'Real Estate·NYSE'},{label:'Loma Negra',ticker:'LOMA',sector:'Cemento·NYSE'},{label:'Cresud',ticker:'CRESY',sector:'Agro·NASDAQ'}],
-  'tbl-cripto':[{label:'Bitcoin',ticker:'CG:bitcoin',sector:'Cripto'},{label:'Ethereum',ticker:'CG:ethereum',sector:'Cripto'},{label:'Solana',ticker:'CG:solana',sector:'Cripto'},{label:'BNB',ticker:'CG:binancecoin',sector:'Cripto'},{label:'XRP',ticker:'CG:ripple',sector:'Cripto'}],
-  'tbl-monedas-latam':[{label:'🇧🇷 Real Brasileño',ticker:'BRL=X',sector:'USD/BRL'},{label:'🇲🇽 Peso Mexicano',ticker:'MXN=X',sector:'USD/MXN'},{label:'🇨🇱 Peso Chileno',ticker:'CLP=X',sector:'USD/CLP'},{label:'🇨🇴 Peso Colombiano',ticker:'COP=X',sector:'USD/COP'},{label:'🇵🇪 Sol Peruano',ticker:'PEN=X',sector:'USD/PEN'},{label:'🇺🇾 Peso Uruguayo',ticker:'UYU=X',sector:'USD/UYU'}],
-  'tbl-monedas-g10':[{label:'🇪🇺 Euro',ticker:'EURUSD=X',sector:'EUR/USD'},{label:'🇬🇧 Libra Esterlina',ticker:'GBPUSD=X',sector:'GBP/USD'},{label:'🇯🇵 Yen Japonés',ticker:'JPY=X',sector:'USD/JPY'},{label:'🇨🇳 Yuan Chino',ticker:'CNY=X',sector:'USD/CNY'},{label:'🇨🇭 Franco Suizo',ticker:'CHF=X',sector:'USD/CHF'},{label:'🇦🇺 Dólar Australiano',ticker:'AUDUSD=X',sector:'AUD/USD'},{label:'🇨🇦 Dólar Canadiense',ticker:'CAD=X',sector:'USD/CAD'}],
-  'tbl-mundo-indices':[{label:'Euro Stoxx 50',ticker:'^STOXX50E',sector:'Europa 🇪🇺'},{label:'DAX',ticker:'^GDAXI',sector:'Alemania 🇩🇪'},{label:'FTSE 100',ticker:'^FTSE',sector:'UK 🇬🇧'},{label:'CAC 40',ticker:'^FCHI',sector:'Francia 🇫🇷'},{label:'Nikkei 225',ticker:'^N225',sector:'Japón 🇯🇵'},{label:'Hang Seng',ticker:'^HSI',sector:'HK 🇭🇰'},{label:'Bovespa',ticker:'^BVSP',sector:'Brasil 🇧🇷'},{label:'MERVAL',ticker:'^MERV',sector:'Argentina 🇦🇷'}],
-  'tbl-mundo-fx':[{label:'EUR/USD',ticker:'EURUSD=X',sector:'Forex'},{label:'USD/JPY',ticker:'JPY=X',sector:'Forex'},{label:'USD/BRL',ticker:'BRL=X',sector:'Forex'},{label:'GBP/USD',ticker:'GBPUSD=X',sector:'Forex'},{label:'USD/CNY',ticker:'CNY=X',sector:'Forex'}],
-  'tbl-commodities':[{label:'WTI Crude',ticker:'CL=F',sector:'NYMEX'},{label:'Brent Crude',ticker:'BZ=F',sector:'ICE'},{label:'Gas Natural',ticker:'NG=F',sector:'NYMEX'},{label:'Oro',ticker:'GC=F',sector:'COMEX'},{label:'Plata',ticker:'SI=F',sector:'COMEX'},{label:'Cobre',ticker:'HG=F',sector:'COMEX'}],
-  'tbl-agricolas':[{label:'Soja',ticker:'ZS=F',sector:'CBOT 🇦🇷'},{label:'Maíz',ticker:'ZC=F',sector:'CBOT 🇦🇷'},{label:'Trigo',ticker:'ZW=F',sector:'CBOT 🇦🇷'}],
-};
-const loaded=new Set();
-const TAB_GROUPS={
-  usa:       ['tbl-usa-indices','tbl-usa-futuros','tbl-usa-bonos','tbl-usa-sectores','tbl-usa-defensa','tbl-usa-tech'],
-  argentina: ['tbl-adrs','tbl-cripto'],
-  monedas:   ['tbl-monedas-latam','tbl-monedas-g10'],
-  mundo:     ['tbl-mundo-indices','tbl-mundo-fx'],
-  commodities:['tbl-commodities','tbl-agricolas'],
-};
-function showTab(id,btn){
-  try {
-    document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
-    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-    const panel = document.getElementById('tab-'+id);
-    if(panel) panel.classList.add('active');
-    if(btn){btn.classList.add('active');btn.scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'});}
-    if(!loaded.has(id) && TAB_GROUPS[id]){
-      loaded.add(id);
-      TAB_GROUPS[id].forEach(g => { if(GROUPS[g]) loadGroup(g, GROUPS[g]); });
-    }
-  } catch(e) { console.error('showTab error:', e); }
-}
-updateHero();
-fetchDolares();
 
-// ── DolarAPI — cotizaciones en tiempo real ─────────────────
-async function fetchDolares() {
-  try {
-    const r = await fetch('https://dolarapi.com/v1/dolares', {signal: AbortSignal.timeout(8000)});
-    const data = await r.json();
-    const map = {};
-    data.forEach(d => { map[d.casa] = d; });
-    const set = (id, compId, d) => {
-      const el = document.getElementById(id);
-      const elc = document.getElementById(compId);
-      if (el && d) { el.textContent = '$' + Math.round(d.venta).toLocaleString('es-AR'); }
-      if (elc && d) { elc.textContent = 'Compra: $' + Math.round(d.compra).toLocaleString('es-AR'); }
-    };
-    set('fx-oficial','fx-oficial-comp', map['oficial']);
-    set('fx-blue',   'fx-blue-comp',    map['blue']);
-    set('fx-mep',    'fx-mep-comp',     map['bolsa']);
-    set('fx-ccl',    'fx-ccl-comp',     map['contadoconliqui']);
-    set('fx-cripto', 'fx-cripto-comp',  map['cripto']);
-    set('fx-tarjeta','fx-tarjeta-comp', map['tarjeta']);
-    // brecha
-    if (map['oficial'] && map['blue']) {
-      const brecha = ((map['blue'].venta - map['oficial'].venta) / map['oficial'].venta * 100).toFixed(1);
-      const el = document.getElementById('fx-brecha');
-      if (el) el.textContent = brecha + '%';
-    }
-    // también actualizar hero strip con blue y ccl reales
-    const hBlue = document.getElementById('hs-blue-val');
-    const hCcl  = document.getElementById('hs-ccl-val');
-    if (hBlue && map['blue'])  hBlue.textContent  = '$' + Math.round(map['blue'].venta).toLocaleString('es-AR');
-    if (hCcl  && map['contadoconliqui']) hCcl.textContent = '$' + Math.round(map['contadoconliqui'].venta).toLocaleString('es-AR');
-  } catch(e) { console.warn('DolarAPI error:', e); }
+// ── Live Data ──────────────────────────────────────────────
+function fmtN(n, dec=2) { return n != null ? n.toLocaleString('en-US', {minimumFractionDigits:dec,maximumFractionDigits:dec}) : '—'; }
+function chgHtml(c) {
+  if (c == null) return '<span style="color:var(--dim)">—</span>';
+  const cls = c > 0 ? 'lv-up' : c < 0 ? 'lv-dn' : 'lv-flat';
+  return '<span class="'+cls+'">'+(c>0?'+':'')+c.toFixed(2)+'%</span>';
 }
+function liveTbl(rows) {
+  return '<table class="live-tbl"><thead><tr><th>ACTIVO</th><th>NOMBRE</th><th>PRECIO</th><th>VAR. %</th></tr></thead><tbody>'
+    + rows.map(r => '<tr><td><div class="lv-sym">'+r.s+'</div></td><td><div class="lv-name">'+r.n+'</div></td><td class="lv-price">$'+fmtN(r.p)+'</td><td>'+chgHtml(r.c)+'</td></tr>').join('')
+    + '</tbody></table>';
+}
+
+async function loadYahoo(symbols) {
+  try {
+    const r = await fetch('https://query1.finance.yahoo.com/v7/finance/quote?symbols='+symbols.join(','));
+    const d = await r.json();
+    return (d.quoteResponse?.result || []).map(q => ({
+      s: q.symbol, n: q.shortName||q.symbol,
+      p: q.regularMarketPrice, c: q.regularMarketChangePercent,
+      v: q.regularMarketVolume
+    }));
+  } catch { return []; }
+}
+
+async function loadDolar() {
+  try {
+    const r = await fetch('https://dolarapi.com/v1/dolares');
+    return await r.json();
+  } catch { return []; }
+}
+
+async function loadCrypto() {
+  try {
+    const r = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana,binancecoin,ripple&vs_currencies=usd&include_24hr_change=true');
+    return await r.json();
+  } catch { return {}; }
+}
+
+function setEl(id, html) { const e = document.getElementById(id); if(e) e.innerHTML = html; }
+
+async function loadAll() {
+  // Hero chips — índices
+  const idx = await loadYahoo(['SPY','QQQ','^VIX','GC=F','CL=F','BTC-USD','^MERV']);
+  idx.forEach(q => {
+    const pf = (p, dec=2) => p != null ? (p > 1000 ? '$'+p.toLocaleString('en-US',{maximumFractionDigits:0}) : '$'+p.toFixed(dec)) : '—';
+    const cf = c => c != null ? '<span style="color:'+(c>0?'var(--up)':c<0?'var(--dn)':'var(--dim)')+';">'+(c>0?'+':'')+c.toFixed(2)+'%</span>' : '⏳';
+    if(q.s==='SPY')    { setEl('hs-sp500',pf(q.p)); setEl('hs-sp500c',cf(q.c)); }
+    if(q.s==='QQQ')    { setEl('hs-nq',pf(q.p)); setEl('hs-nqc',cf(q.c)); }
+    if(q.s==='^VIX')   { setEl('hs-vix',q.p?.toFixed(2)||'—'); setEl('hs-vixc',cf(q.c));
+                         setEl('vix-val',q.p?.toFixed(2)||'—'); setEl('vix-chg',cf(q.c));
+                         const zona = q.p<15?'Calma 😌':q.p<20?'Normal':'⚠️ Alerta';
+                         setEl('vix-zona','<span style="background:rgba(255,170,0,.1);color:var(--warn);padding:2px 8px;border-radius:8px;">'+zona+'</span>'); }
+    if(q.s==='GC=F')   { setEl('hs-gold',pf(q.p,0)); setEl('hs-goldc',cf(q.c)); }
+    if(q.s==='CL=F')   { setEl('hs-wti',pf(q.p)); setEl('hs-wtic',cf(q.c)); }
+    if(q.s==='BTC-USD') { setEl('hs-btc',pf(q.p,0)); setEl('hs-btcc',cf(q.c)); }
+    if(q.s==='^MERV')  { setEl('hs-merv',pf(q.p,0)); setEl('hs-mervc',cf(q.c));
+                         setEl('merval-live',pf(q.p,0)); setEl('merval-chg',cf(q.c)); }
+  });
+
+  // Dólar AR
+  const dolar = await loadDolar();
+  dolar.forEach(d => {
+    const v = '$'+Math.round(d.venta).toLocaleString('es-AR');
+    const comp = 'C: $'+Math.round(d.compra)+' · V: $'+Math.round(d.venta);
+    if(d.casa==='oficial')  { setEl('fx-oficial',v); setEl('fx-oficial-comp',comp); setEl('hs-blue-val','$'+Math.round(d.venta)); }
+    if(d.casa==='blue')     { setEl('fx-blue',v); setEl('fx-blue-comp',comp); }
+    if(d.casa==='mep')      { setEl('fx-mep',v); setEl('fx-mep-comp',comp); }
+    if(d.casa==='contadoconliqui') { setEl('fx-ccl',v); setEl('fx-ccl-comp',comp); setEl('hs-ccl-val','$'+Math.round(d.venta)); }
+    if(d.casa==='cripto')   { setEl('fx-cripto',v); setEl('fx-cripto-comp',comp); }
+    if(d.casa==='tarjeta')  { setEl('fx-tarjeta',v); setEl('fx-tarjeta-comp',comp); }
+  });
+  const of = dolar.find(d=>d.casa==='oficial')?.venta;
+  const bl = dolar.find(d=>d.casa==='blue')?.venta;
+  if(of&&bl) setEl('fx-brecha', ((bl/of-1)*100).toFixed(1)+'%');
+
+  // USA Indices
+  const usa = await loadYahoo(['SPY','QQQ','DIA','IWM','^VIX']);
+  setEl('tbl-usa-indices', liveTbl(usa.map(q=>({s:q.s,n:q.n,p:q.p,c:q.c}))));
+
+  // Futuros
+  const fut = await loadYahoo(['ES=F','NQ=F','YM=F','RTY=F']);
+  setEl('tbl-usa-futuros', fut.length ? liveTbl(fut.map(q=>({s:q.s,n:q.n,p:q.p,c:q.c}))) : '');
+
+  // Bonos USA
+  const bonos = await loadYahoo(['^TNX','^TYX','^IRX']);
+  setEl('tbl-usa-bonos', bonos.length ? liveTbl(bonos.map(q=>({s:q.s,n:q.n,p:q.p,c:q.c}))) : '');
+
+  // Sectores
+  const sect = await loadYahoo(['XLK','XLF','XLE','XLV','XLC','XLI','XLB','XLY','XLP','XLU','XLRE']);
+  setEl('tbl-usa-sectores', liveTbl(sect.map(q=>({s:q.s,n:q.n,p:q.p,c:q.c}))));
+
+  // Defensa
+  const def = await loadYahoo(['LMT','RTX','NOC','GD','BA']);
+  setEl('tbl-usa-defensa', liveTbl(def.map(q=>({s:q.s,n:q.n,p:q.p,c:q.c}))));
+
+  // Mega Tech
+  const tech = await loadYahoo(['AAPL','MSFT','NVDA','GOOGL','AMZN','META','TSLA','NFLX','AMD']);
+  setEl('tbl-usa-tech', liveTbl(tech.map(q=>({s:q.s,n:q.n,p:q.p,c:q.c}))));
+
+  // ADRs AR
+  const adrs = await loadYahoo(['MELI','GLOB','YPF','BMA','GGAL','SUPV','BBAR','CEPU','LOMA','IRCP','PAM','TGS']);
+  setEl('tbl-adrs', liveTbl(adrs.map(q=>({s:q.s,n:q.n,p:q.p,c:q.c}))));
+
+  // Crypto
+  const crypto = await loadCrypto();
+  const cNames = {bitcoin:'Bitcoin',ethereum:'Ethereum',solana:'Solana',binancecoin:'BNB',ripple:'XRP'};
+  const cSyms = {bitcoin:'BTC',ethereum:'ETH',solana:'SOL',binancecoin:'BNB',ripple:'XRP'};
+  const cRows = Object.entries(crypto).map(([id,v])=>({s:cSyms[id],n:cNames[id],p:v.usd,c:v.usd_24h_change}));
+  setEl('tbl-cripto', liveTbl(cRows));
+
+  // Commodities
+  const comm = await loadYahoo(['GC=F','SI=F','CL=F','NG=F','HG=F','ZW=F','ZC=F','ZS=F']);
+  setEl('tbl-commodities', liveTbl(comm.map(q=>({s:q.s,n:q.n,p:q.p,c:q.c}))));
+  setEl('tbl-agricolas', '');
+
+  // Monedas LATAM
+  const latam = await loadYahoo(['BRL=X','CLP=X','COP=X','PEN=X','MXN=X','UYU=X']);
+  setEl('tbl-monedas-latam', liveTbl(latam.map(q=>({s:q.s,n:q.n,p:q.p,c:q.c}))));
+
+  // G10
+  const g10 = await loadYahoo(['EURUSD=X','GBPUSD=X','JPY=X','CHF=X','AUD=X','CAD=X']);
+  setEl('tbl-monedas-g10', liveTbl(g10.map(q=>({s:q.s,n:q.n,p:q.p,c:q.c}))));
+
+  // Mundo
+  const mundo = await loadYahoo(['^N225','^HSI','^FTSE','^GDAXI','^FCHI','^BVSP','^MXX']);
+  setEl('tbl-mundo-indices', liveTbl(mundo.map(q=>({s:q.s,n:q.n,p:q.p,c:q.c}))));
+}
+
+loadAll();
+setInterval(loadAll, 60000);
 </script>
 </body>
 </html>
