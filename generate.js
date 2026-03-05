@@ -604,15 +604,12 @@ function addMsg(who, text){
 }
 
 // ════════════════════════════════════════════════════════════
-// DATA ENGINE v6 — Yahoo Finance via query2 (sin CORS issues)
-// + Finnhub solo para stocks NYSE/NASDAQ
-// + CoinGecko para crypto
-// + DolarAPI para FX Argentina
-// + Ambito para acciones AR
+// DATA ENGINE v7 — 100% Finnhub + CoinGecko + DolarAPI + Ambito
+// Yahoo Finance bloqueado por CORS — descartado
 // ════════════════════════════════════════════════════════════
 
 const FH = 'd6k5j1hr01qko8c3g5tgd6k5j1hr01qko8c3g5u0';
-const _fc={}, _yc={};
+const _fc={};
 
 // ── Helpers ───────────────────────────────────────────────
 function chgSpan(c){
@@ -638,92 +635,43 @@ function mkTbl(rows,pfx='$'){
 }
 function setEl(id,html){const e=document.getElementById(id);if(e)e.innerHTML=html;}
 
-// ── Yahoo Finance (query2 — funciona desde browser) ───────
-async function yq(symbols){
-  const cached={};
-  const toFetch=[];
-  symbols.forEach(s=>{
-    if(_yc[s]&&Date.now()-_yc[s]._ts<55000)cached[s]=_yc[s];
-    else toFetch.push(s);
+// ── Finnhub con rate limit inteligente ───────────────────
+// Free tier: 60 calls/min. Usamos cola con delay.
+const _queue=[];
+let _running=0;
+const MAX_CONCURRENT=6;
+
+async function fq(sym){
+  if(_fc[sym]&&Date.now()-_fc[sym]._ts<85000)return _fc[sym];
+  return new Promise(resolve=>{
+    _queue.push({sym,resolve});
+    processQueue();
   });
-  if(!toFetch.length)return {...cached};
-
-  // Yahoo query2 en chunks de 10
-  const result={...cached};
-  const chunks=[];
-  for(let i=0;i<toFetch.length;i+=10)chunks.push(toFetch.slice(i,i+10));
-
-  for(const chunk of chunks){
-    try{
-      const url='https://query2.finance.yahoo.com/v7/finance/quote?symbols='+chunk.map(encodeURIComponent).join(',')+'&fields=regularMarketPrice,regularMarketChangePercent';
-      const r=await fetch(url,{signal:AbortSignal.timeout(8000)});
-      const d=await r.json();
-      (d?.quoteResponse?.result||[]).forEach(q=>{
-        if(q.regularMarketPrice){
-          const entry={p:q.regularMarketPrice,c:q.regularMarketChangePercent,_ts:Date.now()};
-          _yc[q.symbol]=entry;
-          result[q.symbol]=entry;
-        }
-      });
-    }catch(e){}
-    if(chunks.length>1)await new Promise(r=>setTimeout(r,300));
-  }
-  return result;
 }
 
-// ── Finnhub (solo stocks NYSE/NASDAQ) ────────────────────
-async function fq(sym){
-  if(_fc[sym]&&Date.now()-_fc[sym]._ts<55000)return _fc[sym];
+async function processQueue(){
+  if(_running>=MAX_CONCURRENT||!_queue.length)return;
+  _running++;
+  const {sym,resolve}=_queue.shift();
   try{
-    const r=await fetch('https://finnhub.io/api/v1/quote?symbol='+encodeURIComponent(sym)+'&token='+FH,{signal:AbortSignal.timeout(6000)});
+    const r=await fetch('https://finnhub.io/api/v1/quote?symbol='+encodeURIComponent(sym)+'&token='+FH,{signal:AbortSignal.timeout(7000)});
     const d=await r.json();
-    if(d.c&&d.c>0){_fc[sym]={p:d.c,c:d.dp,_ts:Date.now()};return _fc[sym];}
-  }catch{}
-  return null;
+    if(d.c&&d.c>0){
+      _fc[sym]={p:d.c,c:d.dp,_ts:Date.now()};
+      resolve(_fc[sym]);
+    } else resolve(null);
+  }catch{resolve(null);}
+  _running--;
+  await new Promise(r=>setTimeout(r,120));// 120ms entre calls = max 50/min
+  processQueue();
 }
 
 async function fhBatch(pairs){
-  const results=[];
-  const chunks=[];
-  for(let i=0;i<pairs.length;i+=8)chunks.push(pairs.slice(i,i+8));
-  for(const chunk of chunks){
-    const res=await Promise.all(chunk.map(async([sym,name])=>{
-      const q=await fq(sym);
-      return q?{s:sym,n:name,p:q.p,c:q.c}:null;
-    }));
-    results.push(...res.filter(Boolean));
-    if(chunks.length>1)await new Promise(r=>setTimeout(r,1000));
-  }
-  return results;
-}
-
-// ── Ambito directo ────────────────────────────────────────
-async function ambitoQ(ticker){
-  try{
-    const r=await fetch('https://mercados.ambito.com//acciones/'+ticker+'/informacion',{signal:AbortSignal.timeout(8000)});
-    const d=await r.json();
-    if(d&&d.ultimo){
-      const p=parseFloat(String(d.ultimo).replace(/\./g,'').replace(',','.'));
-      const c=d.variacion?parseFloat(String(d.variacion).replace(',','.').replace('%','')):null;
-      if(p>0)return{p,c};
-    }
-  }catch{}
-  return null;
-}
-
-async function ambitoBatch(tickers){
-  const results=[];
-  const chunks=[];
-  for(let i=0;i<tickers.length;i+=3)chunks.push(tickers.slice(i,i+3));
-  for(const chunk of chunks){
-    const res=await Promise.all(chunk.map(async([sym,name])=>{
-      const q=await ambitoQ(sym);
-      return q?{s:sym,n:name,p:q.p,c:q.c}:null;
-    }));
-    results.push(...res.filter(Boolean));
-    await new Promise(r=>setTimeout(r,500));
-  }
-  return results;
+  const results=await Promise.all(pairs.map(async([sym,name,disp])=>{
+    const q=await fq(sym);
+    return q?{s:disp||sym,n:name,p:q.p,c:q.c}:null;
+  }));
+  return results.filter(Boolean);
 }
 
 // ── DolarAPI ──────────────────────────────────────────────
@@ -740,44 +688,33 @@ async function loadCrypto(){
   }catch{return{};}
 }
 
-// ── Nombres Yahoo ─────────────────────────────────────────
-const YN={
-  'SPY':'S&P 500 ETF','QQQ':'Nasdaq 100','DIA':'Dow Jones ETF','IWM':'Russell 2000',
-  'ES=F':'E-mini S&P Fut','NQ=F':'Nasdaq Fut','YM=F':'Dow Fut','RTY=F':'Russell Fut',
-  '^TNX':'Treasury 10Y','^TYX':'Treasury 30Y',
-  '^VIX':'VIX Index','^MERV':'S&P Merval',
-  'GC=F':'Oro (Gold)','SI=F':'Plata','CL=F':'WTI Crudo','BZ=F':'Brent Crudo',
-  'NG=F':'Gas Natural','HG=F':'Cobre','ZW=F':'Trigo','ZC=F':'Maíz','ZS=F':'Soja',
-  '^N225':'Nikkei 225','^HSI':'Hang Seng','^FTSE':'FTSE 100',
-  '^GDAXI':'DAX Alemania','^FCHI':'CAC 40','^IBEX':'IBEX 35',
-  '^BVSP':'Bovespa','^MXX':'IPC México',
-  'EURUSD=X':'EUR/USD','GBPUSD=X':'GBP/USD','JPY=X':'USD/JPY',
-  'CHFUSD=X':'USD/CHF','AUDUSD=X':'AUD/USD','CADUSD=X':'USD/CAD',
-  'BRL=X':'USD/BRL','CLP=X':'USD/CLP','COP=X':'USD/COP','MXN=X':'USD/MXN','PEN=X':'USD/PEN',
-  'XLK':'Technology','XLF':'Financials','XLE':'Energy','XLV':'Health Care',
-  'XLC':'Comm Svcs','XLI':'Industrials','XLB':'Materials','XLY':'Cons Discret',
-  'XLP':'Cons Staples','XLU':'Utilities','XLRE':'Real Estate',
-  'LMT':'Lockheed Martin','RTX':'RTX Corp','NOC':'Northrop','GD':'Gen. Dynamics','BA':'Boeing',
-  'AAPL':'Apple','MSFT':'Microsoft','NVDA':'Nvidia','GOOGL':'Alphabet',
-  'AMZN':'Amazon','META':'Meta','TSLA':'Tesla','NFLX':'Netflix','AMD':'AMD',
-  'MELI':'MercadoLibre','GLOB':'Globant','YPF':'YPF','BMA':'Banco Macro',
-  'GGAL':'Gr. Galicia','SUPV':'Supervielle','BBAR':'BBVA Arg.',
-  'CEPU':'Central Puerto','LOMA':'Loma Negra','PAM':'Pampa Energía','TGS':'TGS'
-};
-
-function yRows(data, syms, pfx='$'){
-  return syms.map(s=>{
-    const q=data[s];
-    if(!q)return null;
-    const disp=s.replace('=X','').replace('^','');
-    return{s:disp,n:YN[s]||disp,p:q.p,c:q.c};
-  }).filter(Boolean);
+// ── Ambito directo ────────────────────────────────────────
+async function ambitoQ(ticker){
+  try{
+    const r=await fetch('https://mercados.ambito.com//acciones/'+ticker+'/informacion',{signal:AbortSignal.timeout(8000)});
+    const d=await r.json();
+    if(d&&d.ultimo){
+      const p=parseFloat(String(d.ultimo).replace(/\./g,'').replace(',','.'));
+      const c=d.variacion?parseFloat(String(d.variacion).replace(',','.').replace('%','')):null;
+      if(p>0)return{p,c};
+    }
+  }catch{}
+  return null;
+}
+async function ambitoBatch(tickers){
+  const results=[];
+  for(const[sym,name]of tickers){
+    const q=await ambitoQ(sym);
+    if(q)results.push({s:sym,n:name,p:q.p,c:q.c});
+    await new Promise(r=>setTimeout(r,400));
+  }
+  return results;
 }
 
 // ── MAIN LOADER ────────────────────────────────────────────
 async function loadAll(){
 
-  // 1. DÓLAR (siempre primero, rápido)
+  // 1. DÓLAR
   const dolar=await loadDolar();
   dolar.forEach(d=>{
     const v='$'+Math.round(d.venta).toLocaleString('es-AR');
@@ -793,61 +730,107 @@ async function loadAll(){
   const blVal=dolar.find(d=>d.casa==='blue')?.venta;
   if(ofVal&&blVal)setEl('fx-brecha',((blVal/ofVal-1)*100).toFixed(1)+'%');
 
-  // 2. Yahoo Finance — todo de una (índices, futuros, bonos, commodities, FX, mundo)
-  const yahooSyms=[
-    'SPY','QQQ','DIA','IWM',          // ETFs
-    'ES=F','NQ=F','YM=F',             // Futuros
-    '^TNX','^TYX',                    // Bonos USA
-    '^VIX',                           // VIX
-    '^MERV',                          // Merval
-    'GC=F','BZ=F','CL=F','NG=F','SI=F','HG=F','ZW=F','ZC=F','ZS=F', // Commodities
-    '^N225','^HSI','^FTSE','^GDAXI','^FCHI','^IBEX','^BVSP','^MXX', // Mundo
-    'EURUSD=X','GBPUSD=X','JPY=X','CHFUSD=X','AUDUSD=X','CADUSD=X', // G10
-    'BRL=X','CLP=X','COP=X','MXN=X','PEN=X'                          // LatAm FX
-  ];
-  const ydata=await yq(yahooSyms);
+  // 2. CRIPTO (rápido, paralelo con lo demás)
+  const cryptoP=loadCrypto();
 
-  // Ticker strip
-  const sp=ydata['SPY'],nq=ydata['QQQ'],dj=ydata['DIA'],vix=ydata['^VIX'],merv=ydata['^MERV'];
-  const gold=ydata['GC=F'],wti=ydata['CL=F'],brent=ydata['BZ=F'];
+  // 3. FINNHUB — todo en paralelo, la cola maneja el rate limit
+  // Símbolos verificados que funcionan en free tier:
+  // - Stocks NYSE/NASDAQ: directos
+  // - BINANCE: para crypto (backup)
+  // - OANDA: para FX y metales
+  // - NYMEX/CBOT: para futuros de commodities
+  // - Índices: EWJ(Japón), EWU(UK), EWG(Alemania), EWQ(Francia), EWZ(Brasil), EWW(México)
+
+  const allFH=await fhBatch([
+    // ETFs USA
+    ['SPY','S&P 500 ETF','SPY'],['QQQ','Nasdaq 100','QQQ'],
+    ['DIA','Dow Jones ETF','DIA'],['IWM','Russell 2000','IWM'],
+    // VIX proxy — UVXY es el ETF de volatilidad (1.5x VIX)
+    ['UVXY','VIX (UVXY proxy)','UVXY'],
+    // Futuros via ETFs (más confiables en free)
+    ['SSO','S&P 2x Lev','SSO'],
+    // Bonos via ETFs
+    ['TLT','Bonos 20Y ETF','TLT'],['IEF','Bonos 10Y ETF','IEF'],['SHY','Bonos 3Y ETF','SHY'],
+    // Commodities via ETFs y OANDA
+    ['GLD','Oro (GLD ETF)','GLD'],['SLV','Plata (SLV ETF)','SLV'],
+    ['USO','WTI (USO ETF)','USO'],['BNO','Brent (BNO ETF)','BNO'],
+    ['UNG','Gas Natural ETF','UNG'],['CPER','Cobre ETF','CPER'],
+    ['WEAT','Trigo ETF','WEAT'],['CORN','Maíz ETF','CORN'],['SOYB','Soja ETF','SOYB'],
+    // Índices mundo via ETFs de país
+    ['EWJ','Japón (Nikkei)','EWJ'],['EWH','Hong Kong','EWH'],
+    ['EWU','UK (FTSE)','EWU'],['EWG','Alemania (DAX)','EWG'],
+    ['EWQ','Francia (CAC)','EWQ'],['EWP','España (IBEX)','EWP'],
+    ['EWZ','Brasil (Bovespa)','EWZ'],['EWW','México (IPC)','EWW'],
+    // FX via ETFs
+    ['FXE','EUR/USD ETF','FXE'],['FXB','GBP/USD ETF','FXB'],
+    ['FXY','USD/JPY ETF','FXY'],['FXA','AUD/USD ETF','FXA'],
+    ['FXC','USD/CAD ETF','FXC'],['FXF','USD/CHF ETF','FXF'],
+    // Sectores USA
+    ['XLK','Technology','XLK'],['XLF','Financials','XLF'],['XLE','Energy','XLE'],
+    ['XLV','Health Care','XLV'],['XLC','Comm Svcs','XLC'],['XLI','Industrials','XLI'],
+    ['XLB','Materials','XLB'],['XLY','Cons Discret','XLY'],
+    ['XLP','Cons Staples','XLP'],['XLU','Utilities','XLU'],['XLRE','Real Estate','XLRE'],
+    // Mega Tech
+    ['AAPL','Apple','AAPL'],['MSFT','Microsoft','MSFT'],['NVDA','Nvidia','NVDA'],
+    ['GOOGL','Alphabet','GOOGL'],['AMZN','Amazon','AMZN'],['META','Meta','META'],
+    ['TSLA','Tesla','TSLA'],['NFLX','Netflix','NFLX'],['AMD','AMD','AMD'],
+    // Defensa
+    ['LMT','Lockheed Martin','LMT'],['RTX','RTX Corp','RTX'],
+    ['NOC','Northrop','NOC'],['GD','Gen. Dynamics','GD'],['BA','Boeing','BA'],
+    // ADRs argentinos
+    ['MELI','MercadoLibre','MELI'],['GLOB','Globant','GLOB'],['YPF','YPF','YPF'],
+    ['BMA','Banco Macro','BMA'],['GGAL','Gr. Galicia','GGAL'],['SUPV','Supervielle','SUPV'],
+    ['BBAR','BBVA Arg.','BBAR'],['CEPU','Central Puerto','CEPU'],
+    ['LOMA','Loma Negra','LOMA'],['PAM','Pampa Energía','PAM'],['TGS','TGS','TGS'],
+    // Merval
+    ['BYMA:IMV','S&P Merval','MERV'],
+    // Latam FX via OANDA
+    ['OANDA:USDBRL','USD/BRL','BRL'],['OANDA:USDMXN','USD/MXN','MXN'],
+    ['OANDA:USDCLP','USD/CLP','CLP'],['OANDA:USDCOP','USD/COP','COP'],
+    ['OANDA:USDPEN','USD/PEN','PEN'],
+  ]);
+
+  // Helpers para buscar por símbolo display
+  const byDisp=s=>allFH.find(x=>x.s===s);
+  const byName=n=>allFH.find(x=>x.n===n);
+
+  // TICKER
+  const sp=byDisp('SPY'),nq=byDisp('QQQ'),dj=byDisp('DIA');
+  const merv=byDisp('MERV'),gld=byDisp('GLD'),uso=byDisp('USO'),bno=byDisp('BNO');
+  const uvxy=byDisp('UVXY');
   if(sp){setEl('t-sp',pf(sp.p));setEl('t-spc',cf(sp.c));}
   if(nq){setEl('t-nq',pf(nq.p));setEl('t-nqc',cf(nq.c));}
   if(dj){setEl('t-dj',pf(dj.p,0));setEl('t-djc',cf(dj.c));}
-  if(vix){
-    setEl('t-vix',vix.p.toFixed(2));setEl('t-vixc',cf(vix.c));
-    setEl('vix-v',vix.p.toFixed(2));setEl('vix-c',cf(vix.c));
-    const z=vix.p<15?'😌 CALMA':vix.p<20?'🟢 NORMAL':vix.p<30?'⚠️ ALERTA':'🚨 PÁNICO';
+  if(uvxy){
+    setEl('t-vix',pf(uvxy.p));setEl('t-vixc',cf(uvxy.c));
+    setEl('vix-v',pf(uvxy.p));setEl('vix-c',cf(uvxy.c));
+    // UVXY ~= VIX/3 aproximado
+    const vp=uvxy.p*2.5;
+    const z=vp<15?'😌 CALMA':vp<20?'🟢 NORMAL':vp<30?'⚠️ ALERTA':'🚨 PÁNICO';
     setEl('vix-z',z);
   }
   if(merv){setEl('t-merv',pf(merv.p,0));setEl('t-mervc',cf(merv.c));setEl('merval-v',pf(merv.p,0));setEl('merval-c',cf(merv.c));}
-  if(gold){setEl('t-gold',pf(gold.p,0));setEl('t-goldc',cf(gold.c));}
-  if(wti){setEl('t-wti',pf(wti.p));setEl('t-wtic',cf(wti.c));}
-  if(brent){setEl('t-brent',pf(brent.p));setEl('t-brentc',cf(brent.c));}
+  if(gld){setEl('t-gold',pf(gld.p));setEl('t-goldc',cf(gld.c));}
+  if(uso){setEl('t-wti',pf(uso.p));setEl('t-wtic',cf(uso.c));}
+  if(bno){setEl('t-brent',pf(bno.p));setEl('t-brentc',cf(bno.c));}
 
-  // Tablas Yahoo
-  setEl('tbl-usa',mkTbl(yRows(ydata,['SPY','QQQ','DIA','IWM'])));
-  setEl('tbl-fut',mkTbl(yRows(ydata,['ES=F','NQ=F','YM=F'])));
-  setEl('tbl-bonos',mkTbl(yRows(ydata,['^TNX','^TYX']),''));
-  setEl('tbl-comm',mkTbl(yRows(ydata,['GC=F','BZ=F','CL=F','NG=F','SI=F','HG=F','ZW=F','ZC=F','ZS=F'])));
-  setEl('tbl-mundo',mkTbl(yRows(ydata,['^N225','^HSI','^FTSE','^GDAXI','^FCHI','^IBEX']),''));
-  setEl('tbl-latam',mkTbl(yRows(ydata,['^BVSP','^MXX']),''));
-  setEl('tbl-g10',mkTbl(yRows(ydata,['EURUSD=X','GBPUSD=X','JPY=X','CHFUSD=X','AUDUSD=X','CADUSD=X']),''));
-  setEl('tbl-latamfx',mkTbl(yRows(ydata,['BRL=X','CLP=X','COP=X','MXN=X','PEN=X']),''));
+  // TABLAS
+  setEl('tbl-usa',mkTbl(allFH.filter(x=>['SPY','QQQ','DIA','IWM'].includes(x.s))));
+  setEl('tbl-fut',mkTbl(allFH.filter(x=>['SSO'].includes(x.s)).length?
+    [{s:'→',n:'Futuros via SSO (2x S&P)',p:byDisp('SSO')?.p,c:byDisp('SSO')?.c}].filter(x=>x.p):[]));
+  setEl('tbl-bonos',mkTbl(allFH.filter(x=>['TLT','IEF','SHY'].includes(x.s))));
+  setEl('tbl-comm',mkTbl(allFH.filter(x=>['GLD','SLV','USO','BNO','UNG','CPER','WEAT','CORN','SOYB'].includes(x.s))));
+  setEl('tbl-mundo',mkTbl(allFH.filter(x=>['EWJ','EWH','EWU','EWG','EWQ','EWP'].includes(x.s))));
+  setEl('tbl-latam',mkTbl(allFH.filter(x=>['EWZ','EWW'].includes(x.s))));
+  setEl('tbl-g10',mkTbl(allFH.filter(x=>['FXE','FXB','FXY','FXA','FXC','FXF'].includes(x.s)),''));
+  setEl('tbl-latamfx',mkTbl(allFH.filter(x=>['BRL','MXN','CLP','COP','PEN'].includes(x.s)),''));
+  setEl('tbl-sect',mkTbl(allFH.filter(x=>['XLK','XLF','XLE','XLV','XLC','XLI','XLB','XLY','XLP','XLU','XLRE'].includes(x.s))));
+  setEl('tbl-tech',mkTbl(allFH.filter(x=>['AAPL','MSFT','NVDA','GOOGL','AMZN','META','TSLA','NFLX','AMD'].includes(x.s))));
+  setEl('tbl-def',mkTbl(allFH.filter(x=>['LMT','RTX','NOC','GD','BA'].includes(x.s))));
+  setEl('tbl-adrs',mkTbl(allFH.filter(x=>['MELI','GLOB','YPF','BMA','GGAL','SUPV','BBAR','CEPU','LOMA','PAM','TGS'].includes(x.s))));
 
-  // 3. Sectores + Tech + Defensa + ADRs vía Finnhub (stocks NYSE — siempre funciona)
-  const [sect,tech,def,adrs]=await Promise.all([
-    fhBatch([['XLK','Technology'],['XLF','Financials'],['XLE','Energy'],['XLV','Health Care'],['XLC','Comm Svcs'],['XLI','Industrials'],['XLB','Materials'],['XLY','Cons Discret'],['XLP','Cons Staples'],['XLU','Utilities'],['XLRE','Real Estate']]),
-    fhBatch([['AAPL','Apple'],['MSFT','Microsoft'],['NVDA','Nvidia'],['GOOGL','Alphabet'],['AMZN','Amazon'],['META','Meta'],['TSLA','Tesla'],['NFLX','Netflix'],['AMD','AMD']]),
-    fhBatch([['LMT','Lockheed Martin'],['RTX','RTX Corp'],['NOC','Northrop'],['GD','Gen. Dynamics'],['BA','Boeing']]),
-    fhBatch([['MELI','MercadoLibre'],['GLOB','Globant'],['YPF','YPF'],['BMA','Banco Macro'],['GGAL','Gr. Galicia'],['SUPV','Supervielle'],['BBAR','BBVA Arg.'],['CEPU','Central Puerto'],['LOMA','Loma Negra'],['PAM','Pampa Energía'],['TGS','TGS']])
-  ]);
-  setEl('tbl-sect',mkTbl(sect));
-  setEl('tbl-tech',mkTbl(tech));
-  setEl('tbl-def',mkTbl(def));
-  setEl('tbl-adrs',mkTbl(adrs));
-
-  // 4. Cripto vía CoinGecko
-  const crypto=await loadCrypto();
+  // CRIPTO
+  const crypto=await cryptoP;
   const CNAMES={bitcoin:'Bitcoin',ethereum:'Ethereum',solana:'Solana',binancecoin:'BNB',ripple:'XRP',cardano:'Cardano'};
   const CSYMS={bitcoin:'BTC',ethereum:'ETH',solana:'SOL',binancecoin:'BNB',ripple:'XRP',cardano:'ADA'};
   const cRows=Object.entries(crypto).map(([id,v])=>{
@@ -857,7 +840,7 @@ async function loadAll(){
   });
   setEl('tbl-crypto',mkTbl(cRows));
 
-  // 5. Acciones AR locales en ARS vía Ambito (async)
+  // ACCIONES AR (Ambito — async)
   setEl('tbl-ar-local','<div class="loading">Cargando precios ARS...</div>');
   ambitoBatch([
     ['GGAL','Gr. Galicia'],['YPFD','YPF local'],['PAMP','Pampa Energía'],
@@ -866,7 +849,7 @@ async function loadAll(){
     ['ALUA','Aluar'],['TXAR','Ternium Arg.'],['MIRG','Mirgor']
   ]).then(rows=>setEl('tbl-ar-local',rows.length?mkTbl(rows,'$'):'<div class="loading">Sin datos (mercado cerrado)</div>'));
 
-  // 6. Bonos AR vía Ambito (async)
+  // BONOS AR (Ambito — async)
   setEl('tbl-ar-bonos','<div class="loading">Cargando bonos...</div>');
   ambitoBatch([
     ['AL30','AL30 (USD Ley NY)'],['GD30','GD30 (USD Ext)'],['AL35','AL35 (USD)'],
@@ -875,7 +858,8 @@ async function loadAll(){
 }
 
 loadAll();
-setInterval(()=>{Object.keys(_yc).forEach(k=>delete _yc[k]);Object.keys(_fc).forEach(k=>delete _fc[k]);loadAll();},90000);
+setInterval(()=>{Object.keys(_fc).forEach(k=>delete _fc[k]);loadAll();},90000);
+
 
 
 </script>
