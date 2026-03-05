@@ -16,35 +16,29 @@ const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 // ══════════════════════════════════════════════════════════
 const TD_KEY = 'e504f37b2f954bfaa12e69dccd2a1efe';
 
-// Twelve Data: batch de hasta 120 símbolos por request
-async function tdBatch(symbols) {
-  const result = {};
-  // Chunks de 50 (límite seguro del plan free)
-  for (let i = 0; i < symbols.length; i += 50) {
-    const chunk = symbols.slice(i, i + 50);
-    try {
-      const url = `https://api.twelvedata.com/quote?symbol=${chunk.map(encodeURIComponent).join(',')}&apikey=${TD_KEY}`;
-      const r = await fetch(url);
-      const data = await r.json();
-      // Si es un solo símbolo devuelve objeto, si son múltiples devuelve objeto con keys
-      if (chunk.length === 1) {
-        const sym = chunk[0];
-        if (data.close && parseFloat(data.close) > 0) {
-          const price = parseFloat(data.close);
-          const pctChg = parseFloat(data.percent_change) || 0;
-          result[sym] = { p: price, c: pctChg };
-        }
-      } else {
-        for (const [sym, q] of Object.entries(data)) {
-          if (q.close && parseFloat(q.close) > 0) {
-            result[sym] = { p: parseFloat(q.close), c: parseFloat(q.percent_change) || 0 };
-          }
-        }
-      }
-    } catch(e) {
-      console.log(`⚠️ TD chunk error: ${e.message}`);
+// Twelve Data: UN símbolo por request (más confiable que batch)
+async function tdSingle(sym) {
+  try {
+    const url = `https://api.twelvedata.com/quote?symbol=${encodeURIComponent(sym)}&apikey=${TD_KEY}`;
+    const r = await fetch(url);
+    const data = await r.json();
+    if (data && data.close && parseFloat(data.close) > 0) {
+      return { p: parseFloat(data.close), c: parseFloat(data.percent_change) || 0 };
     }
-    if (i + 50 < symbols.length) await new Promise(r => setTimeout(r, 1000));
+    if (data && data.code) console.log(`  ⚠️ ${sym}: ${data.message||data.code}`);
+  } catch(e) {
+    console.log(`  ⚠️ ${sym} error: ${e.message}`);
+  }
+  return null;
+}
+
+// Batch secuencial con delay para respetar rate limit (8 req/min free tier)
+async function tdBatch(symbols, delayMs=500) {
+  const result = {};
+  for (const sym of symbols) {
+    const q = await tdSingle(sym);
+    if (q) result[sym] = q;
+    await new Promise(r => setTimeout(r, delayMs));
   }
   return result;
 }
@@ -53,56 +47,32 @@ async function fetchAllPrices() {
   console.log('📊 Cargando precios via Twelve Data...');
   const prices = {};
 
-  // ── 1. Twelve Data — todos los símbolos ──────────────────
-  // Twelve Data soporta: stocks, ETFs, indices, forex, commodities, futuros
-  const tdSymbols = [
-    // ETFs USA (siempre funcionan)
-    'SPY','QQQ','DIA','IWM',
-    // VIX
-    'VIX',
-    // Futuros
-    'ES1!','NQ1!','YM1!',
-    // Bonos via ETFs
-    'TLT','IEF',
-    // Bonos yields (si están disponibles)
-    'TNX',
-    // Commodities
-    'XAU/USD','XAG/USD','WTI/USD','BCO/USD',
-    'GLD','SLV','USO','BNO','UNG','GC1!','CL1!','BZ1!','NG1!',
-    // Índices USA
-    'SPX','NDX','DJI',
-    // Sectores
+  // ── 1. ETFs USA — símbolos simples, siempre funcionan ────
+  const etfsUSA = ['SPY','QQQ','DIA','IWM','TLT','IEF','VIXY',
     'XLK','XLF','XLE','XLV','XLC','XLI','XLB','XLY','XLP','XLU','XLRE',
-    // Mega Tech
-    'AAPL','MSFT','NVDA','GOOGL','AMZN','META','TSLA','NFLX','AMD',
-    // Defensa
+    'GLD','SLV','USO','BNO','UNG','WEAT','CORN',
+    'EWJ','EWH','EWU','EWG','EWQ','EWP','EWZ','EWW'];
+  console.log(`⏳ Cargando ${etfsUSA.length} ETFs...`);
+  const etfResult = await tdBatch(etfsUSA, 400);
+  Object.assign(prices, etfResult);
+  console.log(`📈 ETFs: ${Object.keys(etfResult).length}/${etfsUSA.length}`);
+
+  // ── 2. Stocks USA ─────────────────────────────────────────
+  const stocksUSA = ['AAPL','MSFT','NVDA','GOOGL','AMZN','META','TSLA','NFLX','AMD',
     'LMT','RTX','NOC','GD','BA',
-    // ADRs argentinos
-    'MELI','GLOB','YPF','BMA','GGAL','SUPV','BBAR','CEPU','LOMA','PAM','TGS',
-    // Índices mundo
-    'NIKKEI','N225','HSI','FTSE','DAX','CAC','IBEX35',
-    // FX G10
-    'EUR/USD','GBP/USD','USD/JPY','USD/CHF','AUD/USD','USD/CAD',
-    // FX LatAm
-    'USD/BRL','USD/CLP','USD/COP','USD/MXN','USD/PEN',
-    // Merval
-    'MERVAL',
-  ];
+    'MELI','GLOB','YPF','BMA','GGAL','SUPV','BBAR','CEPU','LOMA','PAM','TGS'];
+  console.log(`⏳ Cargando ${stocksUSA.length} stocks...`);
+  const stockResult = await tdBatch(stocksUSA, 400);
+  Object.assign(prices, stockResult);
+  console.log(`📈 Stocks: ${Object.keys(stockResult).length}/${stocksUSA.length}`);
 
-  const tdResult = await tdBatch(tdSymbols);
-  Object.assign(prices, tdResult);
-  console.log(`📈 Twelve Data: ${Object.keys(tdResult).length} precios`);
-
-  // ── 2. ETFs como fallback para índices mundiales ─────────
-  // Si los índices directos no funcionan, usamos ETFs de país
-  const etfFallback = ['EWJ','EWH','EWU','EWG','EWQ','EWP','EWZ','EWW',
-    'FXE','FXB','FXY','FXA','FXC','FXF','VIXY','TLT','IEF'];
-  const missing = etfFallback.filter(s => !prices[s]);
-  if (missing.length > 0) {
-    const fallbackResult = await tdBatch(missing);
-    Object.assign(prices, fallbackResult);
-    console.log(`📈 ETF fallback: ${Object.keys(fallbackResult).length} adicionales`);
-  }
+  // ── 3. Forex — formato TD: EUR/USD ────────────────────────
+  const forex = ['EUR/USD','GBP/USD','USD/JPY','USD/CHF','AUD/USD','USD/CAD',
+    'USD/BRL','USD/CLP','USD/MXN','USD/COP','USD/PEN'];
+  console.log(`⏳ Cargando ${forex.length} pares FX...`);
+  const fxResult = await tdBatch(forex, 400);
+  Object.assign(prices, fxResult);
+  console.log(`📈 FX: ${Object.keys(fxResult).length}/${forex.length}`);
 
   // ── 3. Dólar AR ───────────────────────────────────────────
   try {
