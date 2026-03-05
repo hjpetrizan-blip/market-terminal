@@ -180,7 +180,10 @@ PRECIOS REALES EN ESTE MOMENTO (usá estos datos, no inventes):
 - AMZN: ${p('AMZN')} | META: ${p('META')} | TSLA: ${p('TSLA')}
 - GGAL: ${p('GGAL')} | YPF: ${p('YPF')} | BMA: ${p('BMA')} | MELI: ${p('MELI')}
 - LMT: ${p('LMT')} | RTX: ${p('RTX')} | NOC: ${p('NOC')}
-- Brasil (EWZ): ${p('EWZ')} | Alemania (EWG): ${p('EWG')} | Japón (EWJ): ${p('EWJ')}`;
+- Brasil (EWZ): ${p('EWZ')} | Alemania (EWG): ${p('EWG')} | Japón (EWJ): ${p('EWJ')}
+- GGAL ADR: ${p('GGAL')} | YPF ADR: ${p('YPF')} | BMA ADR: ${p('BMA')} | MELI: ${p('MELI')}
+IMPORTANTE: El análisis de Argentina debe basarse en los ADRs de arriba (cotizan en NYSE en tiempo real).
+Si los ADRs argentinos bajan, el Merval probablemente también baja. No inventes datos positivos si los ADRs caen.`;
 
   return `Sos un analista financiero senior especializado en mercados argentinos y globales.
 Hoy es ${fechaLarga}, hora actual en Argentina: ${hora}. Edición: ${EDICION}.
@@ -681,13 +684,13 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;bac
           <div style="font-size:11px;color:#a8c0d8;line-height:1.75;">${d.post_cierre.merval_cierre}</div>
         </div>
 
-        ${d.post_cierre.licitaciones ? `
+        ${(d.post_cierre.licitaciones && d.post_cierre.licitaciones !== 'null') ? `
         <div style="background:rgba(255,170,0,.05);border:1px solid rgba(255,170,0,.2);border-radius:8px;padding:14px;border-left:3px solid var(--warn);">
           <div style="font-size:8px;color:var(--warn);letter-spacing:1.5px;margin-bottom:6px;">🏦 LICITACIONES TESORO AR</div>
           <div style="font-size:11px;color:#a8c0d8;line-height:1.75;">${d.post_cierre.licitaciones}</div>
         </div>` : ''}
 
-        ${d.post_cierre.macro_argentina ? `
+        ${(d.post_cierre.macro_argentina && d.post_cierre.macro_argentina !== 'null') ? `
         <div style="background:rgba(74,158,255,.05);border:1px solid rgba(74,158,255,.2);border-radius:8px;padding:14px;border-left:3px solid var(--info);">
           <div style="font-size:8px;color:var(--info);letter-spacing:1.5px;margin-bottom:6px;">📊 DATOS MACRO ARGENTINA</div>
           <div style="font-size:11px;color:#a8c0d8;line-height:1.75;">${d.post_cierre.macro_argentina}</div>
@@ -936,7 +939,9 @@ function renderStatic(){
   const djq  = tryGet('DIA','DJI','^DJI');
   const vixq = tryGet('VIX','^VIX','VIXY');
   const mervq= tryGet('MERVAL','^MERV','BYMA:IMV');
-  const goldq= tryGet('XAU/USD','GC1!','GLD','GC=F');
+  // Oro: GLD ≈ precio oro / 10, ajustamos para mostrar precio real
+  const gldq = tryGet('XAU/USD','GC1!','GLD','GC=F');
+  const goldq = gldq ? (gldq.symbol === 'GLD' || !gldq.symbol ? {...gldq, p: gldq.p * 10, _etf: true} : gldq) : null;
   const wtiq = tryGet('WTI/USD','CL1!','USO','CL=F');
   const brentq=tryGet('BCO/USD','BZ1!','BNO','BZ=F');
 
