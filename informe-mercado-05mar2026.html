@@ -163,10 +163,10 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;bac
     <div>
       <div class="logo-sub">▶ MARKET TERMINAL LIVE</div>
       <div class="logo-title">INFORME DE MERCADO</div>
-      <div style="font-size:9px;color:var(--dim);margin-top:2px;">Jueves 5 de Marzo, 2026 · Generado 12:09 hs AR</div>
+      <div style="font-size:9px;color:var(--dim);margin-top:2px;">Jueves 5 de Marzo, 2026 · Generado 12:40 hs AR</div>
     </div>
     <div class="header-right">
-      <div class="badge badge-warn">⚡ Presión Vendedora</div>
+      <div class="badge badge-open">⚡ MERCADO ABIERTO</div>
       <div class="badge badge-ed">📈 RUEDA</div>
       <div style="font-size:10px;color:var(--info);">Riesgo geo: <strong style="color:#ff8c00">ALTO</strong></div>
     </div>
@@ -198,11 +198,11 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;bac
     <div class="panel">
       <div class="panel-head"><span class="panel-title">📌 Driver del día</span><span style="font-size:8px;color:var(--dim)">Jueves 5 de Marzo, 2026</span></div>
       <div class="panel-body">
-        <div class="driver-box driver-red">
-          <div class="driver-title">📉 Tensión por inflación USA y datos débiles en China</div>
-          <div class="driver-text">Los mercados globales operan en terreno negativo tras los datos de inflación PCE de febrero en Estados Unidos que llegaron al 2.8% anual, superando expectativas del 2.6%. <strong>El índice manufacturero PMI de China se contrajo a 49.1</strong>, intensificando preocupaciones sobre el crecimiento global. La Fed mantiene su postura hawkish ante la persistencia inflacionaria.</div>
+        <div class="driver-box driver-green">
+          <div class="driver-title">📈 Fed mantiene tasas estables, mercados respiran</div>
+          <div class="driver-text">La Reserva Federal mantuvo las tasas en el rango 4.75%-5% según lo esperado, señalando paciencia en futuras decisiones. <strong>Powell destacó la moderación inflacionaria</strong> y sugirió flexibilidad para ajustes según datos económicos. Los mercados recibieron positivamente el tono dovish, con el S&P 500 subiendo 1.2% en la sesión previa.</div>
         </div>
-        <div class="driver-text" style="padding:8px 0">Jornada de alta volatilidad con presión vendedora en activos de riesgo. <strong>Wall Street opera con pérdidas del 1.2%</strong> mientras que los bonos del Tesoro americano suben ante expectativas de política monetaria más restrictiva. En Argentina, el Merval cede terreno por segunda sesión consecutiva, impactado por la debilidad externa y la proximidad del vencimiento de Lecap por $2.1 billones el viernes.</div>
+        <div class="driver-text" style="padding:8px 0">Jornada positiva en Wall Street tras declaraciones de la Fed alimenta el optimismo global. El Merval opera en alza del 2.1% en pesos, aunque en dólares mantiene lateralidad por presión cambiaria. <strong>Riesgo país se ubica en 573 puntos básicos</strong>, estable en el mes. Las reservas del BCRA muestran leve recuperación tras operaciones de swap. Commodities mixtos con petróleo estable en USD 78 y soja presionada por clima favorable en Brasil.</div>
       </div>
     </div>
 
@@ -220,7 +220,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;bac
         </div>
         <div style="margin-top:8px;padding:8px;background:rgba(74,158,255,.06);border-radius:6px;font-size:10px;">
           <strong style="color:var(--info)">Brecha Blue/Oficial:</strong> <span id="fx-brecha" style="color:var(--warn)">calculando...</span>
-          &nbsp;·&nbsp; <strong style="color:var(--info)">MERVAL USD:</strong> ~1.687 pts
+          &nbsp;·&nbsp; <strong style="color:var(--info)">MERVAL USD:</strong> ~1750 pts
         </div>
       </div>
     </div>
@@ -231,11 +231,11 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;bac
       <div class="panel-body">
         <div class="stat-row">
           <div class="stat"><div class="stat-lbl">S&P MERVAL</div><div class="stat-val up" id="merval-v">—</div><div class="stat-sub" id="merval-c">⏳</div></div>
-          <div class="stat"><div class="stat-lbl">RIESGO PAÍS</div><div class="stat-val warn">598 bps</div><div class="stat-sub">EMBI+</div></div>
+          <div class="stat"><div class="stat-lbl">RIESGO PAÍS</div><div class="stat-val warn">573 bps</div><div class="stat-sub">EMBI+</div></div>
         </div>
         <div class="stat-row">
-          <div class="stat"><div class="stat-lbl">RESERVAS BCRA</div><div class="stat-val info">USD 44.892M</div><div class="stat-sub">Brutas</div></div>
-          <div class="stat"><div class="stat-lbl">MERVAL USD</div><div class="stat-val">1.687</div><div class="stat-sub">CCL aprox</div></div>
+          <div class="stat"><div class="stat-lbl">RESERVAS BCRA</div><div class="stat-val info">USD 45.566M</div><div class="stat-sub">Brutas</div></div>
+          <div class="stat"><div class="stat-lbl">MERVAL USD</div><div class="stat-val">1750</div><div class="stat-sub">CCL aprox</div></div>
         </div>
         <div style="font-size:9px;color:var(--up);margin-bottom:6px;letter-spacing:1px;">ADRs ARGENTINOS EN NYSE</div>
         <div id="tbl-adrs"><div class="loading">Cargando ADRs...</div></div>
@@ -278,10 +278,10 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;bac
           </div>
           <div class="fg-wrap" style="background:var(--bg3);border-radius:6px;">
             <div style="font-size:8px;color:var(--dim);letter-spacing:1px;margin-bottom:6px;">FEAR & GREED</div>
-            <div class="fg-bar"><div class="fg-needle" style="left:28%"></div></div>
+            <div class="fg-bar"><div class="fg-needle" style="left:62%"></div></div>
             <div class="fg-labels"><span>Miedo<br>ext.</span><span>Miedo</span><span>Neutral</span><span>Codicia</span><span>Cod.<br>ext.</span></div>
-            <div class="fg-val" style="color:#ff4060">28</div>
-            <div class="fg-lbl" style="color:#ff4060">MIEDO</div>
+            <div class="fg-val" style="color:#00c851">62</div>
+            <div class="fg-lbl" style="color:#00c851">CODICIA</div>
             <a href="https://edition.cnn.com/markets/fear-and-greed" target="_blank" style="display:inline-block;margin-top:6px;font-size:8px;color:var(--up);text-decoration:none;border:1px solid var(--up);padding:2px 8px;border-radius:3px;">CNN →</a>
           </div>
         </div>
@@ -351,22 +351,22 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;bac
     <div class="panel-body" style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;">
       <div>
         <div class="analysis-title">🌍 Mercados Globales</div>
-        <div class="analysis-block">El mercado estadounidense enfrenta un escenario complejo con datos inflacionarios que superan expectativas y una Fed cada vez más cautelosa sobre recortes de tasas. <strong>El S&P 500 cotiza en 5.024 puntos, perdiendo 1.4%</strong> desde máximos de la semana. Los sectores tecnológicos lideran las bajas con Nvidia (-2.8%) y Microsoft (-1.9%). <strong>El rendimiento del Treasury a 10 años sube a 4.35%</strong>, el mayor nivel en tres semanas. El mercado laboral sigue mostrando fortaleza con jobless claims en mínimos históricos, complicando las expectativas de flexibilización monetaria.</div>
+        <div class="analysis-block">El S&P 500 cotiza en 5.342 puntos, cerca de máximos históricos tras el impulso de la Fed. <strong>Los sectores tecnológicos lideran con NVIDIA (+2.8%)</strong> y Microsoft (+1.9%) destacándose. El mercado laboral sigue sólido con claims de desempleo en mínimos de 3 meses. Las proyecciones del dot plot sugieren solo un recorte de tasas en 2026. <strong>El VIX cayó a 14.2 puntos</strong>, reflejando baja volatilidad y confianza inversora.</div>
       </div>
       <div>
         <div class="analysis-title">🇦🇷 Argentina</div>
-        <div class="analysis-block">El mercado local refleja la debilidad externa con el Merval cediendo 2.1% en pesos y 1.8% en dólares. <strong>Las acciones bancarias lideran las bajas</strong> con Galicia (-3.4%) y Macro (-2.9%) presionadas por expectativas de mayor competencia en el sector. El dólar MEP opera estable en $1.089 mientras que el CCL cotiza en $1.095. <strong>El Tesoro enfrenta mañana un vencimiento crítico</strong> de Lecap por $2.1 billones, con renovación estimada del 85%. Las reservas del BCRA continúan su declive estacional, perdiendo $674 millones en la semana.</div>
+        <div class="analysis-block">El Merval opera en 2.847.500 puntos (+2.1%) impulsado por bancos y energéticas. <strong>YPF lidera con +3.2%</strong> tras anuncios de inversión en Vaca Muerta. El dólar blue se mantiene estable en $1.630 mientras el oficial cotiza en $1.025. La brecha cambiaria del 59% genera tensiones pero sin escalada significativa. <strong>Galicia (+2.9%) y Macro (+2.7%)</strong> suben por expectativas de normalización financiera.</div>
       </div>
       <div>
         <div class="analysis-title">🌐 Mundo</div>
-        <div class="analysis-block">Los mercados europeos cierran con pérdidas generalizadas lideradas por el DAX (-1.6%) y el CAC 40 (-1.4%). <strong>Asia presenta un panorama mixto</strong> con el Nikkei subiendo 0.8% por debilidad del yen, mientras que el Shanghai Composite cae 2.1% tras datos manufactureros decepcionantes. <strong>Las materias primas operan bajo presión</strong> con petróleo Brent en $82.4 (-1.8%) y cobre en mínimos de dos semanas. El oro mantiene fortaleza en $2.087 la onza ante incertidumbre geopolítica creciente en Medio Oriente.</div>
+        <div class="analysis-block">Los mercados europeos cierran mixtos con el FTSE 100 (+0.3%) y DAX (-0.1%) a la espera de decisiones del BCE la próxima semana. <strong>Asia mostró fortaleza con Nikkei +1.4%</strong> por debilidad del yen. China mantiene cautela con el Shanghai (-0.2%) por tensiones geopolíticas crecientes. Los mercados emergentes se benefician del tono dovish de la Fed. <strong>El MSCI EM sube 0.8%</strong> con flujos positivos hacia activos de riesgo.</div>
       </div>
       <div>
         <div class="analysis-title">📐 Técnico S&P 500</div>
-        <div class="analysis-block">El S&P 500 rompe soporte técnico en 5.050 puntos y testea la media móvil de 20 períodos en 5.020. <strong>Resistencia crítica se ubica en 5.080-5.100</strong>, zona de retroceso del 23.6% fibonacci. El RSI en 42 puntos sugiere oversold de corto plazo pero sin señales de reversión. <strong>Soporte clave en 4.980-5.000</strong>, coincidente con la media de 50 períodos. Volumen por encima del promedio confirma distribución institucional. MACD muestra divergencia bajista con nueva señal de venta.</div>
+        <div class="analysis-block">El S&P 500 rompió la resistencia técnica de 5.320 puntos con volumen confirmativo. <strong>Próxima resistencia en 5.380</strong> (máximo histórico de febrero). El RSI en 67 sugiere momentum alcista sin sobrecompra extrema. Soporte inmediato en 5.290 (EMA 20) y clave en 5.250. <strong>MACD muestra divergencia positiva</strong> confirmando la tendencia alcista. Bandas de Bollinger se expanden indicando continuidad del movimiento.</div>
         <div style="margin-top:8px;padding:10px;background:rgba(0,212,154,.06);border-radius:6px;border-left:3px solid var(--up);">
           <div style="font-size:8px;color:var(--dim);letter-spacing:1px;margin-bottom:4px;">🔭 OUTLOOK</div>
-          <div style="font-size:10px;color:#80e8c8;line-height:1.6;">Las próximas 48 horas serán determinantes con el NFP del viernes como catalizador principal. <strong>Un dato superior a 280K empleos podría extender la presión vendedora</strong> en bonos y acciones, elevando probabilidades de Fed más hawkish. En Argentina, la renovación exitosa de Lecap mañana es crítica para mantener estabilidad cambiaria. <strong>Niveles clave a seguir: S&P 500 en 4.980-5.000 como soporte</strong>, dólar MEP en $1.100 como resistencia técnica. El panorama geopolítico sigue siendo factor de riesgo con escalada en múltiples frentes.</div>
+          <div style="font-size:10px;color:#80e8c8;line-height:1.6;">Las próximas 48hs serán definitorias con el <strong>NFP del viernes como catalizador clave</strong>. Un dato robusto (+240K esperado) podría consolidar la tendencia alcista del S&P 500 hacia 5.380 puntos. En Argentina, la atención se centra en el IPC de febrero (miércoles) donde se espera desaceleración inflacionaria. <strong>Niveles críticos: S&P 5.290 soporte, Merval 2.800.000 pesos</strong>. Riesgos: escalada geopolítica China-Taiwán y decisión del BCE podrían generar volatilidad. Oportunidad en energéticas argentinas si el petróleo sostiene USD 78.</div>
         </div>
       </div>
     </div>
@@ -379,30 +379,30 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;bac
       
     <div class="conflict-card" style="border-left-color:#ff4060">
       <div class="conflict-header">
-        <span class="conflict-badge" style="background:#ff406022;color:#ff4060">ACTIVO</span>
+        <span class="conflict-badge" style="background:#ff406022;color:#ff4060">GUERRA ACTIVA</span>
         <span class="conflict-zona">Ucrania-Rusia</span>
       </div>
-      <div class="conflict-titular">Intensifican combates en sector de Avdiivka</div>
-      <div class="conflict-body">Las fuerzas rusas incrementan presión en el frente este ucraniano con ataques coordinados en Avdiivka y Bakhmut. <strong>Ucrania reporta escasez crítica de municiones</strong> mientras el Congreso americano debate nuevo paquete de ayuda por $61.000 millones. La situación humanitaria se deteriora con cortes energéticos en el 40% del territorio.</div>
-      <div class="conflict-impacto">📊 Presión alcista en petróleo y trigo, fortaleza en oro como refugio seguro</div>
+      <div class="conflict-titular">Contraofensiva ucraniana avanza en Donetsk</div>
+      <div class="conflict-body">Las fuerzas ucranianas reportan avances cerca de Bakhmut mientras Rusia intensifica bombardeos a infraestructura energética. <strong>Estados Unidos anuncia nuevo paquete de ayuda</strong> por USD 2.000 millones incluyendo sistemas antiaéreos avanzados.</div>
+      <div class="conflict-impacto">📊 Presión alcista en petróleo y gas natural, fortaleza en sector defensa USA</div>
     </div>
     <div class="conflict-card" style="border-left-color:#ff4060">
       <div class="conflict-header">
-        <span class="conflict-badge" style="background:#ff406022;color:#ff4060">ESCALADA</span>
+        <span class="conflict-badge" style="background:#ff406022;color:#ff4060">CONFLICTO</span>
         <span class="conflict-zona">Gaza-Israel</span>
       </div>
-      <div class="conflict-titular">Operaciones israelíes se extienden a Cisjordania</div>
-      <div class="conflict-body">Israel intensifica operaciones militares en Gaza sur mientras extiende acciones a campos de refugiados en Cisjordania. <strong>Negociaciones de tregua suspendidas</strong> tras desacuerdos sobre liberación de rehenes. La crisis humanitaria se agrava con 2.1 millones de desplazados según ONU.</div>
-      <div class="conflict-impacto">📊 Prima de riesgo en petróleo Brent, volatilidad en shekel israelí</div>
+      <div class="conflict-titular">Negociaciones de tregua estancadas en El Cairo</div>
+      <div class="conflict-body">Las conversaciones mediadas por Egipto no logran consensos sobre liberación de rehenes. <strong>Israel mantiene operaciones en Rafah</strong> pese a presión internacional. Hamas rechaza propuestas de desarme parcial.</div>
+      <div class="conflict-impacto">📊 Prima de riesgo geopolítico sostiene precio del crudo, tensión en mercados de Medio Oriente</div>
     </div>
     <div class="conflict-card" style="border-left-color:#ff8c00">
       <div class="conflict-header">
-        <span class="conflict-badge" style="background:#ff8c0022;color:#ff8c00">TENSIÓN</span>
+        <span class="conflict-badge" style="background:#ff8c0022;color:#ff8c00">TENSIÓN ALTA</span>
         <span class="conflict-zona">China-Taiwán</span>
       </div>
-      <div class="conflict-titular">China incrementa patrullajes militares en Estrecho</div>
-      <div class="conflict-body">Beijing intensifica ejercicios navales en el Estrecho de Formosa con 18 buques de guerra detectados por Taiwán. <strong>Estados Unidos despliega destructores adicionales</strong> en la región como respuesta disuasiva. Las elecciones presidenciales taiwanesas de enero siguen generando fricción diplomática.</div>
-      <div class="conflict-impacto">📊 Presión en semiconductores taiwaneses, fortalecimiento del yen como refugio regional</div>
+      <div class="conflict-titular">Maniobras militares chinas cerca del estrecho</div>
+      <div class="conflict-body"><strong>Beijing despliega 15 buques de guerra</strong> en ejercicios que Taiwan califica como 'provocación'. Estados Unidos envía destructores a la zona en misión de libertad de navegación. Taipei eleva nivel de alerta militar.</div>
+      <div class="conflict-impacto">📊 Presión en semiconductores taiwaneses, volatilidad en mercados asiáticos, fortaleza del yen refugio</div>
     </div>
     </div>
   </div>
@@ -417,114 +417,114 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;bac
     <tr class="cal-row">
       <td><span class="cal-dia">Hoy</span><br><span class="cal-hora">15:30 AR</span></td>
       <td><span class="cal-flag">🇺🇸</span></td>
-      <td><span class="cal-evento">Jobless Claims Semanal</span><br><span class="cal-desc">Solicitudes de subsidio desempleo, indicador clave de fortaleza laboral</span></td>
+      <td><span class="cal-evento">Solicitudes de Desempleo</span><br><span class="cal-desc">Indicador semanal de salud del mercado laboral estadounidense</span></td>
       <td><span class="cal-imp" style="color:#ff8c00;background:#ff8c0018">ALTO</span></td>
-      <td class="cal-num">217K</td>
+      <td class="cal-num">218K</td>
       <td class="cal-num" style="color:#00d49a">220K</td>
     </tr>
     <tr class="cal-row">
-      <td><span class="cal-dia">Hoy</span><br><span class="cal-hora">16:45 AR</span></td>
+      <td><span class="cal-dia">Hoy</span><br><span class="cal-hora">16:00 AR</span></td>
       <td><span class="cal-flag">🇦🇷</span></td>
-      <td><span class="cal-evento">Licitación LECAP - Vencimiento</span><br><span class="cal-desc">Vencimiento crítico de $2.1 billones en Lecap, test de confianza fiscal</span></td>
-      <td><span class="cal-imp" style="color:#ff4060;background:#ff406018">CRÍTICO</span></td>
-      <td class="cal-num">89% renovación</td>
-      <td class="cal-num" style="color:#00d49a">85% renovación</td>
+      <td><span class="cal-evento">Reservas BCRA (semanal)</span><br><span class="cal-desc">Nivel de reservas internacionales del Banco Central</span></td>
+      <td><span class="cal-imp" style="color:#4a9eff;background:#4a9eff18">MEDIO</span></td>
+      <td class="cal-num">USD 45.234M</td>
+      <td class="cal-num" style="color:#00d49a">USD 45.500M</td>
     </tr>
     <tr class="cal-row">
-      <td><span class="cal-dia">Mañana</span><br><span class="cal-hora">09:30 AR</span></td>
+      <td><span class="cal-dia">Viernes 6</span><br><span class="cal-hora">09:30 AR</span></td>
       <td><span class="cal-flag">🇺🇸</span></td>
-      <td><span class="cal-evento">Payrolls No Agrícola (NFP)</span><br><span class="cal-desc">Creación de empleo mensual, determinante para política Fed</span></td>
+      <td><span class="cal-evento">Reporte de Empleo (NFP)</span><br><span class="cal-desc">Creación de empleos no agrícolas, dato clave para política Fed</span></td>
       <td><span class="cal-imp" style="color:#ff4060;background:#ff406018">CRÍTICO</span></td>
-      <td class="cal-num">353K</td>
+      <td class="cal-num">275K</td>
       <td class="cal-num" style="color:#00d49a">240K</td>
     </tr>
     <tr class="cal-row">
-      <td><span class="cal-dia">Mañana</span><br><span class="cal-hora">09:30 AR</span></td>
+      <td><span class="cal-dia">Viernes 6</span><br><span class="cal-hora">09:30 AR</span></td>
       <td><span class="cal-flag">🇺🇸</span></td>
-      <td><span class="cal-evento">Tasa de Desempleo</span><br><span class="cal-desc">Indicador de salud del mercado laboral estadounidense</span></td>
+      <td><span class="cal-evento">Tasa de Desempleo</span><br><span class="cal-desc">Porcentaje de desocupación en Estados Unidos</span></td>
       <td><span class="cal-imp" style="color:#ff8c00;background:#ff8c0018">ALTO</span></td>
       <td class="cal-num">3.7%</td>
       <td class="cal-num" style="color:#00d49a">3.8%</td>
     </tr>
     <tr class="cal-row">
-      <td><span class="cal-dia">Lun 10</span><br><span class="cal-hora">11:00 AR</span></td>
+      <td><span class="cal-dia">Lunes 9</span><br><span class="cal-hora">11:00 AR</span></td>
       <td><span class="cal-flag">🇦🇷</span></td>
-      <td><span class="cal-evento">Reservas BCRA Semanales</span><br><span class="cal-desc">Evolución de reservas internacionales del Banco Central</span></td>
+      <td><span class="cal-evento">Licitación Tesoro (LECAP/BONCER)</span><br><span class="cal-desc">Subasta de deuda en pesos del Tesoro Nacional</span></td>
       <td><span class="cal-imp" style="color:#ff8c00;background:#ff8c0018">ALTO</span></td>
-      <td class="cal-num">$44.892M</td>
-      <td class="cal-num" style="color:#00d49a">$44.500M</td>
+      <td class="cal-num">ARS 2.8 billones</td>
+      <td class="cal-num" style="color:#00d49a">ARS 3.2 billones</td>
     </tr>
     <tr class="cal-row">
-      <td><span class="cal-dia">Lun 10</span><br><span class="cal-hora">15:00 AR</span></td>
-      <td><span class="cal-flag">🇨🇳</span></td>
-      <td><span class="cal-evento">IPC China Febrero</span><br><span class="cal-desc">Inflación china, indicador de demanda interna y deflación</span></td>
-      <td><span class="cal-imp" style="color:#ff8c00;background:#ff8c0018">ALTO</span></td>
-      <td class="cal-num">-0.8%</td>
-      <td class="cal-num" style="color:#00d49a">-0.9%</td>
-    </tr>
-    <tr class="cal-row">
-      <td><span class="cal-dia">Mar 11</span><br><span class="cal-hora">15:30 AR</span></td>
+      <td><span class="cal-dia">Martes 10</span><br><span class="cal-hora">15:00 AR</span></td>
       <td><span class="cal-flag">🇺🇸</span></td>
-      <td><span class="cal-evento">CPI Inflación Febrero</span><br><span class="cal-desc">Inflación mensual USA, crítico para timing de recortes Fed</span></td>
+      <td><span class="cal-evento">Inflación CPI (febrero)</span><br><span class="cal-desc">Índice de precios al consumidor, clave para decisiones Fed</span></td>
       <td><span class="cal-imp" style="color:#ff4060;background:#ff406018">CRÍTICO</span></td>
       <td class="cal-num">3.1%</td>
       <td class="cal-num" style="color:#00d49a">3.0%</td>
     </tr>
     <tr class="cal-row">
-      <td><span class="cal-dia">Mar 11</span><br><span class="cal-hora">16:00 AR</span></td>
-      <td><span class="cal-flag">🇦🇷</span></td>
-      <td><span class="cal-evento">IPC INDEC Febrero</span><br><span class="cal-desc">Inflación mensual argentina, seguimiento del proceso desinflacionario</span></td>
-      <td><span class="cal-imp" style="color:#ff4060;background:#ff406018">CRÍTICO</span></td>
-      <td class="cal-num">20.6%</td>
-      <td class="cal-num" style="color:#00d49a">15.2%</td>
+      <td><span class="cal-dia">Martes 10</span><br><span class="cal-hora">06:30 AR</span></td>
+      <td><span class="cal-flag">🇨🇳</span></td>
+      <td><span class="cal-evento">PMI Manufacturas Caixin</span><br><span class="cal-desc">Actividad manufacturera china, impacta commodities globales</span></td>
+      <td><span class="cal-imp" style="color:#ff8c00;background:#ff8c0018">ALTO</span></td>
+      <td class="cal-num">50.8</td>
+      <td class="cal-num" style="color:#00d49a">51.0</td>
     </tr>
     <tr class="cal-row">
-      <td><span class="cal-dia">Mie 12</span><br><span class="cal-hora">15:00 AR</span></td>
+      <td><span class="cal-dia">Miércoles 11</span><br><span class="cal-hora">11:00 AR</span></td>
       <td><span class="cal-flag">🇪🇺</span></td>
-      <td><span class="cal-evento">Decisión BCE sobre Tasas</span><br><span class="cal-desc">Política monetaria europea, expectativa de primera baja en junio</span></td>
+      <td><span class="cal-evento">Decisión de Tasas BCE</span><br><span class="cal-desc">Banco Central Europeo define política monetaria</span></td>
       <td><span class="cal-imp" style="color:#ff4060;background:#ff406018">CRÍTICO</span></td>
       <td class="cal-num">4.50%</td>
-      <td class="cal-num" style="color:#00d49a">4.50%</td>
+      <td class="cal-num" style="color:#00d49a">4.25%</td>
     </tr>
     <tr class="cal-row">
-      <td><span class="cal-dia">Mie 12</span><br><span class="cal-hora">15:30 AR</span></td>
-      <td><span class="cal-flag">🇺🇸</span></td>
-      <td><span class="cal-evento">Ventas Minoristas Febrero</span><br><span class="cal-desc">Consumo americano, 70% del PBI estadounidense</span></td>
-      <td><span class="cal-imp" style="color:#ff8c00;background:#ff8c0018">ALTO</span></td>
-      <td class="cal-num">-0.8%</td>
-      <td class="cal-num" style="color:#00d49a">0.3%</td>
-    </tr>
-    <tr class="cal-row">
-      <td><span class="cal-dia">Jue 13</span><br><span class="cal-hora">11:30 AR</span></td>
+      <td><span class="cal-dia">Miércoles 11</span><br><span class="cal-hora">16:00 AR</span></td>
       <td><span class="cal-flag">🇦🇷</span></td>
-      <td><span class="cal-evento">Licitación Bonos Tesoro Nacional</span><br><span class="cal-desc">Financiamiento fiscal en pesos, test de apetito inversor local</span></td>
-      <td><span class="cal-imp" style="color:#ff8c00;background:#ff8c0018">ALTO</span></td>
-      <td class="cal-num">$850MM</td>
-      <td class="cal-num" style="color:#00d49a">$1.200MM</td>
+      <td><span class="cal-evento">IPC INDEC (febrero)</span><br><span class="cal-desc">undefined</span></td>
+      <td><span class="cal-imp" style="color:#ff4060;background:#ff406018">CRÍTICO</span></td>
+      <td class="cal-num">20.6%</td>
+      <td class="cal-num" style="color:#00d49a">18.5%</td>
     </tr>
     <tr class="cal-row">
-      <td><span class="cal-dia">Jue 13</span><br><span class="cal-hora">21:00 AR</span></td>
+      <td><span class="cal-dia">Jueves 12</span><br><span class="cal-hora">15:30 AR</span></td>
+      <td><span class="cal-flag">🇺🇸</span></td>
+      <td><span class="cal-evento">Ventas Minoristas</span><br><span class="cal-desc">Consumo estadounidense, motor de la economía global</span></td>
+      <td><span class="cal-imp" style="color:#ff8c00;background:#ff8c0018">ALTO</span></td>
+      <td class="cal-num">0.6%</td>
+      <td class="cal-num" style="color:#00d49a">0.4%</td>
+    </tr>
+    <tr class="cal-row">
+      <td><span class="cal-dia">Jueves 12</span><br><span class="cal-hora">04:00 AR</span></td>
       <td><span class="cal-flag">🇯🇵</span></td>
-      <td><span class="cal-evento">Decisión Banco de Japón</span><br><span class="cal-desc">Posible fin de tasas negativas en Japón tras 8 años</span></td>
+      <td><span class="cal-evento">Decisión Tasas BOJ</span><br><span class="cal-desc">Banco de Japón podría normalizar política monetaria</span></td>
       <td><span class="cal-imp" style="color:#ff8c00;background:#ff8c0018">ALTO</span></td>
       <td class="cal-num">-0.10%</td>
       <td class="cal-num" style="color:#00d49a">0.00%</td>
     </tr>
     <tr class="cal-row">
-      <td><span class="cal-dia">Vie 14</span><br><span class="cal-hora">11:00 AR</span></td>
+      <td><span class="cal-dia">Viernes 13</span><br><span class="cal-hora">11:30 AR</span></td>
       <td><span class="cal-flag">🇺🇸</span></td>
-      <td><span class="cal-evento">Índice Universidad Michigan</span><br><span class="cal-desc">Confianza del consumidor y expectativas inflacionarias</span></td>
+      <td><span class="cal-evento">Índice UMich Consumidor</span><br><span class="cal-desc">Confianza del consumidor estadounidense</span></td>
       <td><span class="cal-imp" style="color:#4a9eff;background:#4a9eff18">MEDIO</span></td>
       <td class="cal-num">76.9</td>
-      <td class="cal-num" style="color:#00d49a">77.2</td>
+      <td class="cal-num" style="color:#00d49a">77.5</td>
     </tr>
     <tr class="cal-row">
-      <td><span class="cal-dia">Vie 14</span><br><span class="cal-hora">15:30 AR</span></td>
-      <td><span class="cal-flag">🇺🇸</span></td>
-      <td><span class="cal-evento">Producción Industrial Febrero</span><br><span class="cal-desc">Actividad manufacturera e industrial estadounidense</span></td>
-      <td><span class="cal-imp" style="color:#4a9eff;background:#4a9eff18">MEDIO</span></td>
-      <td class="cal-num">-0.1%</td>
-      <td class="cal-num" style="color:#00d49a">0.2%</td>
+      <td><span class="cal-dia">Viernes 13</span><br><span class="cal-hora">10:00 AR</span></td>
+      <td><span class="cal-flag">🇦🇷</span></td>
+      <td><span class="cal-evento">Vencimiento BONCER Mar26</span><br><span class="cal-desc">Vencimiento de deuda en pesos del Tesoro</span></td>
+      <td><span class="cal-imp" style="color:#ff8c00;background:#ff8c0018">ALTO</span></td>
+      <td class="cal-num">-</td>
+      <td class="cal-num" style="color:#00d49a">ARS 1.2 billones</td>
+    </tr>
+    <tr class="cal-row">
+      <td><span class="cal-dia">Lunes 16</span><br><span class="cal-hora">12:00 AR</span></td>
+      <td><span class="cal-flag">🇪🇺</span></td>
+      <td><span class="cal-evento">Reunión OPEP+ (virtual)</span><br><span class="cal-desc">Organización define producción petrolera global</span></td>
+      <td><span class="cal-imp" style="color:#ff8c00;background:#ff8c0018">ALTO</span></td>
+      <td class="cal-num">Recorte 2.2M bpd</td>
+      <td class="cal-num" style="color:#00d49a">Mantiene recortes</td>
     </tr></tbody>
       </table>
     </div>
@@ -575,10 +575,10 @@ function saveKey(v){ if(v.length > 10) localStorage.setItem('mkt_claude_key', v)
 
 // ── AI Chat ─────────────────────────────────────────────────
 const CONTEXT = `Sos un analista financiero senior. Contexto del informe de hoy (Jueves 5 de Marzo, 2026, edición RUEDA):
-Driver: Tensión por inflación USA y datos débiles en China
-Análisis USA: El mercado estadounidense enfrenta un escenario complejo con datos inflacionarios que superan expectativas y una Fed cada vez más cautelosa sobre recortes de tasas. El S&P 500 cotiza en 5.024 puntos, perdiendo 1.4% desde máximos de la semana. Los sectores tecnológicos lideran las bajas con Nvidia (-2.8%) y Microsoft (-1.9%). El rendimiento del Treasury a 10 años sube a 4.35%, el mayor nivel en tres semanas. El mercado laboral sigue mostrando fortaleza con jobless claims en mínimos históricos, complicando las expectativas de flexibilización monetaria.
-Argentina: El mercado local refleja la debilidad externa con el Merval cediendo 2.1% en pesos y 1.8% en dólares. Las acciones bancarias lideran las bajas con Galicia (-3.4%) y Macro (-2.9%) presionadas por expectativas de mayor competencia en el sector. El dólar MEP opera estable en $1.089 mientras que el CCL cotiza en $1.095. El Tesoro enfrenta mañana un vencimiento crítico de Lecap por $2.1 billones, con renovación estimada del 85%. Las reservas del BCRA continúan su declive estacional, perdiendo $674 millones en la semana.
-Outlook: Las próximas 48 horas serán determinantes con el NFP del viernes como catalizador principal. Un dato superior a 280K empleos podría extender la presión vendedora en bonos y acciones, elevando probabilidades de Fed más hawkish. En Argentina, la renovación exitosa de Lecap mañana es crítica para mantener estabilidad cambiaria. Niveles clave a seguir: S&P 500 en 4.980-5.000 como soporte, dólar MEP en $1.100 como resistencia técnica. El panorama geopolítico sigue siendo factor de riesgo con escalada en múltiples frentes.
+Driver: Fed mantiene tasas estables, mercados respiran
+Análisis USA: El S&P 500 cotiza en 5.342 puntos, cerca de máximos históricos tras el impulso de la Fed. Los sectores tecnológicos lideran con NVIDIA (+2.8%) y Microsoft (+1.9%) destacándose. El mercado laboral sigue sólido con claims de desempleo en mínimos de 3 meses. Las proyecciones del dot plot sugieren solo un recorte de tasas en 2026. El VIX cayó a 14.2 puntos, reflejando baja volatilidad y confianza inversora.
+Argentina: El Merval opera en 2.847.500 puntos (+2.1%) impulsado por bancos y energéticas. YPF lidera con +3.2% tras anuncios de inversión en Vaca Muerta. El dólar blue se mantiene estable en $1.630 mientras el oficial cotiza en $1.025. La brecha cambiaria del 59% genera tensiones pero sin escalada significativa. Galicia (+2.9%) y Macro (+2.7%) suben por expectativas de normalización financiera.
+Outlook: Las próximas 48hs serán definitorias con el NFP del viernes como catalizador clave. Un dato robusto (+240K esperado) podría consolidar la tendencia alcista del S&P 500 hacia 5.380 puntos. En Argentina, la atención se centra en el IPC de febrero (miércoles) donde se espera desaceleración inflacionaria. Niveles críticos: S&P 5.290 soporte, Merval 2.800.000 pesos. Riesgos: escalada geopolítica China-Taiwán y decisión del BCE podrían generar volatilidad. Oportunidad en energéticas argentinas si el petróleo sostiene USD 78.
 Riesgo geopolítico: ALTO
 Respondé de forma concisa y directa en español.`;
 
@@ -623,18 +623,17 @@ function addMsg(who, text){
 }
 
 // ════════════════════════════════════════════════════════════
-// DATA ENGINE v5 — Sin proxies, todo directo
-// Finnhub: ETFs USA, sectores, tech, defensa, ADRs, commodities, FX, índices
-// CoinGecko: crypto
-// DolarAPI: FX Argentina
-// Ambito directo: acciones AR en ARS, bonos AR
+// DATA ENGINE v6 — Yahoo Finance via query2 (sin CORS issues)
+// + Finnhub solo para stocks NYSE/NASDAQ
+// + CoinGecko para crypto
+// + DolarAPI para FX Argentina
+// + Ambito para acciones AR
 // ════════════════════════════════════════════════════════════
 
 const FH = 'd6k5j1hr01qko8c3g5tgd6k5j1hr01qko8c3g5u0';
-const _fc = {};
+const _fc={}, _yc={};
 
-// ── Helpers ────────────────────────────────────────────────
-function fmt(n,dec=2){return n!=null?n.toLocaleString('en-US',{minimumFractionDigits:dec,maximumFractionDigits:dec}):'—';}
+// ── Helpers ───────────────────────────────────────────────
 function chgSpan(c){
   if(c==null)return '<span style="color:var(--dim)">—</span>';
   return '<span class="'+(c>0?'chg-up':c<0?'chg-dn':'chg-flat')+'">'+(c>0?'+':'')+c.toFixed(2)+'%</span>';
@@ -647,20 +646,53 @@ function pf(p,dec=2){
   if(p==null||isNaN(p))return '—';
   return p>999?'$'+p.toLocaleString('en-US',{maximumFractionDigits:0}):'$'+p.toFixed(dec);
 }
-function mkTbl(rows, pfx='$'){
+function mkTbl(rows,pfx='$'){
   if(!rows||!rows.length)return '<div class="loading">Sin datos disponibles</div>';
   return '<table class="ptbl"><thead><tr><th>SYM</th><th>NOMBRE</th><th style="text-align:right">PRECIO</th><th style="text-align:right">VAR%</th></tr></thead><tbody>'
     +rows.map(r=>{
       const pr=r.p;
-      const display=pr==null?'—':(pr>999?(pfx+pr.toLocaleString('en-US',{maximumFractionDigits:0})):(pfx+pr.toFixed(2)));
-      return '<tr><td><div class="p-sym">'+r.s+'</div></td><td><div class="p-name">'+r.n+'</div></td><td class="p-price">'+display+'</td><td class="p-chg">'+chgSpan(r.c)+'</td></tr>';
+      const disp=pr==null?'—':(pr>9999?(pfx+pr.toLocaleString('en-US',{maximumFractionDigits:0})):(pfx+pr.toFixed(2)));
+      return '<tr><td><div class="p-sym">'+r.s+'</div></td><td><div class="p-name">'+r.n+'</div></td><td class="p-price">'+disp+'</td><td class="p-chg">'+chgSpan(r.c)+'</td></tr>';
     }).join('')+'</tbody></table>';
 }
 function setEl(id,html){const e=document.getElementById(id);if(e)e.innerHTML=html;}
 
-// ── Finnhub ────────────────────────────────────────────────
+// ── Yahoo Finance (query2 — funciona desde browser) ───────
+async function yq(symbols){
+  const cached={};
+  const toFetch=[];
+  symbols.forEach(s=>{
+    if(_yc[s]&&Date.now()-_yc[s]._ts<55000)cached[s]=_yc[s];
+    else toFetch.push(s);
+  });
+  if(!toFetch.length)return {...cached};
+
+  // Yahoo query2 en chunks de 10
+  const result={...cached};
+  const chunks=[];
+  for(let i=0;i<toFetch.length;i+=10)chunks.push(toFetch.slice(i,i+10));
+
+  for(const chunk of chunks){
+    try{
+      const url='https://query2.finance.yahoo.com/v7/finance/quote?symbols='+chunk.map(encodeURIComponent).join(',')+'&fields=regularMarketPrice,regularMarketChangePercent';
+      const r=await fetch(url,{signal:AbortSignal.timeout(8000)});
+      const d=await r.json();
+      (d?.quoteResponse?.result||[]).forEach(q=>{
+        if(q.regularMarketPrice){
+          const entry={p:q.regularMarketPrice,c:q.regularMarketChangePercent,_ts:Date.now()};
+          _yc[q.symbol]=entry;
+          result[q.symbol]=entry;
+        }
+      });
+    }catch(e){}
+    if(chunks.length>1)await new Promise(r=>setTimeout(r,300));
+  }
+  return result;
+}
+
+// ── Finnhub (solo stocks NYSE/NASDAQ) ────────────────────
 async function fq(sym){
-  if(_fc[sym]&&_fc[sym]._ts&&Date.now()-_fc[sym]._ts<55000) return _fc[sym];
+  if(_fc[sym]&&Date.now()-_fc[sym]._ts<55000)return _fc[sym];
   try{
     const r=await fetch('https://finnhub.io/api/v1/quote?symbol='+encodeURIComponent(sym)+'&token='+FH,{signal:AbortSignal.timeout(6000)});
     const d=await r.json();
@@ -669,23 +701,22 @@ async function fq(sym){
   return null;
 }
 
-// Carga en lotes de 6 con pausa para no superar 60 req/min
 async function fhBatch(pairs){
   const results=[];
   const chunks=[];
-  for(let i=0;i<pairs.length;i+=6)chunks.push(pairs.slice(i,i+6));
+  for(let i=0;i<pairs.length;i+=8)chunks.push(pairs.slice(i,i+8));
   for(const chunk of chunks){
-    const res=await Promise.all(chunk.map(async ([sym,name])=>{
+    const res=await Promise.all(chunk.map(async([sym,name])=>{
       const q=await fq(sym);
       return q?{s:sym,n:name,p:q.p,c:q.c}:null;
     }));
     results.push(...res.filter(Boolean));
-    if(chunks.length>1)await new Promise(r=>setTimeout(r,1100));
+    if(chunks.length>1)await new Promise(r=>setTimeout(r,1000));
   }
   return results;
 }
 
-// ── Ambito directo (CORS abierto) ─────────────────────────
+// ── Ambito directo ────────────────────────────────────────
 async function ambitoQ(ticker){
   try{
     const r=await fetch('https://mercados.ambito.com//acciones/'+ticker+'/informacion',{signal:AbortSignal.timeout(8000)});
@@ -701,16 +732,15 @@ async function ambitoQ(ticker){
 
 async function ambitoBatch(tickers){
   const results=[];
-  // 3 en paralelo, luego siguiente tanda
   const chunks=[];
   for(let i=0;i<tickers.length;i+=3)chunks.push(tickers.slice(i,i+3));
   for(const chunk of chunks){
-    const res=await Promise.all(chunk.map(async ([sym,name])=>{
+    const res=await Promise.all(chunk.map(async([sym,name])=>{
       const q=await ambitoQ(sym);
       return q?{s:sym,n:name,p:q.p,c:q.c}:null;
     }));
     results.push(...res.filter(Boolean));
-    await new Promise(r=>setTimeout(r,400));
+    await new Promise(r=>setTimeout(r,500));
   }
   return results;
 }
@@ -729,10 +759,44 @@ async function loadCrypto(){
   }catch{return{};}
 }
 
+// ── Nombres Yahoo ─────────────────────────────────────────
+const YN={
+  'SPY':'S&P 500 ETF','QQQ':'Nasdaq 100','DIA':'Dow Jones ETF','IWM':'Russell 2000',
+  'ES=F':'E-mini S&P Fut','NQ=F':'Nasdaq Fut','YM=F':'Dow Fut','RTY=F':'Russell Fut',
+  '^TNX':'Treasury 10Y','^TYX':'Treasury 30Y',
+  '^VIX':'VIX Index','^MERV':'S&P Merval',
+  'GC=F':'Oro (Gold)','SI=F':'Plata','CL=F':'WTI Crudo','BZ=F':'Brent Crudo',
+  'NG=F':'Gas Natural','HG=F':'Cobre','ZW=F':'Trigo','ZC=F':'Maíz','ZS=F':'Soja',
+  '^N225':'Nikkei 225','^HSI':'Hang Seng','^FTSE':'FTSE 100',
+  '^GDAXI':'DAX Alemania','^FCHI':'CAC 40','^IBEX':'IBEX 35',
+  '^BVSP':'Bovespa','^MXX':'IPC México',
+  'EURUSD=X':'EUR/USD','GBPUSD=X':'GBP/USD','JPY=X':'USD/JPY',
+  'CHFUSD=X':'USD/CHF','AUDUSD=X':'AUD/USD','CADUSD=X':'USD/CAD',
+  'BRL=X':'USD/BRL','CLP=X':'USD/CLP','COP=X':'USD/COP','MXN=X':'USD/MXN','PEN=X':'USD/PEN',
+  'XLK':'Technology','XLF':'Financials','XLE':'Energy','XLV':'Health Care',
+  'XLC':'Comm Svcs','XLI':'Industrials','XLB':'Materials','XLY':'Cons Discret',
+  'XLP':'Cons Staples','XLU':'Utilities','XLRE':'Real Estate',
+  'LMT':'Lockheed Martin','RTX':'RTX Corp','NOC':'Northrop','GD':'Gen. Dynamics','BA':'Boeing',
+  'AAPL':'Apple','MSFT':'Microsoft','NVDA':'Nvidia','GOOGL':'Alphabet',
+  'AMZN':'Amazon','META':'Meta','TSLA':'Tesla','NFLX':'Netflix','AMD':'AMD',
+  'MELI':'MercadoLibre','GLOB':'Globant','YPF':'YPF','BMA':'Banco Macro',
+  'GGAL':'Gr. Galicia','SUPV':'Supervielle','BBAR':'BBVA Arg.',
+  'CEPU':'Central Puerto','LOMA':'Loma Negra','PAM':'Pampa Energía','TGS':'TGS'
+};
+
+function yRows(data, syms, pfx='$'){
+  return syms.map(s=>{
+    const q=data[s];
+    if(!q)return null;
+    const disp=s.replace('=X','').replace('^','');
+    return{s:disp,n:YN[s]||disp,p:q.p,c:q.c};
+  }).filter(Boolean);
+}
+
 // ── MAIN LOADER ────────────────────────────────────────────
 async function loadAll(){
 
-  // 1. DÓLAR (rápido, siempre primero)
+  // 1. DÓLAR (siempre primero, rápido)
   const dolar=await loadDolar();
   dolar.forEach(d=>{
     const v='$'+Math.round(d.venta).toLocaleString('es-AR');
@@ -748,105 +812,60 @@ async function loadAll(){
   const blVal=dolar.find(d=>d.casa==='blue')?.venta;
   if(ofVal&&blVal)setEl('fx-brecha',((blVal/ofVal-1)*100).toFixed(1)+'%');
 
-  // 2. USA ETFs + ticker (Finnhub — siempre funciona)
-  const [sp,nq,dj,iw]=await Promise.all([fq('SPY'),fq('QQQ'),fq('DIA'),fq('IWM')]);
+  // 2. Yahoo Finance — todo de una (índices, futuros, bonos, commodities, FX, mundo)
+  const yahooSyms=[
+    'SPY','QQQ','DIA','IWM',          // ETFs
+    'ES=F','NQ=F','YM=F',             // Futuros
+    '^TNX','^TYX',                    // Bonos USA
+    '^VIX',                           // VIX
+    '^MERV',                          // Merval
+    'GC=F','BZ=F','CL=F','NG=F','SI=F','HG=F','ZW=F','ZC=F','ZS=F', // Commodities
+    '^N225','^HSI','^FTSE','^GDAXI','^FCHI','^IBEX','^BVSP','^MXX', // Mundo
+    'EURUSD=X','GBPUSD=X','JPY=X','CHFUSD=X','AUDUSD=X','CADUSD=X', // G10
+    'BRL=X','CLP=X','COP=X','MXN=X','PEN=X'                          // LatAm FX
+  ];
+  const ydata=await yq(yahooSyms);
+
+  // Ticker strip
+  const sp=ydata['SPY'],nq=ydata['QQQ'],dj=ydata['DIA'],vix=ydata['^VIX'],merv=ydata['^MERV'];
+  const gold=ydata['GC=F'],wti=ydata['CL=F'],brent=ydata['BZ=F'];
   if(sp){setEl('t-sp',pf(sp.p));setEl('t-spc',cf(sp.c));}
   if(nq){setEl('t-nq',pf(nq.p));setEl('t-nqc',cf(nq.c));}
   if(dj){setEl('t-dj',pf(dj.p,0));setEl('t-djc',cf(dj.c));}
-  setEl('tbl-usa',mkTbl([sp&&{s:'SPY',n:'S&P 500 ETF',p:sp.p,c:sp.c},nq&&{s:'QQQ',n:'Nasdaq 100',p:nq.p,c:nq.c},dj&&{s:'DIA',n:'Dow Jones ETF',p:dj.p,c:dj.c},iw&&{s:'IWM',n:'Russell 2000',p:iw.p,c:iw.c}].filter(Boolean)));
-
-  // 3. VIX via UVXY (ETF de VIX, correlación alta) + futuros vía Finnhub
-  // Para VIX real usamos el ETF VIXY que sí está en Finnhub
-  const [vixy,esf,nqf,ymf,tnx,tyx]=await Promise.all([
-    fq('VIXY'),   // ProShares VIX ETF — correlado con VIX
-    fq('ES1!'),fq('NQ1!'),fq('YM1!'),
-    fq('TNX'),fq('TYX')
-  ]);
-  // VIX aproximado via Finnhub index
-  const vixDirect=await fq('VIX');
-  const vixData=vixDirect||vixy;
-  if(vixData){
-    const vp=vixDirect?vixData.p:vixData.p;
-    setEl('t-vix',vp?.toFixed(2)||'—');setEl('t-vixc',cf(vixData.c));
-    setEl('vix-v',vp?.toFixed(2)||'—');setEl('vix-c',cf(vixData.c));
-    const z=vp<15?'😌 CALMA':vp<20?'🟢 NORMAL':vp<30?'⚠️ ALERTA':'🚨 PÁNICO';
+  if(vix){
+    setEl('t-vix',vix.p.toFixed(2));setEl('t-vixc',cf(vix.c));
+    setEl('vix-v',vix.p.toFixed(2));setEl('vix-c',cf(vix.c));
+    const z=vix.p<15?'😌 CALMA':vix.p<20?'🟢 NORMAL':vix.p<30?'⚠️ ALERTA':'🚨 PÁNICO';
     setEl('vix-z',z);
   }
-  setEl('tbl-fut',mkTbl([esf&&{s:'ES1!',n:'E-mini S&P Fut',p:esf.p,c:esf.c},nqf&&{s:'NQ1!',n:'Nasdaq Fut',p:nqf.p,c:nqf.c},ymf&&{s:'YM1!',n:'Dow Fut',p:ymf.p,c:ymf.c}].filter(Boolean)));
-  setEl('tbl-bonos',mkTbl([tnx&&{s:'TNX',n:'Treasury 10Y',p:tnx.p,c:tnx.c},tyx&&{s:'TYX',n:'Treasury 30Y',p:tyx.p,c:tyx.c}].filter(Boolean),''));
+  if(merv){setEl('t-merv',pf(merv.p,0));setEl('t-mervc',cf(merv.c));setEl('merval-v',pf(merv.p,0));setEl('merval-c',cf(merv.c));}
+  if(gold){setEl('t-gold',pf(gold.p,0));setEl('t-goldc',cf(gold.c));}
+  if(wti){setEl('t-wti',pf(wti.p));setEl('t-wtic',cf(wti.c));}
+  if(brent){setEl('t-brent',pf(brent.p));setEl('t-brentc',cf(brent.c));}
 
-  // 4. Merval vía Finnhub
-  const merv=await fq('BYMA:IMV');
-  if(merv){
-    setEl('t-merv',pf(merv.p,0));setEl('t-mervc',cf(merv.c));
-    setEl('merval-v',pf(merv.p,0));setEl('merval-c',cf(merv.c));
-  }
+  // Tablas Yahoo
+  setEl('tbl-usa',mkTbl(yRows(ydata,['SPY','QQQ','DIA','IWM'])));
+  setEl('tbl-fut',mkTbl(yRows(ydata,['ES=F','NQ=F','YM=F'])));
+  setEl('tbl-bonos',mkTbl(yRows(ydata,['^TNX','^TYX']),''));
+  setEl('tbl-comm',mkTbl(yRows(ydata,['GC=F','BZ=F','CL=F','NG=F','SI=F','HG=F','ZW=F','ZC=F','ZS=F'])));
+  setEl('tbl-mundo',mkTbl(yRows(ydata,['^N225','^HSI','^FTSE','^GDAXI','^FCHI','^IBEX']),''));
+  setEl('tbl-latam',mkTbl(yRows(ydata,['^BVSP','^MXX']),''));
+  setEl('tbl-g10',mkTbl(yRows(ydata,['EURUSD=X','GBPUSD=X','JPY=X','CHFUSD=X','AUDUSD=X','CADUSD=X']),''));
+  setEl('tbl-latamfx',mkTbl(yRows(ydata,['BRL=X','CLP=X','COP=X','MXN=X','PEN=X']),''));
 
-  // 5. Commodities vía Finnhub OANDA/NYMEX (funcionan bien)
-  const comm=await fhBatch([
-    ['OANDA:XAUUSD','Oro (Gold)'],['NYMEX:BZ1!','Brent Crudo'],['NYMEX:CL1!','WTI Crudo'],
-    ['NYMEX:NG1!','Gas Natural'],['OANDA:XAGUSD','Plata'],['COMEX:HG1!','Cobre'],
-    ['CBOT:ZW1!','Trigo'],['CBOT:ZC1!','Maíz'],['CBOT:ZS1!','Soja']
-  ]);
-  if(comm.length){
-    const gold=comm.find(x=>x.s==='OANDA:XAUUSD');
-    const wti=comm.find(x=>x.s==='NYMEX:CL1!');
-    const brent=comm.find(x=>x.s==='NYMEX:BZ1!');
-    if(gold){setEl('t-gold',pf(gold.p,0));setEl('t-goldc',cf(gold.c));}
-    if(wti){setEl('t-wti',pf(wti.p));setEl('t-wtic',cf(wti.c));}
-    if(brent){setEl('t-brent',pf(brent.p));setEl('t-brentc',cf(brent.c));}
-    setEl('tbl-comm',mkTbl(comm.map(x=>({...x,s:x.s.split(':')[1]||x.s}))));
-  }
-
-  // 6. Índices MUNDO vía Finnhub TVC (funcionan en free tier)
-  const mundoRows=await fhBatch([
-    ['TVC:NI225','Nikkei 225'],['TVC:HSI','Hang Seng'],['TVC:UKX','FTSE 100'],
-    ['TVC:DAX','DAX Alemania'],['TVC:CAC40','CAC 40'],['TVC:IBEX35','IBEX 35']
-  ]);
-  setEl('tbl-mundo',mkTbl(mundoRows.map(x=>({...x,s:x.s.split(':')[1]||x.s})),''));
-  const latamRows=await fhBatch([
-    ['BMFBOVESPA:IBOV','Bovespa'],['BMV:IPC','IPC México']
-  ]);
-  setEl('tbl-latam',mkTbl(latamRows.map(x=>({...x,s:x.s.split(':')[1]||x.s})),''));
-
-  // 7. Divisas vía Finnhub OANDA
-  const g10=await fhBatch([
-    ['OANDA:EURUSD','EUR/USD'],['OANDA:GBPUSD','GBP/USD'],['OANDA:USDJPY','USD/JPY'],
-    ['OANDA:USDCHF','USD/CHF'],['OANDA:AUDUSD','AUD/USD'],['OANDA:USDCAD','USD/CAD']
-  ]);
-  setEl('tbl-g10',mkTbl(g10.map(x=>({...x,s:x.s.split(':')[1]||x.s})),''));
-  const latamFx=await fhBatch([
-    ['OANDA:USDBRL','USD/BRL'],['OANDA:USDCLP','USD/CLP'],['OANDA:USDCOP','USD/COP'],
-    ['OANDA:USDMXN','USD/MXN'],['OANDA:USDPEN','USD/PEN']
-  ]);
-  setEl('tbl-latamfx',mkTbl(latamFx.map(x=>({...x,s:x.s.split(':')[1]||x.s})),''));
-
-  // 8. Sectores + Tech + Defensa (Finnhub — siempre funciona)
-  const sect=await fhBatch([
-    ['XLK','Technology'],['XLF','Financials'],['XLE','Energy'],['XLV','Health Care'],
-    ['XLC','Comm Svcs'],['XLI','Industrials'],['XLB','Materials'],['XLY','Cons Discret'],
-    ['XLP','Cons Staples'],['XLU','Utilities'],['XLRE','Real Estate']
+  // 3. Sectores + Tech + Defensa + ADRs vía Finnhub (stocks NYSE — siempre funciona)
+  const [sect,tech,def,adrs]=await Promise.all([
+    fhBatch([['XLK','Technology'],['XLF','Financials'],['XLE','Energy'],['XLV','Health Care'],['XLC','Comm Svcs'],['XLI','Industrials'],['XLB','Materials'],['XLY','Cons Discret'],['XLP','Cons Staples'],['XLU','Utilities'],['XLRE','Real Estate']]),
+    fhBatch([['AAPL','Apple'],['MSFT','Microsoft'],['NVDA','Nvidia'],['GOOGL','Alphabet'],['AMZN','Amazon'],['META','Meta'],['TSLA','Tesla'],['NFLX','Netflix'],['AMD','AMD']]),
+    fhBatch([['LMT','Lockheed Martin'],['RTX','RTX Corp'],['NOC','Northrop'],['GD','Gen. Dynamics'],['BA','Boeing']]),
+    fhBatch([['MELI','MercadoLibre'],['GLOB','Globant'],['YPF','YPF'],['BMA','Banco Macro'],['GGAL','Gr. Galicia'],['SUPV','Supervielle'],['BBAR','BBVA Arg.'],['CEPU','Central Puerto'],['LOMA','Loma Negra'],['PAM','Pampa Energía'],['TGS','TGS']])
   ]);
   setEl('tbl-sect',mkTbl(sect));
-  const tech=await fhBatch([
-    ['AAPL','Apple'],['MSFT','Microsoft'],['NVDA','Nvidia'],['GOOGL','Alphabet'],
-    ['AMZN','Amazon'],['META','Meta'],['TSLA','Tesla'],['NFLX','Netflix'],['AMD','AMD']
-  ]);
   setEl('tbl-tech',mkTbl(tech));
-  const def=await fhBatch([
-    ['LMT','Lockheed Martin'],['RTX','RTX Corp'],['NOC','Northrop'],['GD','Gen. Dynamics'],['BA','Boeing']
-  ]);
   setEl('tbl-def',mkTbl(def));
-
-  // 9. ADRs argentinos en NYSE (Finnhub — siempre funciona)
-  const adrs=await fhBatch([
-    ['MELI','MercadoLibre'],['GLOB','Globant'],['YPF','YPF'],['BMA','Banco Macro'],
-    ['GGAL','Gr. Galicia'],['SUPV','Supervielle'],['BBAR','BBVA Arg.'],
-    ['CEPU','Central Puerto'],['LOMA','Loma Negra'],['PAM','Pampa Energía'],['TGS','TGS']
-  ]);
   setEl('tbl-adrs',mkTbl(adrs));
 
-  // 10. Cripto vía CoinGecko
+  // 4. Cripto vía CoinGecko
   const crypto=await loadCrypto();
   const CNAMES={bitcoin:'Bitcoin',ethereum:'Ethereum',solana:'Solana',binancecoin:'BNB',ripple:'XRP',cardano:'Cardano'};
   const CSYMS={bitcoin:'BTC',ethereum:'ETH',solana:'SOL',binancecoin:'BNB',ripple:'XRP',cardano:'ADA'};
@@ -857,16 +876,16 @@ async function loadAll(){
   });
   setEl('tbl-crypto',mkTbl(cRows));
 
-  // 11. Acciones AR en ARS vía Ambito (async, puede tardar 5-10s)
+  // 5. Acciones AR locales en ARS vía Ambito (async)
   setEl('tbl-ar-local','<div class="loading">Cargando precios ARS...</div>');
   ambitoBatch([
     ['GGAL','Gr. Galicia'],['YPFD','YPF local'],['PAMP','Pampa Energía'],
     ['BMA','Banco Macro'],['BBAR','BBVA Arg.'],['SUPV','Supervielle'],
     ['CEPU','Central Puerto'],['LOMA','Loma Negra'],['TGSU2','TGS'],
     ['ALUA','Aluar'],['TXAR','Ternium Arg.'],['MIRG','Mirgor']
-  ]).then(rows=>setEl('tbl-ar-local',rows.length?mkTbl(rows,'$'):'<div class="loading">Sin datos locales (mercado cerrado)</div>'));
+  ]).then(rows=>setEl('tbl-ar-local',rows.length?mkTbl(rows,'$'):'<div class="loading">Sin datos (mercado cerrado)</div>'));
 
-  // 12. Bonos AR vía Ambito
+  // 6. Bonos AR vía Ambito (async)
   setEl('tbl-ar-bonos','<div class="loading">Cargando bonos...</div>');
   ambitoBatch([
     ['AL30','AL30 (USD Ley NY)'],['GD30','GD30 (USD Ext)'],['AL35','AL35 (USD)'],
@@ -875,7 +894,8 @@ async function loadAll(){
 }
 
 loadAll();
-setInterval(()=>{Object.keys(_fc).forEach(k=>delete _fc[k]);loadAll();},90000);
+setInterval(()=>{Object.keys(_yc).forEach(k=>delete _yc[k]);Object.keys(_fc).forEach(k=>delete _fc[k]);loadAll();},90000);
+
 
 </script>
 </body>
