@@ -134,7 +134,8 @@ async function getEditorialContent() {
     max_tokens: 6000,
     messages: [{ role: 'user', content: buildPrompt() }]
   });
-  const text = response.content[0].text.trim();
+  const raw = response.content[0].text.trim();
+  const text = raw.replace(/^```json\s*/,'').replace(/^```\s*/,'').replace(/\s*```$/,'').trim();
   return JSON.parse(text);
 }
 
