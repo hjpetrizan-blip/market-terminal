@@ -20,9 +20,11 @@ const meses  = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto
 const fechaLarga = `${dias[now.getDay()]} ${now.getDate()} de ${meses[now.getMonth()]}, ${now.getFullYear()}`;
 const fechaCorta = `${String(now.getDate()).padStart(2,'0')}${meses[now.getMonth()].slice(0,3).toLowerCase()}${now.getFullYear()}`;
 const hora       = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
-const esManana   = now.getHours() < 14;   // antes de 14hs AR = edición mañana
-const EDICION    = esManana ? 'MAÑANA' : 'CIERRE';
-const EDICION_EMOJI = esManana ? '🌅' : '🌆';
+const horaNum    = now.getHours() + now.getMinutes() / 60;
+const esManana   = horaNum < 10.5;          // antes de 10:30 AR = edición mañana
+const esCierre   = horaNum >= 18;           // después de 18:00 AR = edición cierre
+const EDICION    = esCierre ? 'CIERRE' : esManana ? 'MAÑANA' : 'RUEDA';
+const EDICION_EMOJI = esCierre ? '🌆' : esManana ? '🌅' : '📈';
 
 console.log(`📅 ${fechaLarga} · Edición ${EDICION} (${hora} AR)`);
 
