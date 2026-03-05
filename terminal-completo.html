@@ -4,6 +4,45 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Market Terminal · Live + Informe</title>
+<script>
+(function() {
+  const PASS = '290585';
+  const KEY = 'mkt_auth';
+  if (sessionStorage.getItem(KEY) !== PASS) {
+    document.addEventListener('DOMContentLoaded', function() {
+      document.body.innerHTML = '';
+      const overlay = document.createElement('div');
+      overlay.style.cssText = 'position:fixed;inset:0;background:#05080f;display:flex;align-items:center;justify-content:center;z-index:9999;font-family:JetBrains Mono,monospace;';
+      overlay.innerHTML = `
+        <div style="text-align:center;padding:40px;background:#0a1020;border:1px solid #1a2a40;border-radius:12px;max-width:320px;width:90%;">
+          <div style="font-size:28px;margin-bottom:8px;">🔐</div>
+          <div style="font-family:Syne,sans-serif;font-size:20px;font-weight:800;color:#e8f4ff;margin-bottom:4px;">MARKET TERMINAL</div>
+          <div style="font-size:10px;color:#4a6a8a;letter-spacing:2px;margin-bottom:24px;">ACCESO RESTRINGIDO</div>
+          <input id="passInput" type="password" placeholder="Ingresá la clave..." autofocus
+            style="width:100%;background:#0d1828;border:1px solid #1a2a40;border-radius:6px;padding:12px;color:#c8d8e8;font-family:JetBrains Mono,monospace;font-size:14px;outline:none;text-align:center;margin-bottom:10px;"
+            onkeydown="if(event.key==='Enter')checkPass()"/>
+          <div id="passError" style="color:#ff4060;font-size:11px;height:16px;margin-bottom:10px;"></div>
+          <button onclick="checkPass()"
+            style="width:100%;background:linear-gradient(135deg,#8b5cf6,#4a9eff);border:none;border-radius:6px;padding:12px;color:#fff;font-family:JetBrains Mono,monospace;font-size:13px;font-weight:700;cursor:pointer;letter-spacing:1px;">
+            ENTRAR →
+          </button>
+        </div>`;
+      document.body.appendChild(overlay);
+      window.checkPass = function() {
+        const val = document.getElementById('passInput').value;
+        if (val === PASS) {
+          sessionStorage.setItem(KEY, PASS);
+          location.reload();
+        } else {
+          document.getElementById('passError').textContent = '⚠️ Clave incorrecta';
+          document.getElementById('passInput').value = '';
+          document.getElementById('passInput').focus();
+        }
+      };
+    });
+  }
+})();
+</script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Syne:wght@400;700;800&display=swap');
 
