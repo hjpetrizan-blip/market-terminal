@@ -53,10 +53,10 @@ async function fetchAllPrices() {
   const allSymbols = [
     // Índices USA via ETFs
     'SPY','QQQ','DIA','IWM',
-    // Volatilidad y bonos
-    'TLT','IEF',
+    // Volatilidad
+    'VIX','TLT','IEF',
     // Commodities ETFs
-    'GLD','SLV','USO','UNG',
+    'GLD','SLV','USO','BNO','UNG',
     // Sectores clave
     'XLK','XLF','XLE','XLV','XLI','XLY',
     // Mega Tech
@@ -70,7 +70,7 @@ async function fetchAllPrices() {
     // FX LatAm
     'USD/BRL','USD/MXN',
     // Índices mundo via ETFs
-    'EWJ','EWZ','EWG','EWU',
+    'EWJ','EWZ','EWG',
   ];
 
   console.log(`⏳ Cargando ${allSymbols.length} símbolos (8s delay cada uno)...`);
@@ -97,16 +97,23 @@ async function fetchAllPrices() {
   ];
   const arPrices = [];
   for (const [sym, name] of arTickers) {
-    try {
-      const r = await fetch(`https://mercados.ambito.com//acciones/${sym}/informacion`);
-      const d = await r.json();
-      if (d && d.ultimo) {
-        const p = parseFloat(String(d.ultimo).replace(/\./g,'').replace(',','.'));
-        const c = d.variacion ? parseFloat(String(d.variacion).replace(',','.').replace('%','')) : null;
-        if (p > 0) arPrices.push({ s: sym, n: name, p, c });
-      }
-    } catch {}
-    await new Promise(r => setTimeout(r, 300));
+    const urls = [
+      `https://mercados.ambito.com/acciones/${sym}/informacion`,
+      `https://mercados.ambito.com//acciones/${sym}/informacion`,
+    ];
+    for (const url of urls) {
+      try {
+        const r = await fetch(url, { headers: { 'User-Agent': 'Mozilla/5.0' } });
+        if (!r.ok) continue;
+        const d = await r.json();
+        if (d && d.ultimo) {
+          const p = parseFloat(String(d.ultimo).replace(/\./g,'').replace(',','.'));
+          const c = d.variacion ? parseFloat(String(d.variacion).replace(',','.').replace('%','')) : null;
+          if (p > 0) { arPrices.push({ s: sym, n: name, p, c }); break; }
+        }
+      } catch(e) { console.log(`  ⚠️ Ambito ${sym}: ${e.message}`); }
+    }
+    await new Promise(r => setTimeout(r, 350));
   }
   if (arPrices.length > 0) {
     prices['_ar_acciones'] = arPrices;
@@ -143,11 +150,43 @@ const EDICION_EMOJI = esCierre ? '🌆' : esManana ? '🌅' : '📈';
 
 console.log(`📅 ${fechaLarga} · Edición ${EDICION} (${hora} AR)`);
 
-function buildPrompt() {
+function buildPrompt(prices={}) {
+  // Construir resumen de precios reales para el prompt
+  const p = (sym, fallback='?') => {
+    const syms = Array.isArray(sym) ? sym : [sym];
+    for (const s of syms) {
+      if (prices[s]) return `${prices[s].p.toFixed(2)} (${prices[s].c>=0?'+':''}${prices[s].c.toFixed(2)}%)`;
+    }
+    return fallback;
+  };
+  const preciosResumen = `
+PRECIOS REALES EN ESTE MOMENTO (usá estos datos, no inventes):
+- S&P 500 (SPY): ${p('SPY')}
+- Nasdaq (QQQ): ${p('QQQ')}
+- Dow Jones (DIA): ${p('DIA')}
+- VIX: ${p('VIX')}
+- Oro (GLD): ${p('GLD')}
+- Petróleo WTI (USO): ${p('USO')}
+- Brent (BNO): ${p('BNO')}
+- Gas Natural (UNG): ${p('UNG')}
+- EUR/USD: ${p('EUR/USD')}
+- GBP/USD: ${p('GBP/USD')}
+- USD/JPY: ${p('USD/JPY')}
+- USD/BRL: ${p('USD/BRL')}
+- USD/MXN: ${p('USD/MXN')}
+- Bonos 20Y (TLT): ${p('TLT')}
+- Tech (XLK): ${p('XLK')} | Finanzas (XLF): ${p('XLF')} | Energía (XLE): ${p('XLE')}
+- AAPL: ${p('AAPL')} | MSFT: ${p('MSFT')} | NVDA: ${p('NVDA')} | GOOGL: ${p('GOOGL')}
+- AMZN: ${p('AMZN')} | META: ${p('META')} | TSLA: ${p('TSLA')}
+- GGAL: ${p('GGAL')} | YPF: ${p('YPF')} | BMA: ${p('BMA')} | MELI: ${p('MELI')}
+- LMT: ${p('LMT')} | RTX: ${p('RTX')} | NOC: ${p('NOC')}
+- Brasil (EWZ): ${p('EWZ')} | Alemania (EWG): ${p('EWG')} | Japón (EWJ): ${p('EWJ')}`;
+
   return `Sos un analista financiero senior especializado en mercados argentinos y globales.
 Hoy es ${fechaLarga}, hora actual en Argentina: ${hora}. Edición: ${EDICION}.
 Respondé SOLO con JSON válido, sin texto extra, sin markdown, sin backticks.
-Usá datos REALES y ACTUALES. No inventes tendencias positivas si el mercado está bajando.
+Usá EXACTAMENTE los datos de precios que te paso abajo. NO inventes ni uses datos distintos.
+${preciosResumen}
 
 {
   "edicion": "${EDICION}",
@@ -209,12 +248,12 @@ Mínimo: 4 USA (NFP, CPI, Fed, jobless claims, ISM, ventas minoristas, balances)
 CONFLICTOS: Incluí todos los conflictos bélicos y geopolíticos activos al ${fechaLarga}: Ucrania-Rusia, Gaza-Israel, tensiones China-Taiwan, Yemen, Sudán, y cualquier otro relevante. Sé específico con la situación actual.`;
 }
 
-async function getContent() {
+async function getContent(prices={}) {
   console.log(`🤖 Llamando a Claude (${EDICION})...`);
   const response = await client.messages.create({
     model: 'claude-sonnet-4-20250514',
     max_tokens: 6000,
-    messages: [{ role: 'user', content: buildPrompt() }]
+    messages: [{ role: 'user', content: buildPrompt(prices) }]
   });
   const raw = response.content[0].text.trim();
   const text = raw.replace(/^```json\s*/,'').replace(/^```\s*/,'').replace(/\s*```$/,'').trim();
@@ -1091,7 +1130,9 @@ setInterval(refreshLive, 120000);
 
 async function main(){
   try{
-    const [data, prices] = await Promise.all([getContent(), fetchAllPrices()]);
+    // Primero precios, después Claude con datos reales
+    const prices = await fetchAllPrices();
+    const data = await getContent(prices);
     const html = generateHTML(data, prices);
     const filename = `informe-mercado-${fechaCorta}.html`;
     writeFileSync(filename, html, 'utf8');
