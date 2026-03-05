@@ -2,11 +2,13 @@ name: 📊 Generar Informe Diario de Mercado
 
 on:
   schedule:
-    # 8:00 AM Argentina (UTC-3) = 11:00 UTC — Edición Mañana
     - cron: '0 11 * * 1-5'
-    # 19:00 Argentina (UTC-3) = 22:00 UTC — Edición Cierre
     - cron: '0 22 * * 1-5'
-  workflow_dispatch:  # También permite correrlo a mano
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'generate.js'
 
 jobs:
   generate:
