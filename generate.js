@@ -219,7 +219,15 @@ Usá datos REALES y ACTUALES. No inventes tendencias positivas si el mercado est
       "descripcion": "qué mide y por qué importa"
     }
   ],
-  "outlook": "HTML outlook concreto para las próximas 24-48hs con niveles y catalizadores"
+  "outlook": "HTML outlook concreto para las próximas 24-48hs con niveles y catalizadores",
+  "post_cierre": {
+    "aplica": true,
+    "wall_street": "HTML 3-4 oraciones con el cierre real de Wall Street de hoy: S&P, Nasdaq, Dow con puntos y porcentajes exactos, sector ganador, sector perdedor, volumen vs promedio y qué lo explicó",
+    "merval_cierre": "HTML 3-4 oraciones con el cierre del Merval en pesos y USD, los ADRs y acciones más destacadas (subas y bajas), volumen operado y contexto",
+    "licitaciones": "HTML sobre licitaciones del Tesoro argentino si hubo hoy: monto licitado, tasa, resultado vs vencimientos, rollover. Si no hubo licitación hoy escribí exactamente null",
+    "macro_argentina": "HTML sobre datos macro argentinos publicados hoy: IPC, actividad, exportaciones, reservas BCRA, brecha cambiaria u otro dato relevante. Si no hubo datos hoy escribí exactamente null",
+    "destacado_global": "HTML sobre el evento global más importante del cierre: Europa, Asia, commodities, Fed speakers, geopolítica"
+  }
 }
 
 CALENDARIO: Generá 12-15 eventos para los próximos 7 días hábiles.
@@ -639,6 +647,47 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;bac
       </div>
     </div>
   </div>
+
+  <!-- FILA COMPLETA: POST CIERRE -->
+  ${(d.post_cierre && d.post_cierre.aplica) ? `
+  <div class="panel panel-full" style="border-color:#8b5cf640;">
+    <div class="panel-head" style="background:linear-gradient(90deg,#12082a,#08101a);border-bottom-color:#8b5cf630;">
+      <span class="panel-title" style="color:#8b5cf6;">🔔 Post Cierre — Resumen de Jornada</span>
+      <span style="font-size:8px;color:#8b5cf6;opacity:.7;">${fechaLarga}</span>
+    </div>
+    <div class="panel-body">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px;">
+        
+        <div style="background:rgba(139,92,246,.06);border:1px solid #8b5cf630;border-radius:8px;padding:14px;border-left:3px solid #8b5cf6;">
+          <div style="font-size:8px;color:#8b5cf6;letter-spacing:1.5px;margin-bottom:6px;">🇺🇸 CIERRE WALL STREET</div>
+          <div style="font-size:11px;color:#a8c0d8;line-height:1.75;">${d.post_cierre.wall_street}</div>
+        </div>
+
+        <div style="background:rgba(0,212,154,.05);border:1px solid rgba(0,212,154,.2);border-radius:8px;padding:14px;border-left:3px solid var(--up);">
+          <div style="font-size:8px;color:var(--up);letter-spacing:1.5px;margin-bottom:6px;">🇦🇷 CIERRE MERVAL & ADRs</div>
+          <div style="font-size:11px;color:#a8c0d8;line-height:1.75;">${d.post_cierre.merval_cierre}</div>
+        </div>
+
+        ${d.post_cierre.licitaciones ? `
+        <div style="background:rgba(255,170,0,.05);border:1px solid rgba(255,170,0,.2);border-radius:8px;padding:14px;border-left:3px solid var(--warn);">
+          <div style="font-size:8px;color:var(--warn);letter-spacing:1.5px;margin-bottom:6px;">🏦 LICITACIONES TESORO AR</div>
+          <div style="font-size:11px;color:#a8c0d8;line-height:1.75;">${d.post_cierre.licitaciones}</div>
+        </div>` : ''}
+
+        ${d.post_cierre.macro_argentina ? `
+        <div style="background:rgba(74,158,255,.05);border:1px solid rgba(74,158,255,.2);border-radius:8px;padding:14px;border-left:3px solid var(--info);">
+          <div style="font-size:8px;color:var(--info);letter-spacing:1.5px;margin-bottom:6px;">📊 DATOS MACRO ARGENTINA</div>
+          <div style="font-size:11px;color:#a8c0d8;line-height:1.75;">${d.post_cierre.macro_argentina}</div>
+        </div>` : ''}
+
+        <div style="background:rgba(255,64,96,.05);border:1px solid rgba(255,64,96,.2);border-radius:8px;padding:14px;border-left:3px solid var(--dn);">
+          <div style="font-size:8px;color:var(--dn);letter-spacing:1.5px;margin-bottom:6px;">🌐 DESTACADO GLOBAL</div>
+          <div style="font-size:11px;color:#a8c0d8;line-height:1.75;">${d.post_cierre.destacado_global}</div>
+        </div>
+
+      </div>
+    </div>
+  </div>` : ''}
 
   <!-- FILA COMPLETA: GEOPOLÍTICA -->
   <div class="panel panel-full">
@@ -1091,6 +1140,5 @@ async function main(){
     process.exit(1);
   }
 }
-// v8
-main();
 
+main();
