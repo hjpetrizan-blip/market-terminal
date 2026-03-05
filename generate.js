@@ -11,124 +11,115 @@ const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 // ══════════════════════════════════════════════════════════
 // SERVER-SIDE PRICE FETCHING (Node.js — sin CORS)
 // ══════════════════════════════════════════════════════════
-const FH_KEY = 'd6k5j1hr01qko8c3g5tgd6k5j1hr01qko8c3g5u0';
+// SERVER-SIDE: Twelve Data (única fuente, confiable)
+// Plan free: 800 req/día — usamos batch endpoint
+// ══════════════════════════════════════════════════════════
+const TD_KEY = 'e504f37b2f954bfaa12e69dccd2a1efe';
 
-async function fhQuote(sym) {
-  try {
-    const r = await fetch(`https://finnhub.io/api/v1/quote?symbol=${encodeURIComponent(sym)}&token=${FH_KEY}`);
-    const d = await r.json();
-    if (d.c && d.c > 0) return { p: d.c, c: d.dp };
-  } catch(e) {}
-  return null;
+// Twelve Data: batch de hasta 120 símbolos por request
+async function tdBatch(symbols) {
+  const result = {};
+  // Chunks de 50 (límite seguro del plan free)
+  for (let i = 0; i < symbols.length; i += 50) {
+    const chunk = symbols.slice(i, i + 50);
+    try {
+      const url = `https://api.twelvedata.com/quote?symbol=${chunk.map(encodeURIComponent).join(',')}&apikey=${TD_KEY}`;
+      const r = await fetch(url);
+      const data = await r.json();
+      // Si es un solo símbolo devuelve objeto, si son múltiples devuelve objeto con keys
+      if (chunk.length === 1) {
+        const sym = chunk[0];
+        if (data.close && parseFloat(data.close) > 0) {
+          const price = parseFloat(data.close);
+          const pctChg = parseFloat(data.percent_change) || 0;
+          result[sym] = { p: price, c: pctChg };
+        }
+      } else {
+        for (const [sym, q] of Object.entries(data)) {
+          if (q.close && parseFloat(q.close) > 0) {
+            result[sym] = { p: parseFloat(q.close), c: parseFloat(q.percent_change) || 0 };
+          }
+        }
+      }
+    } catch(e) {
+      console.log(`⚠️ TD chunk error: ${e.message}`);
+    }
+    if (i + 50 < symbols.length) await new Promise(r => setTimeout(r, 1000));
+  }
+  return result;
 }
 
 async function fetchAllPrices() {
-  console.log('📊 Cargando precios server-side...');
+  console.log('📊 Cargando precios via Twelve Data...');
   const prices = {};
 
-  // ── 1. Yahoo Finance (server-side, User-Agent = sin bloqueo) ──
-  // Cargamos TODO lo posible con Yahoo primero
-  const yahooSyms = [
-    '^VIX','^MERV','^GSPC','^IXIC','^DJI',
+  // ── 1. Twelve Data — todos los símbolos ──────────────────
+  // Twelve Data soporta: stocks, ETFs, indices, forex, commodities, futuros
+  const tdSymbols = [
+    // ETFs USA (siempre funcionan)
     'SPY','QQQ','DIA','IWM',
-    'ES=F','NQ=F','YM=F',
-    '^TNX','^TYX',
-    'GC=F','SI=F','CL=F','BZ=F','NG=F','HG=F','ZW=F','ZC=F','ZS=F',
-    '^N225','^HSI','^FTSE','^GDAXI','^FCHI','^IBEX','^BVSP','^MXX',
-    'EURUSD=X','GBPUSD=X','JPY=X','AUDUSD=X','USDCAD=X','USDCHF=X',
-    'BRL=X','CLP=X','COP=X','MXN=X','PEN=X',
-    'XLK','XLF','XLE','XLV','XLC','XLI','XLB','XLY','XLP','XLU','XLRE',
-    'AAPL','MSFT','NVDA','GOOGL','AMZN','META','TSLA','NFLX','AMD',
-    'LMT','RTX','NOC','GD','BA',
-    'MELI','GLOB','YPF','BMA','GGAL','SUPV','BBAR','CEPU','LOMA','PAM','TGS',
-  ];
-
-  // Yahoo en lotes de 20
-  const yahooChunks = [];
-  for (let i = 0; i < yahooSyms.length; i += 20) yahooChunks.push(yahooSyms.slice(i, i+20));
-
-  for (const chunk of yahooChunks) {
-    try {
-      const url = 'https://query2.finance.yahoo.com/v7/finance/quote?symbols=' + chunk.map(encodeURIComponent).join(',');
-      const r = await fetch(url, {
-        headers: {
-          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-          'Accept': 'application/json',
-          'Accept-Language': 'en-US,en;q=0.9',
-        }
-      });
-      if (!r.ok) { console.log(`⚠️ Yahoo HTTP ${r.status}`); continue; }
-      const data = await r.json();
-      (data?.quoteResponse?.result || []).forEach(q => {
-        if (q.regularMarketPrice) {
-          prices[q.symbol] = { p: q.regularMarketPrice, c: q.regularMarketChangePercent || 0 };
-        }
-      });
-    } catch(e) { console.log(`⚠️ Yahoo chunk error: ${e.message}`); }
-    await new Promise(r => setTimeout(r, 300));
-  }
-  console.log(`📈 Yahoo: ${Object.keys(prices).length} precios`);
-
-  // ── 2. Finnhub para lo que Yahoo no tenga ──────────────────
-  // Solo símbolos que Yahoo típicamente falla
-  const fhOnly = [
-    'VIXY','GLD','SLV','USO','BNO','UNG','CPER','WEAT','CORN','SOYB',
-    'EWJ','EWH','EWU','EWG','EWQ','EWP','EWZ','EWW',
-    'FXE','FXB','FXY','FXA','FXC','FXF',
+    // VIX
+    'VIX',
+    // Futuros
+    'ES1!','NQ1!','YM1!',
+    // Bonos via ETFs
     'TLT','IEF',
-    'OANDA:USDBRL','OANDA:USDMXN','OANDA:USDCLP',
-    'BYMA:IMV',
-  ];
-  // Solo buscar los que Yahoo no trajo
-  const fhNeeded = fhOnly.filter(s => !prices[s]);
-  console.log(`🔍 Finnhub: buscando ${fhNeeded.length} símbolos adicionales`);
-
-  for (let i = 0; i < fhNeeded.length; i += 8) {
-    const batch = fhNeeded.slice(i, i+8);
-    await Promise.all(batch.map(async sym => {
-      const q = await fhQuote(sym);
-      if (q) { prices[sym] = q; }
-    }));
-    if (i + 8 < fhNeeded.length) await new Promise(r => setTimeout(r, 1000));
-  }
-  console.log(`📈 Finnhub añadió: total ${Object.keys(prices).length} precios`);
-
-  // ── 3. Finnhub fallback para stocks que Yahoo bloqueó ──────
-  const fhFallback = ['AAPL','MSFT','NVDA','GOOGL','AMZN','META','TSLA','NFLX','AMD',
+    // Bonos yields (si están disponibles)
+    'TNX',
+    // Commodities
+    'XAU/USD','XAG/USD','WTI/USD','BCO/USD',
+    'GLD','SLV','USO','BNO','UNG','GC1!','CL1!','BZ1!','NG1!',
+    // Índices USA
+    'SPX','NDX','DJI',
+    // Sectores
     'XLK','XLF','XLE','XLV','XLC','XLI','XLB','XLY','XLP','XLU','XLRE',
+    // Mega Tech
+    'AAPL','MSFT','NVDA','GOOGL','AMZN','META','TSLA','NFLX','AMD',
+    // Defensa
     'LMT','RTX','NOC','GD','BA',
+    // ADRs argentinos
     'MELI','GLOB','YPF','BMA','GGAL','SUPV','BBAR','CEPU','LOMA','PAM','TGS',
-    'SPY','QQQ','DIA','IWM'
-  ].filter(s => !prices[s]);
+    // Índices mundo
+    'NIKKEI','N225','HSI','FTSE','DAX','CAC','IBEX35',
+    // FX G10
+    'EUR/USD','GBP/USD','USD/JPY','USD/CHF','AUD/USD','USD/CAD',
+    // FX LatAm
+    'USD/BRL','USD/CLP','USD/COP','USD/MXN','USD/PEN',
+    // Merval
+    'MERVAL',
+  ];
 
-  if (fhFallback.length > 0) {
-    console.log(`🔄 Finnhub fallback para ${fhFallback.length} stocks sin precio`);
-    for (let i = 0; i < fhFallback.length; i += 8) {
-      const batch = fhFallback.slice(i, i+8);
-      await Promise.all(batch.map(async sym => {
-        const q = await fhQuote(sym);
-        if (q) prices[sym] = q;
-      }));
-      if (i + 8 < fhFallback.length) await new Promise(r => setTimeout(r, 1000));
-    }
+  const tdResult = await tdBatch(tdSymbols);
+  Object.assign(prices, tdResult);
+  console.log(`📈 Twelve Data: ${Object.keys(tdResult).length} precios`);
+
+  // ── 2. ETFs como fallback para índices mundiales ─────────
+  // Si los índices directos no funcionan, usamos ETFs de país
+  const etfFallback = ['EWJ','EWH','EWU','EWG','EWQ','EWP','EWZ','EWW',
+    'FXE','FXB','FXY','FXA','FXC','FXF','VIXY','TLT','IEF'];
+  const missing = etfFallback.filter(s => !prices[s]);
+  if (missing.length > 0) {
+    const fallbackResult = await tdBatch(missing);
+    Object.assign(prices, fallbackResult);
+    console.log(`📈 ETF fallback: ${Object.keys(fallbackResult).length} adicionales`);
   }
 
-  // ── 4. Dólar AR ────────────────────────────────────────────
+  // ── 3. Dólar AR ───────────────────────────────────────────
   try {
     const r = await fetch('https://dolarapi.com/v1/dolares');
     const dolares = await r.json();
     prices['_dolar'] = dolares;
-    // Log qué tipos de dólar tenemos
     const tipos = dolares.map(d => d.casa).join(', ');
     console.log(`✅ Dólar AR: ${tipos}`);
   } catch(e) { console.log(`⚠️ Dólar falló: ${e.message}`); }
 
-  // ── 5. Ambito para acciones AR en ARS ─────────────────────
+  // ── 4. Ambito: acciones AR en ARS ─────────────────────────
   const arTickers = [
     ['GGAL','Gr. Galicia'],['YPFD','YPF local'],['PAMP','Pampa Energía'],
-    ['BMA','Banco Macro'],['BBAR','BBVA Arg.'],['CEPU','Central Puerto'],
-    ['LOMA','Loma Negra'],['TGSU2','TGS'],['ALUA','Aluar'],['TXAR','Ternium'],
-    ['AL30','AL30'],['GD30','GD30'],['GD41','GD41'],['TX26','TX26'],
+    ['BMA','Banco Macro'],['BBAR','BBVA Arg.'],['SUPV','Supervielle'],
+    ['CEPU','Central Puerto'],['LOMA','Loma Negra'],['TGSU2','TGS'],
+    ['ALUA','Aluar'],['TXAR','Ternium'],['MIRG','Mirgor'],
+    ['AL30','AL30'],['GD30','GD30'],['GD41','GD41'],['TX26','TX26'],['AE38','AE38'],
   ];
   const arPrices = [];
   for (const [sym, name] of arTickers) {
@@ -141,19 +132,26 @@ async function fetchAllPrices() {
         if (p > 0) arPrices.push({ s: sym, n: name, p, c });
       }
     } catch {}
-    await new Promise(r => setTimeout(r, 350));
+    await new Promise(r => setTimeout(r, 300));
   }
   if (arPrices.length > 0) {
     prices['_ar_acciones'] = arPrices;
     console.log(`✅ Ambito: ${arPrices.length} acciones AR`);
   } else {
-    console.log('⚠️ Ambito: sin datos (¿mercado cerrado?)');
+    console.log('⚠️ Ambito: sin datos');
   }
 
-  // Log resumen
+  // ── 5. CoinGecko: crypto ──────────────────────────────────
+  try {
+    const r = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana,binancecoin,ripple,cardano&vs_currencies=usd&include_24hr_change=true');
+    const crypto = await r.json();
+    prices['_crypto'] = crypto;
+    console.log(`✅ CoinGecko: ${Object.keys(crypto).length} cryptos`);
+  } catch(e) { console.log(`⚠️ CoinGecko falló: ${e.message}`); }
+
   const loaded = Object.keys(prices).filter(k => !k.startsWith('_'));
   console.log(`\n✅ TOTAL: ${loaded.length} precios cargados`);
-  console.log('Símbolos:', loaded.join(', '));
+  console.log('Precios:', loaded.join(', '));
   return prices;
 }
 
@@ -866,23 +864,27 @@ async function ambitoBatch(tickers){
 
 // ── RENDER inicial con precios estáticos ──────────────────
 function renderStatic(){
-  // TICKER — Yahoo symbols
-  const spq=sp('SPY')||sp('^GSPC');
-  const nqq=sp('QQQ')||sp('^IXIC');
-  const djq=sp('DIA')||sp('^DJI');
-  const vixq=sp('^VIX')||sp('VIXY');
-  const mervq=sp('^MERV')||sp('BYMA:IMV');
-  const goldq=sp('GC=F')||sp('GLD');
-  const wtiq=sp('CL=F')||sp('USO');
-  const brentq=sp('BZ=F')||sp('BNO');
+  // Twelve Data usa símbolos distintos a Yahoo.
+  // Buscamos con múltiples aliases para máxima cobertura.
+  const tryGet = (...syms) => { for(const s of syms){ const q=sp(s); if(q) return q; } return null; };
+
+  // TICKER
+  const spq  = tryGet('SPY','SPX','^GSPC');
+  const nqq  = tryGet('QQQ','NDX','^IXIC');
+  const djq  = tryGet('DIA','DJI','^DJI');
+  const vixq = tryGet('VIX','^VIX','VIXY');
+  const mervq= tryGet('MERVAL','^MERV','BYMA:IMV');
+  const goldq= tryGet('XAU/USD','GC1!','GLD','GC=F');
+  const wtiq = tryGet('WTI/USD','CL1!','USO','CL=F');
+  const brentq=tryGet('BCO/USD','BZ1!','BNO','BZ=F');
 
   if(spq){setEl('t-sp',pf(spq.p));setEl('t-spc',cf(spq.c));}
   if(nqq){setEl('t-nq',pf(nqq.p));setEl('t-nqc',cf(nqq.c));}
   if(djq){setEl('t-dj',pf(djq.p,0));setEl('t-djc',cf(djq.c));}
   if(vixq){
     const vp=vixq.p;
-    setEl('t-vix',pf(vp));setEl('t-vixc',cf(vixq.c));
-    setEl('vix-v',pf(vp));setEl('vix-c',cf(vixq.c));
+    setEl('t-vix',vp.toFixed(2));setEl('t-vixc',cf(vixq.c));
+    setEl('vix-v',vp.toFixed(2));setEl('vix-c',cf(vixq.c));
     const z=vp<15?'😌 CALMA':vp<20?'🟢 NORMAL':vp<30?'⚠️ ALERTA':'🚨 PÁNICO';
     setEl('vix-z',z);
   }
@@ -891,61 +893,93 @@ function renderStatic(){
   if(wtiq){setEl('t-wti',pf(wtiq.p));setEl('t-wtic',cf(wtiq.c));}
   if(brentq){setEl('t-brent',pf(brentq.p));setEl('t-brentc',cf(brentq.c));}
 
-  // TABLAS USA
+  // USA ETFs
   setEl('tbl-usa',mkTbl(makeRows(['SPY','QQQ','DIA','IWM'])));
-  // Futuros Yahoo usa ES=F, NQ=F, YM=F
+
+  // Futuros — TD usa ES1!, NQ1!, YM1!
   setEl('tbl-fut',mkTbl([
-    sp('ES=F')&&{s:'ES',n:'E-mini S&P Fut',p:sp('ES=F').p,c:sp('ES=F').c},
-    sp('NQ=F')&&{s:'NQ',n:'Nasdaq Fut',p:sp('NQ=F').p,c:sp('NQ=F').c},
-    sp('YM=F')&&{s:'YM',n:'Dow Fut',p:sp('YM=F').p,c:sp('YM=F').c},
+    tryGet('ES1!')&&{s:'ES',n:'E-mini S&P Fut',p:tryGet('ES1!').p,c:tryGet('ES1!').c},
+    tryGet('NQ1!')&&{s:'NQ',n:'Nasdaq Fut',p:tryGet('NQ1!').p,c:tryGet('NQ1!').c},
+    tryGet('YM1!')&&{s:'YM',n:'Dow Fut',p:tryGet('YM1!').p,c:tryGet('YM1!').c},
   ].filter(Boolean)));
+
+  // Bonos
   setEl('tbl-bonos',mkTbl([
-    sp('^TNX')&&{s:'TNX',n:'Treasury 10Y',p:sp('^TNX').p,c:sp('^TNX').c},
-    sp('^TYX')&&{s:'TYX',n:'Treasury 30Y',p:sp('^TYX').p,c:sp('^TYX').c},
-    sp('TLT')&&{s:'TLT',n:'Bonos 20Y ETF',p:sp('TLT').p,c:sp('TLT').c},
-    sp('IEF')&&{s:'IEF',n:'Bonos 10Y ETF',p:sp('IEF').p,c:sp('IEF').c},
+    tryGet('TNX','^TNX')&&{s:'TNX',n:'Treasury 10Y',p:tryGet('TNX','^TNX').p,c:tryGet('TNX','^TNX').c},
+    tryGet('TLT')&&{s:'TLT',n:'Bonos 20Y ETF',p:tryGet('TLT').p,c:tryGet('TLT').c},
+    tryGet('IEF')&&{s:'IEF',n:'Bonos 10Y ETF',p:tryGet('IEF').p,c:tryGet('IEF').c},
   ].filter(Boolean),''));
 
-  // COMMODITIES con dedup
-  const commMap=[['GC=F','Oro'],['BZ=F','Brent'],['CL=F','WTI'],['NG=F','Gas Natural'],
-    ['SI=F','Plata'],['HG=F','Cobre'],['ZW=F','Trigo'],['ZC=F','Maíz'],['ZS=F','Soja'],
-    ['GLD','Oro ETF'],['BNO','Brent ETF'],['USO','WTI ETF'],['SLV','Plata ETF'],
-    ['UNG','Gas Natural ETF'],['CPER','Cobre ETF'],['WEAT','Trigo ETF'],['CORN','Maíz ETF'],['SOYB','Soja ETF']];
-  const commRows=[],seenC=new Set();
-  for(const[s,n]of commMap){
-    const q=sp(s);
-    if(q&&!seenC.has(n)){seenC.add(n);commRows.push({s:s.replace('=F',''),n,p:q.p,c:q.c});}
-  }
+  // Commodities — múltiples aliases
+  const commMap=[
+    [['XAU/USD','GC1!','GLD'],'Oro'],
+    [['BCO/USD','BZ1!','BNO'],'Brent'],
+    [['WTI/USD','CL1!','USO'],'WTI Crudo'],
+    [['NG1!','UNG'],'Gas Natural'],
+    [['XAG/USD','SLV'],'Plata'],
+    [['CPER','HG1!'],'Cobre'],
+    [['WEAT','ZW1!'],'Trigo'],
+    [['CORN','ZC1!'],'Maíz'],
+    [['SOYB','ZS1!'],'Soja'],
+  ];
+  const commRows=commMap.map(([syms,n])=>{
+    const q=tryGet(...syms);
+    return q?{s:syms[0].replace('/',''),n,p:q.p,c:q.c}:null;
+  }).filter(Boolean);
   setEl('tbl-comm',mkTbl(commRows));
 
-  // ÍNDICES MUNDO con dedup
-  const mundoMap=[['^N225','Nikkei 225'],['^HSI','Hang Seng'],['^FTSE','FTSE 100'],
-    ['^GDAXI','DAX Alemania'],['^FCHI','CAC 40'],['^IBEX','IBEX 35'],
-    ['EWJ','Japón ETF'],['EWH','Hong Kong ETF'],['EWU','UK ETF'],
-    ['EWG','Alemania ETF'],['EWQ','Francia ETF'],['EWP','España ETF']];
-  const mundoRows=[],seenM=new Set();
-  for(const[s,n]of mundoMap){const q=sp(s);if(q&&!seenM.has(n)){seenM.add(n);mundoRows.push({s:s.replace('^',''),n,p:q.p,c:q.c});}}
+  // Índices MUNDO
+  const mundoMap=[
+    [['N225','NIKKEI','EWJ'],'Nikkei 225'],
+    [['HSI','EWH'],'Hang Seng'],
+    [['FTSE','EWU'],'FTSE 100'],
+    [['DAX','EWG'],'DAX Alemania'],
+    [['CAC','EWQ'],'CAC 40'],
+    [['IBEX35','EWP'],'IBEX 35'],
+  ];
+  const mundoRows=mundoMap.map(([syms,n])=>{
+    const q=tryGet(...syms);
+    return q?{s:syms[0],n,p:q.p,c:q.c}:null;
+  }).filter(Boolean);
   setEl('tbl-mundo',mkTbl(mundoRows,''));
 
-  const latamMap=[['^BVSP','Bovespa'],['^MXX','IPC México'],['EWZ','Brasil ETF'],['EWW','México ETF']];
-  const latamRows=[],seenL=new Set();
-  for(const[s,n]of latamMap){const q=sp(s);if(q&&!seenL.has(n)){seenL.add(n);latamRows.push({s:s.replace('^',''),n,p:q.p,c:q.c});}}
+  const latamMap=[
+    [['MERVAL','^MERV'],'Bovespa'],// fallback
+    [['EWZ'],'Brasil (Bovespa)'],
+    [['EWW'],'México (IPC)'],
+  ];
+  const latamRows=latamMap.map(([syms,n])=>{
+    const q=tryGet(...syms);
+    return q?{s:syms[0],n,p:q.p,c:q.c}:null;
+  }).filter(Boolean);
   setEl('tbl-latam',mkTbl(latamRows,''));
 
-  // FX G10 con dedup
-  const g10Map=[['EURUSD=X','EUR/USD'],['GBPUSD=X','GBP/USD'],['JPY=X','USD/JPY'],
-    ['AUDUSD=X','AUD/USD'],['USDCAD=X','USD/CAD'],['USDCHF=X','USD/CHF'],
-    ['FXE','EUR/USD'],['FXB','GBP/USD'],['FXY','USD/JPY'],
-    ['FXA','AUD/USD'],['FXC','USD/CAD'],['FXF','USD/CHF']];
-  const g10Rows=[],seenG=new Set();
-  for(const[s,n]of g10Map){const q=sp(s);if(q&&!seenG.has(n)){seenG.add(n);g10Rows.push({s:s.replace('=X','').replace('USD',''),n,p:q.p,c:q.c});}}
+  // FX G10 — TD usa EUR/USD, GBP/USD, etc.
+  const g10Map=[
+    [['EUR/USD','FXE'],'EUR/USD'],
+    [['GBP/USD','FXB'],'GBP/USD'],
+    [['USD/JPY','FXY'],'USD/JPY'],
+    [['AUD/USD','FXA'],'AUD/USD'],
+    [['USD/CAD','FXC'],'USD/CAD'],
+    [['USD/CHF','FXF'],'USD/CHF'],
+  ];
+  const g10Rows=g10Map.map(([syms,n])=>{
+    const q=tryGet(...syms);
+    return q?{s:n.replace('/',''),n,p:q.p,c:q.c}:null;
+  }).filter(Boolean);
   setEl('tbl-g10',mkTbl(g10Rows,''));
 
-  const latamFxMap=[['BRL=X','USD/BRL'],['CLP=X','USD/CLP'],['COP=X','USD/COP'],
-    ['MXN=X','USD/MXN'],['PEN=X','USD/PEN'],
-    ['OANDA:USDBRL','USD/BRL'],['OANDA:USDMXN','USD/MXN'],['OANDA:USDCLP','USD/CLP']];
-  const latamFxRows=[],seenLF=new Set();
-  for(const[s,n]of latamFxMap){const q=sp(s);if(q&&!seenLF.has(n)){seenLF.add(n);latamFxRows.push({s:s.replace('=X','').replace('OANDA:USD',''),n,p:q.p,c:q.c});}}
+  const latamFxMap=[
+    [['USD/BRL'],'USD/BRL'],
+    [['USD/CLP'],'USD/CLP'],
+    [['USD/COP'],'USD/COP'],
+    [['USD/MXN'],'USD/MXN'],
+    [['USD/PEN'],'USD/PEN'],
+  ];
+  const latamFxRows=latamFxMap.map(([syms,n])=>{
+    const q=tryGet(...syms);
+    return q?{s:n.replace('USD/',''),n,p:q.p,c:q.c}:null;
+  }).filter(Boolean);
   setEl('tbl-latamfx',mkTbl(latamFxRows,''));
 
   // SECTORES + TECH + DEFENSA + ADRs
@@ -954,7 +988,18 @@ function renderStatic(){
   setEl('tbl-def',mkTbl(makeRows(['LMT','RTX','NOC','GD','BA'])));
   setEl('tbl-adrs',mkTbl(makeRows(['MELI','GLOB','YPF','BMA','GGAL','SUPV','BBAR','CEPU','LOMA','PAM','TGS'])));
 
-  // ACCIONES AR + BONOS pre-cargados server-side via Ambito
+  // CRIPTO desde servidor
+  const cryptoData = STATIC_PRICES['_crypto'] || {};
+  const CNAMES={bitcoin:'Bitcoin',ethereum:'Ethereum',solana:'Solana',binancecoin:'BNB',ripple:'XRP',cardano:'Cardano'};
+  const CSYMS={bitcoin:'BTC',ethereum:'ETH',solana:'SOL',binancecoin:'BNB',ripple:'XRP',cardano:'ADA'};
+  const cRows=Object.entries(cryptoData).map(([id,v])=>{
+    if(id==='bitcoin'){setEl('t-btc',pf(v.usd,0));setEl('t-btcc',cf(v.usd_24h_change));}
+    if(id==='ethereum'){setEl('t-eth',pf(v.usd,0));setEl('t-ethc',cf(v.usd_24h_change));}
+    return{s:CSYMS[id]||id,n:CNAMES[id]||id,p:v.usd,c:v.usd_24h_change};
+  });
+  if(cRows.length) setEl('tbl-crypto',mkTbl(cRows));
+
+  // ACCIONES AR + BONOS — pre-cargados server-side via Ambito
   const arData=STATIC_PRICES['_ar_acciones']||[];
   const bonosSym=['AL30','GD30','GD41','TX26','AE38','AL35'];
   const arAcciones=arData.filter(x=>!bonosSym.includes(x.s));
