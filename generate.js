@@ -602,15 +602,34 @@ function liveTbl(rows) {
 }
 
 async function loadYahoo(symbols) {
+  // Intentar múltiples endpoints por si alguno falla CORS
+  const urls = [
+    'https://query1.finance.yahoo.com/v8/finance/spark?symbols='+symbols.join(',')+'&range=1d&interval=5m',
+    'https://corsproxy.io/?'+encodeURIComponent('https://query1.finance.yahoo.com/v7/finance/quote?symbols='+symbols.join(',')),
+    'https://api.allorigins.win/get?url='+encodeURIComponent('https://query1.finance.yahoo.com/v7/finance/quote?symbols='+symbols.join(','))
+  ];
+  // Usar allorigins como proxy confiable
   try {
-    const r = await fetch('https://query1.finance.yahoo.com/v7/finance/quote?symbols='+symbols.join(','));
-    const d = await r.json();
+    const r = await fetch('https://api.allorigins.win/get?url='+encodeURIComponent('https://query1.finance.yahoo.com/v7/finance/quote?symbols='+symbols.join(',')));
+    const outer = await r.json();
+    const d = JSON.parse(outer.contents);
     return (d.quoteResponse?.result || []).map(q => ({
       s: q.symbol, n: q.shortName||q.symbol,
       p: q.regularMarketPrice, c: q.regularMarketChangePercent,
       v: q.regularMarketVolume
     }));
-  } catch { return []; }
+  } catch {
+    // Fallback: corsproxy.io
+    try {
+      const r2 = await fetch('https://corsproxy.io/?'+encodeURIComponent('https://query1.finance.yahoo.com/v7/finance/quote?symbols='+symbols.join(',')));
+      const d2 = await r2.json();
+      return (d2.quoteResponse?.result || []).map(q => ({
+        s: q.symbol, n: q.shortName||q.symbol,
+        p: q.regularMarketPrice, c: q.regularMarketChangePercent,
+        v: q.regularMarketVolume
+      }));
+    } catch { return []; }
+  }
 }
 
 async function loadDolar() {
