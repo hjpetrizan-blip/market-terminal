@@ -47,32 +47,36 @@ async function fetchAllPrices() {
   console.log('📊 Cargando precios via Twelve Data...');
   const prices = {};
 
-  // ── 1. ETFs USA — símbolos simples, siempre funcionan ────
-  const etfsUSA = ['SPY','QQQ','DIA','IWM','TLT','IEF','VIXY',
-    'XLK','XLF','XLE','XLV','XLC','XLI','XLB','XLY','XLP','XLU','XLRE',
-    'GLD','SLV','USO','BNO','UNG','WEAT','CORN',
-    'EWJ','EWH','EWU','EWG','EWQ','EWP','EWZ','EWW'];
-  console.log(`⏳ Cargando ${etfsUSA.length} ETFs...`);
-  const etfResult = await tdBatch(etfsUSA, 400);
-  Object.assign(prices, etfResult);
-  console.log(`📈 ETFs: ${Object.keys(etfResult).length}/${etfsUSA.length}`);
+  // Free tier: 8 req/min → delay de 8s entre requests
+  // Total símbolos: 45 → ~6 minutos de carga
+  // Priorizamos los más importantes
+  const allSymbols = [
+    // Índices USA via ETFs
+    'SPY','QQQ','DIA','IWM',
+    // Volatilidad y bonos
+    'TLT','IEF',
+    // Commodities ETFs
+    'GLD','SLV','USO','UNG',
+    // Sectores clave
+    'XLK','XLF','XLE','XLV','XLI','XLY',
+    // Mega Tech
+    'AAPL','MSFT','NVDA','GOOGL','AMZN','META','TSLA',
+    // Defensa
+    'LMT','RTX','NOC',
+    // ADRs argentinos
+    'GGAL','YPF','BMA','MELI','GLOB','BBAR','CEPU','PAM',
+    // FX G10
+    'EUR/USD','GBP/USD','USD/JPY',
+    // FX LatAm
+    'USD/BRL','USD/MXN',
+    // Índices mundo via ETFs
+    'EWJ','EWZ','EWG','EWU',
+  ];
 
-  // ── 2. Stocks USA ─────────────────────────────────────────
-  const stocksUSA = ['AAPL','MSFT','NVDA','GOOGL','AMZN','META','TSLA','NFLX','AMD',
-    'LMT','RTX','NOC','GD','BA',
-    'MELI','GLOB','YPF','BMA','GGAL','SUPV','BBAR','CEPU','LOMA','PAM','TGS'];
-  console.log(`⏳ Cargando ${stocksUSA.length} stocks...`);
-  const stockResult = await tdBatch(stocksUSA, 400);
-  Object.assign(prices, stockResult);
-  console.log(`📈 Stocks: ${Object.keys(stockResult).length}/${stocksUSA.length}`);
-
-  // ── 3. Forex — formato TD: EUR/USD ────────────────────────
-  const forex = ['EUR/USD','GBP/USD','USD/JPY','USD/CHF','AUD/USD','USD/CAD',
-    'USD/BRL','USD/CLP','USD/MXN','USD/COP','USD/PEN'];
-  console.log(`⏳ Cargando ${forex.length} pares FX...`);
-  const fxResult = await tdBatch(forex, 400);
-  Object.assign(prices, fxResult);
-  console.log(`📈 FX: ${Object.keys(fxResult).length}/${forex.length}`);
+  console.log(`⏳ Cargando ${allSymbols.length} símbolos (8s delay cada uno)...`);
+  const tdResult = await tdBatch(allSymbols, 8000);
+  Object.assign(prices, tdResult);
+  console.log(`📈 TD: ${Object.keys(tdResult).length}/${allSymbols.length} precios`);
 
   // ── 3. Dólar AR ───────────────────────────────────────────
   try {
