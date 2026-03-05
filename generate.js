@@ -601,35 +601,72 @@ function liveTbl(rows) {
     + '</tbody></table>';
 }
 
-async function loadYahoo(symbols) {
-  // Intentar múltiples endpoints por si alguno falla CORS
-  const urls = [
-    'https://query1.finance.yahoo.com/v8/finance/spark?symbols='+symbols.join(',')+'&range=1d&interval=5m',
-    'https://corsproxy.io/?'+encodeURIComponent('https://query1.finance.yahoo.com/v7/finance/quote?symbols='+symbols.join(',')),
-    'https://api.allorigins.win/get?url='+encodeURIComponent('https://query1.finance.yahoo.com/v7/finance/quote?symbols='+symbols.join(','))
-  ];
-  // Usar allorigins como proxy confiable
+const FINNHUB_KEY = 'd6k5j1hr01qko8c3g5tgd6k5j1hr01qko8c3g5u0';
+
+const SYM_MAP = {
+  '^VIX':'VIX','ES=F':'ES1!','NQ=F':'NQ1!','YM=F':'YM1!','RTY=F':'RTY1!',
+  '^TNX':'TNX','^TYX':'TYX','^IRX':'IRX',
+  'GC=F':'OANDA:XAUUSD','SI=F':'OANDA:XAGUSD',
+  'CL=F':'NYMEX:CL1!','NG=F':'NYMEX:NG1!','HG=F':'COMEX:HG1!',
+  'ZW=F':'CBOT:ZW1!','ZC=F':'CBOT:ZC1!','ZS=F':'CBOT:ZS1!',
+  'BTC-USD':'BINANCE:BTCUSDT',
+  '^MERV':'BYMA:IMV',
+  '^N225':'TVC:NI225','^HSI':'TVC:HSI',
+  '^FTSE':'TVC:UKX','^GDAXI':'TVC:DAX','^FCHI':'TVC:CAC40',
+  '^BVSP':'BMFBOVESPA:IBOV','^MXX':'BMV:IPC',
+  'BRL=X':'OANDA:USDBRL','CLP=X':'OANDA:USDCLP',
+  'COP=X':'OANDA:USDCOP','PEN=X':'OANDA:USDPEN',
+  'MXN=X':'OANDA:USDMXN','UYU=X':'OANDA:USDUYU',
+  'EURUSD=X':'OANDA:EURUSD','GBPUSD=X':'OANDA:GBPUSD',
+  'JPY=X':'OANDA:USDJPY','CHF=X':'OANDA:USDCHF',
+  'AUD=X':'OANDA:AUDUSD','CAD=X':'OANDA:USDCAD'
+};
+
+const SYM_NAMES = {
+  'SPY':'S&P 500 ETF','QQQ':'Nasdaq 100 ETF','DIA':'Dow Jones ETF','IWM':'Russell 2000',
+  'VIX':'VIX Volatilidad','ES1!':'S&P Futuro','NQ1!':'Nasdaq Futuro','YM1!':'Dow Futuro','RTY1!':'Russell Futuro',
+  'TNX':'T-Note 10Y','TYX':'T-Bond 30Y','IRX':'T-Bill 3M',
+  'OANDA:XAUUSD':'Oro','OANDA:XAGUSD':'Plata',
+  'NYMEX:CL1!':'WTI Crudo','NYMEX:NG1!':'Gas Natural','COMEX:HG1!':'Cobre',
+  'CBOT:ZW1!':'Trigo','CBOT:ZC1!':'Maíz','CBOT:ZS1!':'Soja',
+  'BINANCE:BTCUSDT':'Bitcoin','BYMA:IMV':'S&P Merval',
+  'TVC:NI225':'Nikkei 225','TVC:HSI':'Hang Seng','TVC:UKX':'FTSE 100',
+  'TVC:DAX':'DAX','TVC:CAC40':'CAC 40','BMFBOVESPA:IBOV':'Bovespa','BMV:IPC':'IPC México',
+  'OANDA:USDBRL':'USD/BRL','OANDA:USDCLP':'USD/CLP','OANDA:USDCOP':'USD/COP',
+  'OANDA:USDPEN':'USD/PEN','OANDA:USDMXN':'USD/MXN','OANDA:USDUYU':'USD/UYU',
+  'OANDA:EURUSD':'EUR/USD','OANDA:GBPUSD':'GBP/USD','OANDA:USDJPY':'USD/JPY',
+  'OANDA:USDCHF':'USD/CHF','OANDA:AUDUSD':'AUD/USD','OANDA:USDCAD':'USD/CAD',
+  'XLK':'Technology','XLF':'Financials','XLE':'Energy','XLV':'Health Care',
+  'XLC':'Comm Services','XLI':'Industrials','XLB':'Materials','XLY':'Cons Discret',
+  'XLP':'Cons Staples','XLU':'Utilities','XLRE':'Real Estate',
+  'LMT':'Lockheed Martin','RTX':'RTX Corp','NOC':'Northrop Grumman','GD':'General Dynamics','BA':'Boeing',
+  'AAPL':'Apple','MSFT':'Microsoft','NVDA':'Nvidia','GOOGL':'Alphabet',
+  'AMZN':'Amazon','META':'Meta','TSLA':'Tesla','NFLX':'Netflix','AMD':'AMD',
+  'MELI':'MercadoLibre','GLOB':'Globant','YPF':'YPF','BMA':'Banco Macro',
+  'GGAL':'Grupo Galicia','SUPV':'Supervielle','BBAR':'BBVA Argentina',
+  'CEPU':'Central Puerto','LOMA':'Loma Negra','IRCP':'IRSA CP','PAM':'Pampa Energía','TGS':'TGS'
+};
+
+const _fhCache = {};
+async function fhQuote(sym) {
+  if (_fhCache[sym]) return _fhCache[sym];
   try {
-    const r = await fetch('https://api.allorigins.win/get?url='+encodeURIComponent('https://query1.finance.yahoo.com/v7/finance/quote?symbols='+symbols.join(',')));
-    const outer = await r.json();
-    const d = JSON.parse(outer.contents);
-    return (d.quoteResponse?.result || []).map(q => ({
-      s: q.symbol, n: q.shortName||q.symbol,
-      p: q.regularMarketPrice, c: q.regularMarketChangePercent,
-      v: q.regularMarketVolume
-    }));
-  } catch {
-    // Fallback: corsproxy.io
-    try {
-      const r2 = await fetch('https://corsproxy.io/?'+encodeURIComponent('https://query1.finance.yahoo.com/v7/finance/quote?symbols='+symbols.join(',')));
-      const d2 = await r2.json();
-      return (d2.quoteResponse?.result || []).map(q => ({
-        s: q.symbol, n: q.shortName||q.symbol,
-        p: q.regularMarketPrice, c: q.regularMarketChangePercent,
-        v: q.regularMarketVolume
-      }));
-    } catch { return []; }
-  }
+    const r = await fetch('https://finnhub.io/api/v1/quote?symbol='+encodeURIComponent(sym)+'&token='+FINNHUB_KEY);
+    const d = await r.json();
+    if (d.c && d.c > 0) { _fhCache[sym] = {p:d.c,c:d.dp}; return _fhCache[sym]; }
+  } catch {}
+  return null;
+}
+
+async function loadYahoo(yahooSymbols) {
+  const results = [];
+  const promises = yahooSymbols.map(async ys => {
+    const fs = SYM_MAP[ys] || ys;
+    const q = await fhQuote(fs);
+    if (q) results.push({s:ys, n:SYM_NAMES[fs]||SYM_NAMES[ys]||ys, p:q.p, c:q.c});
+  });
+  await Promise.all(promises);
+  return results;
 }
 
 async function loadDolar() {
