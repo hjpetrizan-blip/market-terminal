@@ -287,7 +287,7 @@ function generateHTML(d, prices={}) {
       <td class="cal-num" style="color:#00d49a">${e.consenso||'—'}</td>
     </tr>`).join('');
 
-  const PASSWORD_SCRIPT = `<script>(function(){var P='290585',K='mkt_auth';if(sessionStorage.getItem(K)!==P){document.addEventListener('DOMContentLoaded',function(){document.body.innerHTML='';var o=document.createElement('div');o.style.cssText='position:fixed;inset:0;background:#05080f;display:flex;align-items:center;justify-content:center;z-index:9999;font-family:Space Mono,monospace;';o.innerHTML='<div style="text-align:center;padding:40px;background:#0a1020;border:1px solid #1a2a40;border-radius:12px;max-width:320px;width:90%;"><div style="font-size:28px;margin-bottom:8px;">&#x1F510;</div><div style="font-family:Syne,sans-serif;font-size:20px;font-weight:800;color:#e8f4ff;margin-bottom:4px;">MARKET TERMINAL</div><div style="font-size:10px;color:#4a6a8a;letter-spacing:2px;margin-bottom:24px;">ACCESO RESTRINGIDO</div><input id="pi" type="password" placeholder="Ingres&#225; la clave..." autofocus style="width:100%;background:#0d1828;border:1px solid #1a2a40;border-radius:6px;padding:12px;color:#c8d8e8;font-size:14px;outline:none;text-align:center;margin-bottom:10px;" onkeydown="if(event.key===\'Enter\')cp()"/><div id="pe" style="color:#ff4060;font-size:11px;height:16px;margin-bottom:10px;"></div><button onclick="cp()" style="width:100%;background:linear-gradient(135deg,#8b5cf6,#4a9eff);border:none;border-radius:6px;padding:12px;color:#fff;font-size:13px;font-weight:700;cursor:pointer;">ENTRAR &#x2192;</button></div>';document.body.appendChild(o);window.cp=function(){var v=document.getElementById('pi').value;if(v===P){sessionStorage.setItem(K,P);location.reload();}else{document.getElementById('pe').textContent='&#x26A0;&#xFE0F; Clave incorrecta';document.getElementById('pi').value='';document.getElementById('pi').focus();}};});}})();<\/script>`;
+  const PASSWORD_SCRIPT = `<style>.pw-overlay{position:fixed;inset:0;background:#0d1117;display:flex;align-items:center;justify-content:center;z-index:9999;font-family:system-ui,sans-serif}.pw-card{text-align:center;padding:48px 40px;background:#161b22;border:1px solid #30363d;border-radius:16px;max-width:340px;width:90%;box-shadow:0 8px 32px rgba(0,0,0,.5)}.pw-icon{font-size:32px;margin-bottom:16px}.pw-title{font-size:22px;font-weight:700;color:#f0f6fc;margin-bottom:4px}.pw-sub{font-size:11px;color:#8b949e;letter-spacing:2px;margin-bottom:24px}.pw-input{width:100%;background:#0d1117;border:1px solid #30363d;border-radius:8px;padding:12px;color:#f0f6fc;font-size:15px;outline:none;text-align:center;margin-bottom:8px;box-sizing:border-box;transition:border-color .2s}.pw-input:focus{border-color:#388bfd}.pw-err{color:#f85149;font-size:12px;height:18px;margin-bottom:12px}.pw-btn{width:100%;background:#238636;border:1px solid #2ea043;border-radius:8px;padding:12px;color:#fff;font-size:14px;font-weight:600;cursor:pointer;transition:background .2s}.pw-btn:hover{background:#2ea043}</style><script>(function(){var P='290585',K='mkt_auth';if(sessionStorage.getItem(K)===P)return;document.addEventListener('DOMContentLoaded',function(){var overlay=document.createElement('div');overlay.className='pw-overlay';overlay.innerHTML='<div class="pw-card"><div class="pw-icon">&#x1F4CA;</div><div class="pw-title">Market Terminal</div><div class="pw-sub">ACCESO RESTRINGIDO</div><input id="pw-in" class="pw-input" type="password" placeholder="Ingres&#225; la clave..."/><div class="pw-err" id="pw-err"></div><button class="pw-btn" id="pw-btn">Ingresar</button></div>';document.body.prepend(overlay);document.getElementById('pw-btn').onclick=cp;document.getElementById('pw-in').addEventListener('keydown',function(e){if(e.key==='Enter')cp();});function cp(){var v=document.getElementById('pw-in').value;if(v===P){sessionStorage.setItem(K,P);overlay.remove();}else{document.getElementById('pw-err').textContent='Clave incorrecta';document.getElementById('pw-in').value='';}}});})();<\/script>`;
 
   return `<!DOCTYPE html>
 <html lang="es">
@@ -299,9 +299,9 @@ function generateHTML(d, prices={}) {
 ${PASSWORD_SCRIPT}
 <style>
 :root{
-  --bg:#05080f;--bg2:#0a1020;--bg3:#0d1828;--border:#1a2a40;
-  --up:#00d49a;--dn:#ff4060;--warn:#ffaa00;--info:#4a9eff;--purple:#8b5cf6;
-  --text:#c8d8e8;--dim:#4a6a8a;--bright:#e8f4ff;
+  --bg:#0d1117;--bg2:#161b22;--bg3:#1c2128;--border:#30363d;
+  --up:#3fb950;--dn:#f85149;--warn:#d29922;--info:#388bfd;--purple:#a371f7;
+  --text:#c9d1d9;--dim:#8b949e;--bright:#f0f6fc;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 body{background:var(--bg);color:var(--text);font-family:'Space Mono',monospace;min-height:100vh;overflow-x:hidden;}
@@ -948,8 +948,10 @@ function renderStatic(){
   const spq  = tryGet('SPY','SPX','^GSPC');
   const nqq  = tryGet('QQQ','NDX','^IXIC');
   const djq  = tryGet('DIA','DJI','^DJI');
-  const vixq = tryGet('VIX','^VIX','VIXY');
-  // Si VIX no está, no mostramos nada (no podemos calcularlo desde ETFs)
+  // VIXY es el ETF de volatilidad, su precio ~= VIX/4 aprox
+  const vixyq = tryGet('VIX','VIXY','^VIX');
+  // Si tenemos VIXY pero no VIX directo, estimamos VIX
+  const vixq = vixyq ? (vixyq.p < 30 ? {...vixyq, p: vixyq.p * 4.2, _est: true} : vixyq) : null;
   const mervq= tryGet('MERVAL','^MERV','BYMA:IMV');
   // Oro: GLD ≈ precio oro / 10, ajustamos para mostrar precio real
   const gldq = tryGet('XAU/USD','GC1!','GLD','GC=F');
