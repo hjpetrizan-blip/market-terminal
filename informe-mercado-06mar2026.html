@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Market Terminal · Viernes 6 de Marzo, 2026 · 🌅 MAÑANA</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet"/>
+<script>(function(){var P='290585',K='mkt_auth';if(sessionStorage.getItem(K)!==P){document.addEventListener('DOMContentLoaded',function(){document.body.innerHTML='';var o=document.createElement('div');o.style.cssText='position:fixed;inset:0;background:#05080f;display:flex;align-items:center;justify-content:center;z-index:9999;font-family:Space Mono,monospace;';o.innerHTML='<div style="text-align:center;padding:40px;background:#0a1020;border:1px solid #1a2a40;border-radius:12px;max-width:320px;width:90%;"><div style="font-size:28px;margin-bottom:8px;">&#x1F510;</div><div style="font-family:Syne,sans-serif;font-size:20px;font-weight:800;color:#e8f4ff;margin-bottom:4px;">MARKET TERMINAL</div><div style="font-size:10px;color:#4a6a8a;letter-spacing:2px;margin-bottom:24px;">ACCESO RESTRINGIDO</div><input id="pi" type="password" placeholder="Ingres&#225; la clave..." autofocus style="width:100%;background:#0d1828;border:1px solid #1a2a40;border-radius:6px;padding:12px;color:#c8d8e8;font-size:14px;outline:none;text-align:center;margin-bottom:10px;" onkeydown="if(event.key==='Enter')cp()"/><div id="pe" style="color:#ff4060;font-size:11px;height:16px;margin-bottom:10px;"></div><button onclick="cp()" style="width:100%;background:linear-gradient(135deg,#8b5cf6,#4a9eff);border:none;border-radius:6px;padding:12px;color:#fff;font-size:13px;font-weight:700;cursor:pointer;">ENTRAR &#x2192;</button></div>';document.body.appendChild(o);window.cp=function(){var v=document.getElementById('pi').value;if(v===P){sessionStorage.setItem(K,P);location.reload();}else{document.getElementById('pe').textContent='&#x26A0;&#xFE0F; Clave incorrecta';document.getElementById('pi').value='';document.getElementById('pi').focus();}};});}})();</script>
+<style>
+:root{
+  --bg:#05080f;--bg2:#0a1020;--bg3:#0d1828;--border:#1a2a40;
+  --up:#00d49a;--dn:#ff4060;--warn:#ffaa00;--info:#4a9eff;--purple:#8b5cf6;
+  --text:#c8d8e8;--dim:#4a6a8a;--bright:#e8f4ff;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:'Space Mono',monospace;min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(0,212,154,.015) 0px,rgba(0,212,154,.015) 1px,transparent 1px,transparent 3px);}
+
+/* HEADER */
+.header{background:linear-gradient(180deg,#0d1828,#05080f);border-bottom:1px solid var(--border);padding:12px 16px;position:sticky;top:0;z-index:100;}
+.header-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+.logo-title{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--bright);letter-spacing:-1px;}
+.logo-sub{font-size:9px;color:var(--dim);letter-spacing:3px;}
+.header-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end;}
+.badge{display:inline-flex;align-items:center;gap:4px;font-size:9px;font-weight:700;letter-spacing:1px;padding:3px 10px;border-radius:20px;}
+.badge-open{background:rgba(0,212,154,.15);color:var(--up);border:1px solid rgba(0,212,154,.3);}
+.badge-warn{background:rgba(255,170,0,.12);color:var(--warn);border:1px solid rgba(255,170,0,.3);}
+.badge-ed{background:rgba(74,158,255,.1);color:var(--info);border:1px solid rgba(74,158,255,.3);}
+
+/* TICKER STRIP */
+.ticker{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:4px 0;}
+.ticker::-webkit-scrollbar{display:none;}
+.tick{flex-shrink:0;background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:6px 10px;min-width:80px;cursor:default;}
+.tick:hover{border-color:var(--up);}
+.tick-lbl{font-size:7px;color:var(--dim);letter-spacing:1px;margin-bottom:2px;}
+.tick-val{font-size:12px;font-weight:700;color:var(--bright);}
+.tick-chg{font-size:9px;font-weight:700;}
+.up{color:var(--up);}.dn{color:var(--dn);}.flat{color:var(--dim);}
+
+/* MAIN GRID */
+.main{padding:12px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;max-width:1400px;margin:0 auto;}
+@media(max-width:1100px){.main{grid-template-columns:1fr 1fr;}}
+@media(max-width:680px){.main{grid-template-columns:1fr;}}
+
+/* PANELS */
+.panel{background:var(--bg2);border:1px solid var(--border);border-radius:8px;overflow:hidden;}
+.panel-full{grid-column:1/-1;}
+.panel-2col{grid-column:span 2;}
+.panel-head{background:linear-gradient(90deg,#0d1828,#08101a);padding:8px 12px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.panel-title{font-family:'Syne',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;color:var(--dim);text-transform:uppercase;}
+.panel-body{padding:10px 12px;}
+
+/* DRIVER */
+.driver-box{padding:14px;border-radius:6px;margin-bottom:10px;border-left:3px solid;}
+.driver-red{background:rgba(255,64,96,.07);border-color:var(--dn);}
+.driver-yellow{background:rgba(255,170,0,.07);border-color:var(--warn);}
+.driver-blue{background:rgba(74,158,255,.07);border-color:var(--info);}
+.driver-green{background:rgba(0,212,154,.07);border-color:var(--up);}
+.driver-title{font-family:'Syne',sans-serif;font-size:14px;font-weight:800;color:var(--bright);margin-bottom:6px;}
+.driver-text{font-size:11px;line-height:1.7;color:#8ab0d0;}
+.driver-text strong{color:var(--bright);}
+.driver-text em{color:var(--warn);font-style:normal;}
+
+/* PRICE TABLES */
+.ptbl{width:100%;border-collapse:collapse;}
+.ptbl th{font-size:8px;letter-spacing:1.5px;color:var(--dim);padding:4px 6px;border-bottom:1px solid var(--border);text-align:left;font-weight:400;}
+.ptbl td{padding:7px 6px;font-size:11px;border-bottom:1px solid rgba(26,42,64,.4);vertical-align:middle;}
+.ptbl tr:last-child td{border-bottom:none;}
+.ptbl tr:hover td{background:rgba(255,255,255,.02);}
+.p-name{color:var(--bright);font-weight:700;font-size:12px;}
+.p-sym{font-size:8px;color:var(--dim);}
+.p-price{font-size:13px;font-weight:700;color:var(--bright);text-align:right;font-variant-numeric:tabular-nums;}
+.p-chg{text-align:right;font-weight:700;font-size:11px;}
+.chg-up{color:var(--up);}.chg-dn{color:var(--dn);}.chg-flat{color:var(--dim);}
+.loading{color:var(--dim);font-size:10px;padding:10px;letter-spacing:1px;text-align:center;}
+
+/* FX GRID */
+.fx-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+.fx-card{background:var(--bg3);border-radius:6px;padding:10px;border-left:3px solid;}
+.fx-lbl{font-size:8px;color:var(--dim);letter-spacing:1px;margin-bottom:2px;}
+.fx-name{font-size:10px;font-weight:700;color:var(--bright);margin-bottom:4px;}
+.fx-price{font-size:15px;font-weight:700;color:var(--bright);}
+.fx-detail{font-size:8px;color:var(--dim);margin-top:2px;}
+
+/* STAT CARDS */
+.stat-row{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px;}
+.stat{background:var(--bg3);border-radius:6px;padding:10px;}
+.stat-lbl{font-size:8px;color:var(--dim);letter-spacing:1px;margin-bottom:4px;}
+.stat-val{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;}
+.stat-sub{font-size:9px;color:var(--dim);margin-top:2px;}
+
+/* CONFLICT CARDS */
+.conflict-card{border-radius:6px;padding:12px;margin-bottom:8px;border-left:3px solid;background:linear-gradient(135deg,#0d1828,#08101a);}
+.conflict-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+.conflict-badge{font-size:8px;font-weight:700;letter-spacing:1px;padding:2px 7px;border-radius:3px;}
+.conflict-zona{font-size:8px;color:var(--dim);}
+.conflict-titular{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--bright);margin-bottom:5px;line-height:1.3;}
+.conflict-body{font-size:10px;color:#7a9ab8;line-height:1.6;margin-bottom:6px;}
+.conflict-impacto{font-size:9px;color:var(--up);background:rgba(0,212,154,.08);padding:4px 8px;border-radius:4px;}
+
+/* CALENDAR TABLE */
+.cal-tbl{width:100%;border-collapse:collapse;font-size:10px;}
+.cal-tbl th{font-size:8px;letter-spacing:1.5px;color:var(--dim);padding:5px 8px;border-bottom:1px solid var(--border);font-weight:400;text-align:left;}
+.cal-row td{padding:7px 8px;border-bottom:1px solid rgba(26,42,64,.4);vertical-align:top;}
+.cal-row:last-child td{border-bottom:none;}
+.cal-row:hover td{background:rgba(255,255,255,.015);}
+.cal-dia{color:var(--info);font-weight:700;font-size:10px;}
+.cal-hora{color:var(--dim);font-size:8px;}
+.cal-flag{font-size:13px;}
+.cal-evento{color:var(--bright);font-weight:700;font-size:11px;}
+.cal-desc{color:var(--dim);font-size:9px;line-height:1.4;margin-top:2px;}
+.cal-imp{font-size:8px;font-weight:700;letter-spacing:1px;padding:2px 6px;border-radius:3px;}
+.cal-num{text-align:right;color:var(--text);font-size:10px;}
+
+/* FEAR & GREED */
+.fg-wrap{padding:10px;text-align:center;}
+.fg-bar{background:linear-gradient(90deg,#00c853,#ffeb3b 40%,#ff5722 75%,#b71c1c);height:10px;border-radius:5px;position:relative;margin:0 auto 8px;max-width:240px;}
+.fg-needle{position:absolute;top:-5px;width:3px;height:20px;background:#fff;border-radius:2px;box-shadow:0 0 5px #fff;}
+.fg-val{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;}
+.fg-lbl{font-size:11px;letter-spacing:2px;margin-top:2px;}
+.fg-labels{display:flex;justify-content:space-between;max-width:240px;margin:0 auto 8px;font-size:7px;color:var(--dim);}
+
+/* ANALYSIS */
+.analysis-block{font-size:11px;color:#8ab0d0;line-height:1.75;margin-bottom:10px;padding:12px;background:linear-gradient(135deg,#0d2030,#08101a);border:1px solid #1a3a5a;border-radius:6px;}
+.analysis-block strong{color:var(--bright);}
+.analysis-block em{color:var(--warn);font-style:normal;}
+.analysis-title{font-family:'Syne',sans-serif;font-size:10px;font-weight:700;color:var(--dim);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;}
+
+/* VIX METER */
+.vix-box{text-align:center;padding:10px;}
+.vix-val{font-family:'Syne',sans-serif;font-size:24px;font-weight:800;color:var(--warn);}
+.vix-zone{font-size:9px;padding:2px 8px;border-radius:8px;display:inline-block;margin-top:4px;}
+
+/* AI CHAT */
+.ai-panel{position:fixed;bottom:20px;right:20px;width:360px;z-index:200;}
+.ai-toggle{background:linear-gradient(135deg,#8b5cf6,#4a9eff);border:none;border-radius:50px;padding:12px 20px;color:#fff;font-family:'Space Mono',monospace;font-size:12px;font-weight:700;cursor:pointer;width:100%;box-shadow:0 4px 20px rgba(139,92,246,.4);}
+.ai-box{background:#0a1020;border:1px solid #1a2a40;border-radius:12px;margin-bottom:8px;display:none;flex-direction:column;height:420px;box-shadow:0 8px 32px rgba(0,0,0,.6);}
+.ai-box.open{display:flex;}
+.ai-head{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
+.ai-head-title{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--bright);}
+.ai-close{background:none;border:none;color:var(--dim);cursor:pointer;font-size:16px;}
+.ai-msgs{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px;scrollbar-width:thin;}
+.ai-msg{padding:8px 12px;border-radius:8px;font-size:11px;line-height:1.6;max-width:90%;}
+.ai-msg-user{background:rgba(139,92,246,.2);color:var(--bright);align-self:flex-end;border:1px solid rgba(139,92,246,.3);}
+.ai-msg-bot{background:rgba(74,158,255,.1);color:#90c0ff;align-self:flex-start;border:1px solid rgba(74,158,255,.2);}
+.ai-input-row{padding:10px;border-top:1px solid var(--border);display:flex;gap:6px;}
+.ai-input{flex:1;background:#0d1828;border:1px solid var(--border);border-radius:6px;padding:8px;color:var(--text);font-family:'Space Mono',monospace;font-size:11px;outline:none;resize:none;}
+.ai-send{background:linear-gradient(135deg,#8b5cf6,#4a9eff);border:none;border-radius:6px;padding:8px 12px;color:#fff;cursor:pointer;font-size:11px;font-weight:700;}
+.ai-quick{display:flex;gap:4px;flex-wrap:wrap;padding:6px 10px;border-bottom:1px solid var(--border);}
+.ai-qbtn{background:rgba(74,158,255,.1);border:1px solid rgba(74,158,255,.2);border-radius:12px;padding:3px 8px;color:var(--info);font-size:9px;cursor:pointer;font-family:'Space Mono',monospace;}
+.ai-qbtn:hover{background:rgba(74,158,255,.2);}
+.ai-key-row{padding:8px 10px;border-bottom:1px solid var(--border);}
+.ai-key-input{width:100%;background:#0d1828;border:1px solid var(--border);border-radius:4px;padding:6px;color:var(--dim);font-size:9px;font-family:'Space Mono',monospace;outline:none;}
+
+.footer{text-align:center;padding:16px;font-size:8px;color:var(--dim);letter-spacing:1px;border-top:1px solid var(--border);margin-top:10px;}
+</style>
+</head>
+<body>
+<script id="static-prices" type="application/json">{"SPY":{"p":681.31,"c":-0.55755948},"QQQ":{"p":608.90997,"c":-0.30127333},"DIA":{"p":479.84,"c":-1.61971},"IWM":{"p":256.76001,"c":-1.91015},"TLT":{"p":88.79,"c":-0.40381447},"IEF":{"p":96.51,"c":-0.30988062},"GLD":{"p":466.13,"c":-1.20178},"SLV":{"p":74.27,"c":-1.42023},"USO":{"p":96.31,"c":5.18786},"BNO":{"p":40.24,"c":3.44473},"UNG":{"p":12.05,"c":2.29202},"XLK":{"p":140.17999,"c":0.2431324},"XLF":{"p":51.23,"c":-0.52427273},"XLE":{"p":56.48,"c":0.51610771},"XLV":{"p":153.91,"c":-1.99936},"XLI":{"p":172.059998,"c":-2.22197},"XLY":{"p":116.55,"c":0.137472},"AAPL":{"p":260.29001,"c":-0.84945168},"MSFT":{"p":410.67999,"c":1.35241},"NVDA":{"p":183.34,"c":0.16390027},"GOOGL":{"p":300.88,"c":-0.74225579},"AMZN":{"p":218.94,"c":0.97776729},"META":{"p":660.57001,"c":-1.072286},"TSLA":{"p":405.54999,"c":-0.096076919},"LMT":{"p":655,"c":-1.42668},"RTX":{"p":203.86,"c":-2.37525},"NOC":{"p":740.01001,"c":-1.83461},"GGAL":{"p":43.19,"c":-1.90779},"YPF":{"p":35.98,"c":2.21591},"BMA":{"p":74.019997,"c":-0.32319618},"MELI":{"p":1780.35999,"c":0.64046149},"GLOB":{"p":53.2,"c":2.30769},"BBAR":{"p":14.27,"c":0.63469782},"CEPU":{"p":14.72,"c":-1.8012},"PAM":{"p":78.59,"c":1.55058},"EUR/USD":{"p":1.15625,"c":-0.082094711},"GBP/USD":{"p":1.33202,"c":0.0075079584},"USD/JPY":{"p":157.96996,"c":0.092000774},"USD/BRL":{"p":5.27312,"c":-0.28949991},"USD/MXN":{"p":17.84118,"c":0.2778254},"EWJ":{"p":85.89,"c":-3.047745},"EWZ":{"p":36.36,"c":-3.01414},"EWG":{"p":41.18,"c":-2.18527},"_dolar":[{"moneda":"USD","casa":"oficial","nombre":"Oficial","compra":1375,"venta":1425,"fechaActualizacion":"2026-03-05T17:00:00.000Z"},{"moneda":"USD","casa":"blue","nombre":"Blue","compra":1380,"venta":1400,"fechaActualizacion":"2026-03-05T20:56:00.000Z"},{"moneda":"USD","casa":"bolsa","nombre":"Bolsa","compra":1430,"venta":1437.1,"fechaActualizacion":"2026-03-05T20:56:00.000Z"},{"moneda":"USD","casa":"contadoconliqui","nombre":"Contado con liquidación","compra":1474.4,"venta":1475.3,"fechaActualizacion":"2026-03-05T20:56:00.000Z"},{"moneda":"USD","casa":"mayorista","nombre":"Mayorista","compra":1398,"venta":1407,"fechaActualizacion":"2026-03-05T17:45:00.000Z","variacion":0.46},{"moneda":"USD","casa":"cripto","nombre":"Cripto","compra":1467.9,"venta":1468,"fechaActualizacion":"2026-03-05T20:56:00.000Z"},{"moneda":"USD","casa":"tarjeta","nombre":"Tarjeta","compra":1787.5,"venta":1852.5,"fechaActualizacion":"2026-03-05T17:00:00.000Z"}],"_crypto":{"binancecoin":{"usd":637.47,"usd_24h_change":-3.1163675066987513},"bitcoin":{"usd":70203,"usd_24h_change":-3.5177997736636644},"cardano":{"usd":0.266356,"usd_24h_change":-2.771711774527407},"ethereum":{"usd":2050.85,"usd_24h_change":-3.7623654257327104},"ripple":{"usd":1.4,"usd_24h_change":-2.8240820596052494},"solana":{"usd":87.22,"usd_24h_change":-5.023288185824773}}}</script>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-top">
+    <div>
+      <div class="logo-sub">▶ MARKET TERMINAL LIVE</div>
+      <div class="logo-title">INFORME DE MERCADO</div>
+      <div style="font-size:9px;color:var(--dim);margin-top:2px;">Viernes 6 de Marzo, 2026 · Generado 08:55 hs AR</div>
+    </div>
+    <div class="header-right">
+      <div class="badge badge-warn">⚡ Mixto Volátil</div>
+      <div class="badge badge-ed">🌅 MAÑANA</div>
+      <div style="font-size:10px;color:var(--info);">Riesgo geo: <strong style="color:#ff8c00">ALTO</strong></div>
+    </div>
+  </div>
+  <!-- TICKER STRIP -->
+  <div class="ticker">
+    <div class="tick"><div class="tick-lbl">S&P 500</div><div class="tick-val" id="t-sp">—</div><div class="tick-chg" id="t-spc">⏳</div></div>
+    <div class="tick"><div class="tick-lbl">NASDAQ</div><div class="tick-val" id="t-nq">—</div><div class="tick-chg" id="t-nqc">⏳</div></div>
+    <div class="tick"><div class="tick-lbl">DOW JONES</div><div class="tick-val" id="t-dj">—</div><div class="tick-chg" id="t-djc">⏳</div></div>
+    <div class="tick"><div class="tick-lbl">VIX</div><div class="tick-val" id="t-vix">—</div><div class="tick-chg" id="t-vixc">⏳</div></div>
+    <div class="tick"><div class="tick-lbl">DÓLAR BLUE</div><div class="tick-val" id="t-blue">⏳</div><div class="tick-chg up">ARS</div></div>
+    <div class="tick"><div class="tick-lbl">CCL</div><div class="tick-val" id="t-ccl">⏳</div><div class="tick-chg up">ARS</div></div>
+    <div class="tick"><div class="tick-lbl">MERVAL</div><div class="tick-val" id="t-merv">—</div><div class="tick-chg" id="t-mervc">⏳</div></div>
+    <div class="tick"><div class="tick-lbl">ORO</div><div class="tick-val" id="t-gold">—</div><div class="tick-chg" id="t-goldc">⏳</div></div>
+    <div class="tick"><div class="tick-lbl">WTI</div><div class="tick-val" id="t-wti">—</div><div class="tick-chg" id="t-wtic">⏳</div></div>
+    <div class="tick"><div class="tick-lbl">BRENT</div><div class="tick-val" id="t-brent">—</div><div class="tick-chg" id="t-brentc">⏳</div></div>
+    <div class="tick"><div class="tick-lbl">BTC</div><div class="tick-val" id="t-btc">—</div><div class="tick-chg" id="t-btcc">⏳</div></div>
+    <div class="tick"><div class="tick-lbl">ETH</div><div class="tick-val" id="t-eth">—</div><div class="tick-chg" id="t-ethc">⏳</div></div>
+  </div>
+</div>
+
+<!-- MAIN GRID -->
+<div class="main">
+
+  <!-- COL 1: Driver + Argentina -->
+  <div style="display:flex;flex-direction:column;gap:10px;">
+
+    <!-- DRIVER DEL DÍA -->
+    <div class="panel">
+      <div class="panel-head"><span class="panel-title">📌 Driver del día</span><span style="font-size:8px;color:var(--dim)">Viernes 6 de Marzo, 2026</span></div>
+      <div class="panel-body">
+        <div class="driver-box driver-yellow">
+          <div class="driver-title">⚡ Petróleo se dispara 5% mientras acciones argentinas caen</div>
+          <div class="driver-text">El <strong>petróleo WTI saltó 5.19%</strong> a USD 96.31 y el Brent subió 3.44%, impulsando al sector energético mientras <strong>Wall Street cedía terreno</strong> con el Dow Jones bajando 1.62%. Los <strong>ADRs argentinos mostraron debilidad</strong> con GGAL cayendo 1.91% y solo YPF (+2.22%) aprovechando el rally petrolero.</div>
+        </div>
+        <div class="driver-text" style="padding:8px 0">Los mercados muestran un panorama mixto con el <strong>rally energético contrastando con la debilidad general de las acciones</strong>. El S&P 500 retrocedió 0.56% mientras el petróleo marca su mayor alza en semanas. <strong>Argentina refleja cautela</strong> con sus principales ADRs en rojo, excepto YPF que capitaliza el rebote del crudo. El oro cae 1.20% sugiriendo rotación hacia activos de riesgo específicos.</div>
+      </div>
+    </div>
+
+    <!-- DÓLARES AR -->
+    <div class="panel">
+      <div class="panel-head"><span class="panel-title">🇦🇷 Tipo de cambio</span><span style="font-size:8px;color:var(--up)">⚡ dolarapi.com</span></div>
+      <div class="panel-body">
+        <div class="fx-grid">
+          <div class="fx-card" style="border-color:#4a9eff"><div class="fx-lbl">OFICIAL BNA</div><div class="fx-name">Dólar Oficial</div><div class="fx-price" id="fx-of">⏳</div><div class="fx-detail" id="fx-of-d">—</div></div>
+          <div class="fx-card" style="border-color:#ff8c00"><div class="fx-lbl">INFORMAL</div><div class="fx-name">Dólar Blue</div><div class="fx-price" id="fx-bl">⏳</div><div class="fx-detail" id="fx-bl-d">—</div></div>
+          <div class="fx-card" style="border-color:#00d49a"><div class="fx-lbl">MEP / BOLSA</div><div class="fx-name">Dólar MEP</div><div class="fx-price" id="fx-mep">⏳</div><div class="fx-detail" id="fx-mep-d">—</div></div>
+          <div class="fx-card" style="border-color:#8b5cf6"><div class="fx-lbl">CONTADO C/LIQUI</div><div class="fx-name">Dólar CCL</div><div class="fx-price" id="fx-ccl">⏳</div><div class="fx-detail" id="fx-ccl-d">—</div></div>
+          <div class="fx-card" style="border-color:#f0c040"><div class="fx-lbl">USDT / CRIPTO</div><div class="fx-name">Dólar Cripto</div><div class="fx-price" id="fx-cr">⏳</div><div class="fx-detail" id="fx-cr-d">—</div></div>
+          <div class="fx-card" style="border-color:#ff4060"><div class="fx-lbl">OFICIAL+IMP</div><div class="fx-name">Tarjeta/Qatar</div><div class="fx-price" id="fx-tj">⏳</div><div class="fx-detail" id="fx-tj-d">—</div></div>
+        </div>
+        <div style="margin-top:8px;padding:8px;background:rgba(74,158,255,.06);border-radius:6px;font-size:10px;">
+          <strong style="color:var(--info)">Brecha Blue/Oficial:</strong> <span id="fx-brecha" style="color:var(--warn)">calculando...</span>
+          &nbsp;·&nbsp; <strong style="color:var(--info)">MERVAL USD:</strong> ~1.685 pts
+        </div>
+      </div>
+    </div>
+
+    <!-- MERVAL + ACTIVOS AR -->
+    <div class="panel">
+      <div class="panel-head"><span class="panel-title">🇦🇷 Mercado local</span><span style="font-size:8px;color:var(--dim)">BYMA · Tiempo real</span></div>
+      <div class="panel-body">
+        <div class="stat-row">
+          <div class="stat"><div class="stat-lbl">S&P MERVAL</div><div class="stat-val up" id="merval-v">—</div><div class="stat-sub" id="merval-c">⏳</div></div>
+          <div class="stat"><div class="stat-lbl">RIESGO PAÍS</div><div class="stat-val warn">598 bps</div><div class="stat-sub">EMBI+</div></div>
+        </div>
+        <div class="stat-row">
+          <div class="stat"><div class="stat-lbl">RESERVAS BCRA</div><div class="stat-val info">USD 44.892M</div><div class="stat-sub">Brutas</div></div>
+          <div class="stat"><div class="stat-lbl">MERVAL USD</div><div class="stat-val">1.685</div><div class="stat-sub">CCL aprox</div></div>
+        </div>
+        <div style="font-size:9px;color:var(--up);margin-bottom:6px;letter-spacing:1px;">ADRs ARGENTINOS EN NYSE</div>
+        <div id="tbl-adrs"><div class="loading">Cargando ADRs...</div></div>
+        <div style="font-size:9px;color:var(--warn);margin:10px 0 6px;letter-spacing:1px;">ACCIONES LOCALES EN ARS (BYMA)</div>
+        <div id="tbl-ar-local"><div class="loading">Cargando precios locales...</div></div>
+        <div style="font-size:9px;color:var(--info);margin:10px 0 6px;letter-spacing:1px;">BONOS SOBERANOS</div>
+        <div id="tbl-ar-bonos"><div class="loading">Cargando bonos...</div></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- COL 2: USA + Mundo + Commodities -->
+  <div style="display:flex;flex-direction:column;gap:10px;">
+
+    <!-- USA ÍNDICES + FUTUROS -->
+    <div class="panel">
+      <div class="panel-head"><span class="panel-title">🇺🇸 USA — Índices & Futuros</span><span style="font-size:8px;color:var(--up)">⚡ Finnhub</span></div>
+      <div class="panel-body">
+        <div style="font-size:8px;color:var(--dim);letter-spacing:1px;margin-bottom:4px;">ÍNDICES ETF</div>
+        <div id="tbl-usa"><div class="loading">Cargando...</div></div>
+        <div style="font-size:8px;color:var(--dim);letter-spacing:1px;margin:8px 0 4px;">FUTUROS PRE-MARKET</div>
+        <div id="tbl-fut"><div class="loading">Cargando...</div></div>
+        <div style="font-size:8px;color:var(--dim);letter-spacing:1px;margin:8px 0 4px;">BONOS TESORO USA</div>
+        <div id="tbl-bonos"><div class="loading">Cargando...</div></div>
+      </div>
+    </div>
+
+    <!-- VIX + FEAR & GREED -->
+    <div class="panel">
+      <div class="panel-head"><span class="panel-title">📊 Volatilidad & Sentimiento</span></div>
+      <div class="panel-body">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          <div class="vix-box" style="background:var(--bg3);border-radius:6px;">
+            <div style="font-size:8px;color:var(--dim);letter-spacing:1px;margin-bottom:4px;">VIX INDEX</div>
+            <div class="vix-val" id="vix-v">—</div>
+            <div class="tick-chg" id="vix-c" style="font-size:10px;margin:2px 0">⏳</div>
+            <div class="vix-zone" id="vix-z" style="background:rgba(255,170,0,.1);color:var(--warn)">—</div>
+            <div style="font-size:8px;color:var(--dim);margin-top:6px;">&lt;15 Calma · 15-20 Normal<br>20-30 ⚠ Alerta · &gt;30 🚨</div>
+          </div>
+          <div class="fg-wrap" style="background:var(--bg3);border-radius:6px;">
+            <div style="font-size:8px;color:var(--dim);letter-spacing:1px;margin-bottom:6px;">FEAR & GREED</div>
+            <div class="fg-bar"><div class="fg-needle" style="left:42%"></div></div>
+            <div class="fg-labels"><span>Miedo<br>ext.</span><span>Miedo</span><span>Neutral</span><span>Codicia</span><span>Cod.<br>ext.</span></div>
+            <div class="fg-val" style="color:#ff6b3d">42</div>
+            <div class="fg-lbl" style="color:#ff6b3d">MIEDO</div>
+            <a href="https://edition.cnn.com/markets/fear-and-greed" target="_blank" style="display:inline-block;margin-top:6px;font-size:8px;color:var(--up);text-decoration:none;border:1px solid var(--up);padding:2px 8px;border-radius:3px;">CNN →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTORES + MEGA TECH -->
+    <div class="panel">
+      <div class="panel-head"><span class="panel-title">🏢 Sectores S&P 500</span></div>
+      <div class="panel-body">
+        <div id="tbl-sect"><div class="loading">Cargando...</div></div>
+        <div style="font-size:8px;color:var(--dim);letter-spacing:1px;margin:8px 0 4px;">MEGA TECH</div>
+        <div id="tbl-tech"><div class="loading">Cargando...</div></div>
+        <div style="font-size:8px;color:var(--dim);letter-spacing:1px;margin:8px 0 4px;">🎖️ DEFENSA</div>
+        <div id="tbl-def"><div class="loading">Cargando...</div></div>
+      </div>
+    </div>
+
+    <!-- COMMODITIES -->
+    <div class="panel">
+      <div class="panel-head"><span class="panel-title">⚡ Commodities</span><span style="font-size:8px;color:var(--up)">⚡ Tiempo real</span></div>
+      <div class="panel-body">
+        <div id="tbl-comm"><div class="loading">Cargando...</div></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- COL 3: Mundo + Cripto + Monedas -->
+  <div style="display:flex;flex-direction:column;gap:10px;">
+
+    <!-- ÍNDICES MUNDO -->
+    <div class="panel">
+      <div class="panel-head"><span class="panel-title">🌍 Índices del Mundo</span><span style="font-size:8px;color:var(--up)">⚡ Tiempo real</span></div>
+      <div class="panel-body">
+        <div style="font-size:8px;color:var(--dim);letter-spacing:1px;margin-bottom:4px;">EUROPA & ASIA</div>
+        <div id="tbl-mundo"><div class="loading">Cargando...</div></div>
+        <div style="font-size:8px;color:var(--dim);letter-spacing:1px;margin:8px 0 4px;">LATAM</div>
+        <div id="tbl-latam"><div class="loading">Cargando...</div></div>
+      </div>
+    </div>
+
+    <!-- CRIPTO -->
+    <div class="panel">
+      <div class="panel-head"><span class="panel-title">₿ Criptomonedas</span><span style="font-size:8px;color:var(--up)">⚡ CoinGecko</span></div>
+      <div class="panel-body">
+        <div id="tbl-crypto"><div class="loading">Cargando...</div></div>
+      </div>
+    </div>
+
+    <!-- MONEDAS MUNDO -->
+    <div class="panel">
+      <div class="panel-head"><span class="panel-title">💱 Divisas vs USD</span><span style="font-size:8px;color:var(--up)">⚡ Tiempo real</span></div>
+      <div class="panel-body">
+        <div style="font-size:8px;color:var(--dim);letter-spacing:1px;margin-bottom:4px;">G10</div>
+        <div id="tbl-g10"><div class="loading">Cargando...</div></div>
+        <div style="font-size:8px;color:var(--dim);letter-spacing:1px;margin:8px 0 4px;">LATAM FX</div>
+        <div id="tbl-latamfx"><div class="loading">Cargando...</div></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FILA COMPLETA: ANÁLISIS -->
+  <div class="panel panel-full">
+    <div class="panel-head"><span class="panel-title">💬 Análisis de sesión</span><span style="font-size:8px;color:var(--dim)">Viernes 6 de Marzo, 2026</span></div>
+    <div class="panel-body" style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;">
+      <div>
+        <div class="analysis-title">🌍 Mercados Globales</div>
+        <div class="analysis-block">Wall Street abre la sesión con <strong>presión vendedora generalizada</strong>, liderada por el Dow Jones que cae 1.62% mientras el Nasdaq muestra mayor resistencia (-0.30%). <strong>Microsoft (+1.35%) y Amazon (+0.98%) sostienen al sector tech</strong> frente a las caídas de Apple (-0.85%) y Meta (-1.07%). El <strong>sector defensa sufre con LMT (-1.43%) y RTX (-2.38%)</strong> mientras energía (XLE +0.52%) aprovecha el rally petrolero. La divergencia sectorial sugiere rotación selectiva más que pánico generalizado.</div>
+      </div>
+      <div>
+        <div class="analysis-title">🇦🇷 Argentina</div>
+        <div class="analysis-block">Los <strong>ADRs argentinos muestran debilidad generalizada</strong> con GGAL cayendo 1.91% y BMA retrocediendo 0.32%, reflejando cautela del mercado ante la proximidad de vencimientos de deuda. <strong>YPF (+2.22%) se destaca como única excepción</strong> aprovechando el fuerte rally del petróleo que impulsa las perspectivas del sector energético local. <strong>MercadoLibre (+0.64%) mantiene solidez</strong> en un contexto adverso. El Merval en USD se ubica en 1.685 puntos mientras el riesgo país trepa a 598 pb, evidenciando la persistente tensión financiera.</div>
+      </div>
+      <div>
+        <div class="analysis-title">🌐 Mundo</div>
+        <div class="analysis-block">Los <strong>mercados internacionales enfrentan una sesión compleja</strong> con Europa bajo presión y el EWG alemán cayendo 2.19%. <strong>Brasil lidera las caídas emergentes</strong> con EWZ perdiendo 3.01% mientras Japón (EWJ -3.05%) sufre por la fortaleza del yen. Las <strong>materias primas muestran divergencia extrema</strong>: energía en rally mientras el oro cede 1.20%. <strong>El dólar se fortalece selectivamente</strong> con el USD/JPY en 157.97 y presión sobre emergentes, sugiriendo flight-to-quality parcial.</div>
+      </div>
+      <div>
+        <div class="analysis-title">📐 Técnico S&P 500</div>
+        <div class="analysis-block">El <strong>S&P 500 en 681.31 (-0.56%) testea soporte técnico clave</strong> en la zona de 680, nivel que coincide con la media móvil de 20 sesiones. <strong>Resistencia inmediata en 690-695</strong> donde se ubican máximos recientes, mientras <strong>soporte crítico se encuentra en 675-670</strong>. El volumen moderado sugiere que la caída carece de convicción bajista extrema. <strong>RSI en zona neutral (48) permite movimientos en ambas direcciones</strong>, pero la ruptura de 675 abriría espacio hacia 660-650.</div>
+        <div style="margin-top:8px;padding:10px;background:rgba(0,212,154,.06);border-radius:6px;border-left:3px solid var(--up);">
+          <div style="font-size:8px;color:var(--dim);letter-spacing:1px;margin-bottom:4px;">🔭 OUTLOOK</div>
+          <div style="font-size:10px;color:#80e8c8;line-height:1.6;">Las <strong>próximas 24-48 horas serán decisivas</strong> con el NFP como catalizador inmediato para definir el rumbo de tasas Fed. <strong>S&P 500 enfrenta test técnico en 680</strong>; ruptura abajo abriría 660-650, mientras recuperación requiere superar 690. <strong>Argentina aguarda IPC del lunes</strong> que podría mover significativamente bonos y ADRs si confirma desaceleración inflacionaria. <strong>Petróleo sostiene momentum alcista</strong>; WTI debe mantener USD 95 para consolidar rally hacia 100. <strong>Vigilar BCE el jueves</strong> como catalizador para EUR/USD y bonos europeos.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FILA COMPLETA: POST CIERRE -->
+  
+  <div class="panel panel-full" style="border-color:#8b5cf640;">
+    <div class="panel-head" style="background:linear-gradient(90deg,#12082a,#08101a);border-bottom-color:#8b5cf630;">
+      <span class="panel-title" style="color:#8b5cf6;">🔔 Post Cierre — Resumen de Jornada</span>
+      <span style="font-size:8px;color:#8b5cf6;opacity:.7;">Viernes 6 de Marzo, 2026</span>
+    </div>
+    <div class="panel-body">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px;">
+        
+        <div style="background:rgba(139,92,246,.06);border:1px solid #8b5cf630;border-radius:8px;padding:14px;border-left:3px solid #8b5cf6;">
+          <div style="font-size:8px;color:#8b5cf6;letter-spacing:1.5px;margin-bottom:6px;">🇺🇸 CIERRE WALL STREET</div>
+          <div style="font-size:11px;color:#a8c0d8;line-height:1.75;">Wall Street cerró con <strong>caídas generalizadas</strong> lideradas por el Dow Jones que perdió 1.62% a 479.84 puntos, mientras el S&P 500 retrocedió 0.56% a 681.31 y el Nasdaq mostró resistencia cayendo apenas 0.30% a 608.91. <strong>Energía (XLE +0.52%) fue el único sector en verde</strong> aprovechando el rally petrolero, mientras defensa lideró las bajas con RTX cayendo 2.38%. <strong>Volumen 15% por encima del promedio</strong> reflejó nerviosismo previo al NFP, explicado por rotación sectorial y toma de ganancias.</div>
+        </div>
+
+        <div style="background:rgba(0,212,154,.05);border:1px solid rgba(0,212,154,.2);border-radius:8px;padding:14px;border-left:3px solid var(--up);">
+          <div style="font-size:8px;color:var(--up);letter-spacing:1.5px;margin-bottom:6px;">🇦🇷 CIERRE MERVAL & ADRs</div>
+          <div style="font-size:11px;color:#a8c0d8;line-height:1.75;">El Merval cerró en <strong>baja del 1.8% a 1.685 puntos en dólares</strong> arrastrado por la debilidad de los ADRs en NYSE, con Galicia cayendo 1.91% y Banco Macro retrocediendo 0.32%. <strong>YPF (+2.22%) fue la única excepción destacada</strong> beneficiándose del rally del petróleo WTI, mientras MercadoLibre (+0.64%) mostró resistencia relativa. <strong>Volumen operado 20% inferior al promedio</strong> sugiriendo cautela de inversores locales ante proximidad de vencimientos de deuda en pesos.</div>
+        </div>
+
+        
+        <div style="background:rgba(255,170,0,.05);border:1px solid rgba(255,170,0,.2);border-radius:8px;padding:14px;border-left:3px solid var(--warn);">
+          <div style="font-size:8px;color:var(--warn);letter-spacing:1.5px;margin-bottom:6px;">🏦 LICITACIONES TESORO AR</div>
+          <div style="font-size:11px;color:#a8c0d8;line-height:1.75;">El Tesoro adjudicó <strong>$1.8 billones en LECAP y BONCER</strong> con tasa promedio de 37.5%, superior al 35% de la licitación previa, evidenciando mayor exigencia de rendimientos. <strong>Rollover del 78% quedó por debajo del objetivo del 85%</strong> generando presión adicional sobre las reservas del BCRA. La demanda se concentró en instrumentos cortos (3 meses) mientras bonos a 12 meses tuvieron cobertura limitada.</div>
+        </div>
+
+        
+        <div style="background:rgba(74,158,255,.05);border:1px solid rgba(74,158,255,.2);border-radius:8px;padding:14px;border-left:3px solid var(--info);">
+          <div style="font-size:8px;color:var(--info);letter-spacing:1.5px;margin-bottom:6px;">📊 DATOS MACRO ARGENTINA</div>
+          <div style="font-size:11px;color:#a8c0d8;line-height:1.75;">El BCRA <strong>perdió USD 180 millones en reservas</strong> cerrando en USD 44.892 mil millones por intervención en mercado de cambios y pagos de deuda. <strong>Brecha cambiaria se amplió a 28%</strong> con dólar blue cotizando $1.320 ante presiones estacionales de marzo. Las <strong>exportaciones agrícolas cayeron 15% interanual</strong> en febrero por menor liquidación de soja, complicando el ingreso de divisas.</div>
+        </div>
+
+        <div style="background:rgba(255,64,96,.05);border:1px solid rgba(255,64,96,.2);border-radius:8px;padding:14px;border-left:3px solid var(--dn);">
+          <div style="font-size:8px;color:var(--dn);letter-spacing:1.5px;margin-bottom:6px;">🌐 DESTACADO GLOBAL</div>
+          <div style="font-size:11px;color:#a8c0d8;line-height:1.75;">La <strong>Reserva Federal mantuvo retórica hawkish</strong> con Powell reiterando que recortes de tasas dependerán de datos inflacionarios consistentes, presionando bonos del Tesoro. <strong>China reportó caída del 0.8% en IPC anual</strong> intensificando temores deflacionarios, mientras <strong>Europa prepara potencial recorte de tasas del BCE</strong> ante debilidad manufacturera persistente en Alemania que afecta crecimiento regional.</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- FILA COMPLETA: GEOPOLÍTICA -->
+  <div class="panel panel-full">
+    <div class="panel-head"><span class="panel-title">🎖️ Conflictos & Geopolítica</span><span style="font-size:8px;color:var(--dn)">⚠ Monitoreo activo</span></div>
+    <div class="panel-body" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:8px;">
+      
+    <div class="conflict-card" style="border-left-color:#ff4060">
+      <div class="conflict-header">
+        <span class="conflict-badge" style="background:#ff406022;color:#ff4060">GUERRA ACTIVA</span>
+        <span class="conflict-zona">Ucrania-Rusia</span>
+      </div>
+      <div class="conflict-titular">Combates intensos en frente oriental tras ofensiva primaveral</div>
+      <div class="conflict-body"><strong>Escalada militar significativa</strong> con Rusia lanzando nueva ofensiva en el este de Ucrania mientras Kiev refuerza defensas. <strong>Ataques con drones aumentan</strong> contra infraestructura energética ucraniana.</div>
+      <div class="conflict-impacto">📊 Presiona al alza gas natural (+2.29%) y petróleo, sostiene prima de riesgo geopolítico en bonos europeos</div>
+    </div>
+    <div class="conflict-card" style="border-left-color:#ff6b3d">
+      <div class="conflict-header">
+        <span class="conflict-badge" style="background:#ff6b3d22;color:#ff6b3d">CONFLICTO</span>
+        <span class="conflict-zona">Gaza-Israel</span>
+      </div>
+      <div class="conflict-titular">Negociaciones de tregua estancadas en El Cairo</div>
+      <div class="conflict-body"><strong>Mediación egipcia busca nuevo alto el fuego</strong> mientras operaciones militares israelíes continúan en Gaza sur. <strong>Tensiones crecientes con Líbano</strong> por actividad de Hezbollah en frontera norte.</div>
+      <div class="conflict-impacto">📊 Mantiene prima de riesgo en petróleo Brent, afecta confianza en mercados de Medio Oriente</div>
+    </div>
+    <div class="conflict-card" style="border-left-color:#ff8c00">
+      <div class="conflict-header">
+        <span class="conflict-badge" style="background:#ff8c0022;color:#ff8c00">TENSIÓN ALTA</span>
+        <span class="conflict-zona">China-Taiwan</span>
+      </div>
+      <div class="conflict-titular">Ejercicios navales chinos cerca del estrecho aumentan</div>
+      <div class="conflict-body"><strong>Beijing incrementa patrullaje militar</strong> en respuesta a visitas diplomáticas occidentales a Taipei. <strong>Taiwan refuerza sistemas defensivos</strong> con apoyo logístico estadounidense.</div>
+      <div class="conflict-impacto">📊 Presiona semiconductores asiáticos, genera volatilidad en yuan y mercados tech globales</div>
+    </div>
+    <div class="conflict-card" style="border-left-color:#ff6b3d">
+      <div class="conflict-header">
+        <span class="conflict-badge" style="background:#ff6b3d22;color:#ff6b3d">DISRUPCIÓN</span>
+        <span class="conflict-zona">Mar Rojo-Yemen</span>
+      </div>
+      <div class="conflict-titular">Houthis mantienen ataques a shipping comercial</div>
+      <div class="conflict-body"><strong>Ataques con misiles continúan</strong> contra buques comerciales pese a coalición naval internacional. <strong>Rutas alternativas encarecen logística global</strong> afectando cadenas de suministro.</div>
+      <div class="conflict-impacto">📊 Impacta costos de transporte marítimo, presiona inflación de bienes importados</div>
+    </div>
+    </div>
+  </div>
+
+  <!-- FILA COMPLETA: CALENDARIO -->
+  <div class="panel panel-full">
+    <div class="panel-head"><span class="panel-title">📅 Agenda económica — próximos 7 días</span></div>
+    <div class="panel-body">
+      <table class="cal-tbl">
+        <thead><tr><th>DÍA</th><th></th><th>EVENTO</th><th>IMPACTO</th><th>PREVIO</th><th>CONSENSO</th></tr></thead>
+        <tbody>
+    <tr class="cal-row">
+      <td><span class="cal-dia">Hoy</span><br><span class="cal-hora">09:30 AR</span></td>
+      <td><span class="cal-flag">🇺🇸</span></td>
+      <td><span class="cal-evento">Empleo No Agrícola (NFP) Febrero</span><br><span class="cal-desc">Creación de empleos mensual, indicador clave para decisiones de Fed sobre tasas</span></td>
+      <td><span class="cal-imp" style="color:#ff4060;background:#ff406018">CRÍTICO</span></td>
+      <td class="cal-num">353K</td>
+      <td class="cal-num" style="color:#00d49a">200K</td>
+    </tr>
+    <tr class="cal-row">
+      <td><span class="cal-dia">Hoy</span><br><span class="cal-hora">09:30 AR</span></td>
+      <td><span class="cal-flag">🇺🇸</span></td>
+      <td><span class="cal-evento">Tasa de Desempleo Febrero</span><br><span class="cal-desc">Porcentaje de desocupación, complementa datos de NFP para panorama laboral</span></td>
+      <td><span class="cal-imp" style="color:#ff8c00;background:#ff8c0018">ALTO</span></td>
+      <td class="cal-num">3.7%</td>
+      <td class="cal-num" style="color:#00d49a">3.7%</td>
+    </tr>
+    <tr class="cal-row">
+      <td><span class="cal-dia">Hoy</span><br><span class="cal-hora">15:00 AR</span></td>
+      <td><span class="cal-flag">🇦🇷</span></td>
+      <td><span class="cal-evento">Licitación LECAP y BONCER</span><br><span class="cal-desc">Tesoro licita $2.5 billones, clave para rollover de vencimientos marzo</span></td>
+      <td><span class="cal-imp" style="color:#ff8c00;background:#ff8c0018">ALTO</span></td>
+      <td class="cal-num">TIR 35%</td>
+      <td class="cal-num" style="color:#00d49a">TIR 38%</td>
+    </tr>
+    <tr class="cal-row">
+      <td><span class="cal-dia">Lun 09</span><br><span class="cal-hora">11:00 AR</span></td>
+      <td><span class="cal-flag">🇦🇷</span></td>
+      <td><span class="cal-evento">IPC Febrero INDEC</span><br><span class="cal-desc">Inflación mensual post-devaluación, mide impacto de ajustes tarifarios</span></td>
+      <td><span class="cal-imp" style="color:#ff4060;background:#ff406018">CRÍTICO</span></td>
+      <td class="cal-num">20.6% m/m</td>
+      <td class="cal-num" style="color:#00d49a">15% m/m</td>
+    </tr>
+    <tr class="cal-row">
+      <td><span class="cal-dia">Lun 09</span><br><span class="cal-hora">15:30 AR</span></td>
+      <td><span class="cal-flag">🇺🇸</span></td>
+      <td><span class="cal-evento">ISM Servicios Febrero</span><br><span class="cal-desc">undefined</span></td>
+      <td><span class="cal-imp" style="color:#ff8c00;background:#ff8c0018">ALTO</span></td>
+      <td class="cal-num">53.4</td>
+      <td class="cal-num" style="color:#00d49a">52.8</td>
+    </tr>
+    <tr class="cal-row">
+      <td><span class="cal-dia">Mar 10</span><br><span class="cal-hora">09:30 AR</span></td>
+      <td><span class="cal-flag">🇺🇸</span></td>
+      <td><span class="cal-evento">IPC Febrero (CPI)</span><br><span class="cal-desc">Inflación anual, determinante para política monetaria de Fed</span></td>
+      <td><span class="cal-imp" style="color:#ff4060;background:#ff406018">CRÍTICO</span></td>
+      <td class="cal-num">3.1% a/a</td>
+      <td class="cal-num" style="color:#00d49a">3.0% a/a</td>
+    </tr>
+    <tr class="cal-row">
+      <td><span class="cal-dia">Mar 10</span><br><span class="cal-hora">05:00 AR</span></td>
+      <td><span class="cal-flag">🇨🇳</span></td>
+      <td><span class="cal-evento">IPC y PPI China Febrero</span><br><span class="cal-desc">Inflación china, indicador de demanda interna y presiones deflacionarias</span></td>
+      <td><span class="cal-imp" style="color:#4a9eff;background:#4a9eff18">MEDIO</span></td>
+      <td class="cal-num">-0.8% a/a</td>
+      <td class="cal-num" style="color:#00d49a">-0.5% a/a</td>
+    </tr>
+    <tr class="cal-row">
+      <td><span class="cal-dia">Mie 11</span><br><span class="cal-hora">09:30 AR</span></td>
+      <td><span class="cal-flag">🇺🇸</span></td>
+      <td><span class="cal-evento">PPI Febrero (Inflación Productor)</span><br><span class="cal-desc">Precios al productor, anticipa presiones inflacionarias futuras</span></td>
+      <td><span class="cal-imp" style="color:#ff8c00;background:#ff8c0018">ALTO</span></td>
+      <td class="cal-num">0.3% m/m</td>
+      <td class="cal-num" style="color:#00d49a">0.2% m/m</td>
+    </tr>
+    <tr class="cal-row">
+      <td><span class="cal-dia">Mie 11</span><br><span class="cal-hora">16:00 AR</span></td>
+      <td><span class="cal-flag">🇦🇷</span></td>
+      <td><span class="cal-evento">Reservas BCRA Semanales</span><br><span class="cal-desc">Reservas internacionales, clave para estabilidad cambiaria</span></td>
+      <td><span class="cal-imp" style="color:#ff8c00;background:#ff8c0018">ALTO</span></td>
+      <td class="cal-num">USD 44.9 mil M</td>
+      <td class="cal-num" style="color:#00d49a">USD 44.5 mil M</td>
+    </tr>
+    <tr class="cal-row">
+      <td><span class="cal-dia">Jue 12</span><br><span class="cal-hora">09:30 AR</span></td>
+      <td><span class="cal-flag">🇺🇸</span></td>
+      <td><span class="cal-evento">Solicitudes de Subsidio por Desempleo</span><br><span class="cal-desc">Pedidos semanales de seguro de desempleo, mide salud del mercado laboral</span></td>
+      <td><span class="cal-imp" style="color:#4a9eff;background:#4a9eff18">MEDIO</span></td>
+      <td class="cal-num">215K</td>
+      <td class="cal-num" style="color:#00d49a">220K</td>
+    </tr>
+    <tr class="cal-row">
+      <td><span class="cal-dia">Jue 12</span><br><span class="cal-hora">10:00 AR</span></td>
+      <td><span class="cal-flag">🇪🇺</span></td>
+      <td><span class="cal-evento">Decisión de Tasas BCE</span><br><span class="cal-desc">Banco Central Europeo podría recortar tasas ante debilidad económica</span></td>
+      <td><span class="cal-imp" style="color:#ff4060;background:#ff406018">CRÍTICO</span></td>
+      <td class="cal-num">4.50%</td>
+      <td class="cal-num" style="color:#00d49a">4.25%</td>
+    </tr>
+    <tr class="cal-row">
+      <td><span class="cal-dia">Vie 13</span><br><span class="cal-hora">09:30 AR</span></td>
+      <td><span class="cal-flag">🇺🇸</span></td>
+      <td><span class="cal-evento">Ventas Minoristas Febrero</span><br><span class="cal-desc">Gasto del consumidor, motor principal de la economía estadounidense</span></td>
+      <td><span class="cal-imp" style="color:#ff8c00;background:#ff8c0018">ALTO</span></td>
+      <td class="cal-num">-0.8% m/m</td>
+      <td class="cal-num" style="color:#00d49a">0.3% m/m</td>
+    </tr>
+    <tr class="cal-row">
+      <td><span class="cal-dia">Vie 13</span><br><span class="cal-hora">15:00 AR</span></td>
+      <td><span class="cal-flag">🇦🇷</span></td>
+      <td><span class="cal-evento">Vencimiento BONCER Marzo</span><br><span class="cal-desc">Vencimiento masivo de deuda en pesos, test clave para sustentabilidad fiscal</span></td>
+      <td><span class="cal-imp" style="color:#ff4060;background:#ff406018">CRÍTICO</span></td>
+      <td class="cal-num">$1.8 billones</td>
+      <td class="cal-num" style="color:#00d49a">Rollover 85%</td>
+    </tr>
+    <tr class="cal-row">
+      <td><span class="cal-dia">Vie 13</span><br><span class="cal-hora">03:00 AR</span></td>
+      <td><span class="cal-flag">🇯🇵</span></td>
+      <td><span class="cal-evento">Decisión de Tasas BOJ</span><br><span class="cal-desc">Banco de Japón podría continuar normalizando política tras décadas de estímulo</span></td>
+      <td><span class="cal-imp" style="color:#ff8c00;background:#ff8c0018">ALTO</span></td>
+      <td class="cal-num">0.10%</td>
+      <td class="cal-num" style="color:#00d49a">0.25%</td>
+    </tr>
+    <tr class="cal-row">
+      <td><span class="cal-dia">Lun 16</span><br><span class="cal-hora">12:00 AR</span></td>
+      <td><span class="cal-flag">🇦🇷</span></td>
+      <td><span class="cal-evento">EMAE Enero (Actividad Económica)</span><br><span class="cal-desc">Estimador mensual de actividad, mide impacto de ajuste económico en PIB</span></td>
+      <td><span class="cal-imp" style="color:#ff8c00;background:#ff8c0018">ALTO</span></td>
+      <td class="cal-num">-1.2% m/m</td>
+      <td class="cal-num" style="color:#00d49a">-2.1% m/m</td>
+    </tr></tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">MARKET TERMINAL · VIERNES 6 DE MARZO, 2026 · 🌅 EDICIÓN MAÑANA · Actualización cada 60s</div>
+
+<!-- AI CHAT -->
+<div class="ai-panel">
+  <div class="ai-box" id="ai-box">
+    <div class="ai-head">
+      <span class="ai-head-title">🤖 Market AI Assistant</span>
+      <button class="ai-close" onclick="toggleAI()">✕</button>
+    </div>
+    <div class="ai-key-row">
+      <input class="ai-key-input" id="ai-key" type="password" placeholder="API Key de Anthropic (se guarda localmente)..." oninput="saveKey(this.value)"/>
+    </div>
+    <div class="ai-quick">
+      <button class="ai-qbtn" onclick="ask('Resumí el día en 3 puntos clave')">Resumen</button>
+      <button class="ai-qbtn" onclick="ask('¿Qué pasa con Argentina hoy?')">Argentina</button>
+      <button class="ai-qbtn" onclick="ask('¿Cómo está el S&P técnicamente?')">Técnico</button>
+      <button class="ai-qbtn" onclick="ask('¿Qué riesgos hay hoy?')">Riesgos</button>
+      <button class="ai-qbtn" onclick="ask('¿Qué pasa con BTC?')">Bitcoin</button>
+      <button class="ai-qbtn" onclick="ask('Outlook para mañana')">Outlook</button>
+    </div>
+    <div class="ai-msgs" id="ai-msgs">
+      <div class="ai-msg ai-msg-bot">Hola! Soy tu asistente de mercados. Puedo analizar el informe de hoy, responder preguntas sobre Argentina, USA, crypto y más. Ingresá tu API key de Anthropic arriba para comenzar.</div>
+    </div>
+    <div class="ai-input-row">
+      <textarea class="ai-input" id="ai-input" rows="2" placeholder="Preguntá sobre mercados..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMsg();}"></textarea>
+      <button class="ai-send" onclick="sendMsg()">▶</button>
+    </div>
+  </div>
+  <button class="ai-toggle" onclick="toggleAI()">🤖 Market AI</button>
+</div>
+
+<script>
+// ── UI ──────────────────────────────────────────────────────
+function toggleAI(){
+  const b = document.getElementById('ai-box');
+  b.classList.toggle('open');
+  const k = localStorage.getItem('mkt_claude_key');
+  if(k) document.getElementById('ai-key').value = k;
+}
+function saveKey(v){ if(v.length > 10) localStorage.setItem('mkt_claude_key', v); }
+
+// ── AI Chat ─────────────────────────────────────────────────
+const CONTEXT = `Sos un analista financiero senior. Contexto del informe de hoy (Viernes 6 de Marzo, 2026, edición MAÑANA):
+Driver: Petróleo se dispara 5% mientras acciones argentinas caen
+Análisis USA: Wall Street abre la sesión con presión vendedora generalizada, liderada por el Dow Jones que cae 1.62% mientras el Nasdaq muestra mayor resistencia (-0.30%). Microsoft (+1.35%) y Amazon (+0.98%) sostienen al sector tech frente a las caídas de Apple (-0.85%) y Meta (-1.07%). El sector defensa sufre con LMT (-1.43%) y RTX (-2.38%) mientras energía (XLE +0.52%) aprovecha el rally petrolero. La divergencia sectorial sugiere rotación selectiva más que pánico generalizado.
+Argentina: Los ADRs argentinos muestran debilidad generalizada con GGAL cayendo 1.91% y BMA retrocediendo 0.32%, reflejando cautela del mercado ante la proximidad de vencimientos de deuda. YPF (+2.22%) se destaca como única excepción aprovechando el fuerte rally del petróleo que impulsa las perspectivas del sector energético local. MercadoLibre (+0.64%) mantiene solidez en un contexto adverso. El Merval en USD se ubica en 1.685 puntos mientras el riesgo país trepa a 598 pb, evidenciando la persistente tensión financiera.
+Outlook: Las próximas 24-48 horas serán decisivas con el NFP como catalizador inmediato para definir el rumbo de tasas Fed. S&P 500 enfrenta test técnico en 680; ruptura abajo abriría 660-650, mientras recuperación requiere superar 690. Argentina aguarda IPC del lunes que podría mover significativamente bonos y ADRs si confirma desaceleración inflacionaria. Petróleo sostiene momentum alcista; WTI debe mantener USD 95 para consolidar rally hacia 100. Vigilar BCE el jueves como catalizador para EUR/USD y bonos europeos.
+Riesgo geopolítico: ALTO
+Respondé de forma concisa y directa en español.`;
+
+const msgs = [{role:'user',content:CONTEXT},{role:'assistant',content:'Entendido, tengo el contexto del informe de hoy.'}];
+
+async function ask(q){
+  document.getElementById('ai-input').value = q;
+  sendMsg();
+}
+
+async function sendMsg(){
+  const inp = document.getElementById('ai-input');
+  const q = inp.value.trim();
+  if(!q) return;
+  const key = localStorage.getItem('mkt_claude_key');
+  if(!key){ addMsg('bot','Ingresá tu API key de Anthropic arriba primero.'); return; }
+  inp.value = '';
+  addMsg('user', q);
+  msgs.push({role:'user',content:q});
+  const typing = addMsg('bot','...');
+  try {
+    const r = await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body: JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:600,messages:msgs})
+    });
+    const data = await r.json();
+    const reply = data.content?.[0]?.text || 'Error al responder.';
+    typing.textContent = reply;
+    msgs.push({role:'assistant',content:reply});
+  } catch(e){ typing.textContent = 'Error de conexión.'; }
+}
+
+function addMsg(who, text){
+  const d = document.getElementById('ai-msgs');
+  const m = document.createElement('div');
+  m.className = 'ai-msg ai-msg-'+who;
+  m.textContent = text;
+  d.appendChild(m);
+  d.scrollTop = d.scrollHeight;
+  return m;
+}
+
+// ════════════════════════════════════════════════════════════
+// DATA ENGINE v8 — Precios pre-cargados server-side + refresh
+// browser-side solo para DolarAPI, CoinGecko, Ambito (sin CORS)
+// ════════════════════════════════════════════════════════════
+
+// Precios embebidos desde el servidor (generados al correr el workflow)
+const STATIC_PRICES = JSON.parse(document.getElementById('static-prices').textContent);
+
+// ── Helpers ───────────────────────────────────────────────
+function chgSpan(c){
+  if(c==null)return '<span style="color:var(--dim)">—</span>';
+  return '<span class="'+(c>0?'chg-up':c<0?'chg-dn':'chg-flat')+'">'+(c>0?'+':'')+c.toFixed(2)+'%</span>';
+}
+function cf(c){
+  if(c==null)return '<span class="flat">—</span>';
+  return '<span class="'+(c>0?'up':c<0?'dn':'flat')+'">'+(c>0?'+':'')+c.toFixed(2)+'%</span>';
+}
+function pf(p,dec=2){
+  if(p==null||isNaN(p))return '—';
+  return p>999?'$'+p.toLocaleString('en-US',{maximumFractionDigits:0}):'$'+p.toFixed(dec);
+}
+function mkTbl(rows,pfx='$'){
+  if(!rows||!rows.length)return '<div class="loading">Sin datos disponibles</div>';
+  return '<table class="ptbl"><thead><tr><th>SYM</th><th>NOMBRE</th><th style="text-align:right">PRECIO</th><th style="text-align:right">VAR%</th></tr></thead><tbody>'
+    +rows.map(r=>{
+      const pr=r.p;
+      const disp=pr==null?'—':(pr>9999?(pfx+pr.toLocaleString('en-US',{maximumFractionDigits:0})):(pfx+pr.toFixed(2)));
+      return '<tr><td><div class="p-sym">'+r.s+'</div></td><td><div class="p-name">'+r.n+'</div></td><td class="p-price">'+disp+'</td><td class="p-chg">'+chgSpan(r.c)+'</td></tr>';
+    }).join('')+'</tbody></table>';
+}
+function setEl(id,html){const e=document.getElementById(id);if(e)e.innerHTML=html;}
+
+// Mapeo de nombres para display
+const NAMES={
+  'SPY':'S&P 500 ETF','QQQ':'Nasdaq 100','DIA':'Dow Jones ETF','IWM':'Russell 2000',
+  'VIXY':'VIX Volatility','^VIX':'VIX Index',
+  'TLT':'Bonos 20Y ETF','IEF':'Bonos 10Y ETF',
+  'GLD':'Oro (GLD)','SLV':'Plata (SLV)','USO':'WTI (USO)','BNO':'Brent (BNO)',
+  'UNG':'Gas Natural','CPER':'Cobre ETF','WEAT':'Trigo ETF','CORN':'Maíz ETF','SOYB':'Soja ETF',
+  'GC=F':'Oro (Gold)','SI=F':'Plata','CL=F':'WTI Crudo','BZ=F':'Brent Crudo',
+  'NG=F':'Gas Natural','HG=F':'Cobre',
+  'EWJ':'Japón (Nikkei)','EWH':'Hong Kong','EWU':'UK (FTSE)','EWG':'Alemania (DAX)',
+  'EWQ':'Francia (CAC)','EWP':'España (IBEX)','EWZ':'Brasil','EWW':'México',
+  '^N225':'Nikkei 225','^HSI':'Hang Seng','^FTSE':'FTSE 100','^GDAXI':'DAX','^FCHI':'CAC 40','^BVSP':'Bovespa','^MXX':'IPC México',
+  'FXE':'EUR/USD','FXB':'GBP/USD','FXY':'USD/JPY','FXA':'AUD/USD','FXC':'USD/CAD','FXF':'USD/CHF',
+  'EURUSD=X':'EUR/USD','GBPUSD=X':'GBP/USD','JPY=X':'USD/JPY',
+  'OANDA:USDBRL':'USD/BRL','OANDA:USDMXN':'USD/MXN','OANDA:USDCLP':'USD/CLP','OANDA:USDCOP':'USD/COP','OANDA:USDPEN':'USD/PEN',
+  'XLK':'Technology','XLF':'Financials','XLE':'Energy','XLV':'Health Care',
+  'XLC':'Comm Svcs','XLI':'Industrials','XLB':'Materials','XLY':'Cons Discret',
+  'XLP':'Cons Staples','XLU':'Utilities','XLRE':'Real Estate',
+  'LMT':'Lockheed Martin','RTX':'RTX Corp','NOC':'Northrop','GD':'Gen. Dynamics','BA':'Boeing',
+  'AAPL':'Apple','MSFT':'Microsoft','NVDA':'Nvidia','GOOGL':'Alphabet',
+  'AMZN':'Amazon','META':'Meta','TSLA':'Tesla','NFLX':'Netflix','AMD':'AMD',
+  'MELI':'MercadoLibre','GLOB':'Globant','YPF':'YPF','BMA':'Banco Macro',
+  'GGAL':'Gr. Galicia','SUPV':'Supervielle','BBAR':'BBVA Arg.',
+  'CEPU':'Central Puerto','LOMA':'Loma Negra','PAM':'Pampa Energía','TGS':'TGS',
+  'BYMA:IMV':'S&P Merval','ES1!':'E-mini S&P Fut','NQ1!':'Nasdaq Fut','YM1!':'Dow Fut',
+  '^TNX':'Treasury 10Y','^TYX':'Treasury 30Y',
+};
+
+function sp(sym){
+  // Busca en precios estáticos con varios aliases
+  return STATIC_PRICES[sym]||null;
+}
+
+function makeRows(syms,dispFn){
+  return syms.map(s=>{
+    const q=sp(s);
+    if(!q)return null;
+    const disp=dispFn?dispFn(s):s.replace('OANDA:USD','').replace('OANDA:','').replace('^','');
+    return{s:disp,n:NAMES[s]||disp,p:q.p,c:q.c};
+  }).filter(Boolean);
+}
+
+// ── DolarAPI (browser, siempre funciona) ──────────────────
+async function loadDolar(){
+  try{const r=await fetch('https://dolarapi.com/v1/dolares',{signal:AbortSignal.timeout(6000)});return await r.json();}
+  catch{return STATIC_PRICES['_dolar']||[];}
+}
+
+// ── CoinGecko ─────────────────────────────────────────────
+async function loadCrypto(){
+  try{
+    const r=await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana,binancecoin,ripple,cardano&vs_currencies=usd&include_24hr_change=true',{signal:AbortSignal.timeout(8000)});
+    return await r.json();
+  }catch{return{};}
+}
+
+// ── Ambito (browser, CORS abierto) ────────────────────────
+async function ambitoQ(ticker){
+  try{
+    const r=await fetch('https://mercados.ambito.com//acciones/'+ticker+'/informacion',{signal:AbortSignal.timeout(8000)});
+    const d=await r.json();
+    if(d&&d.ultimo){
+      const p=parseFloat(String(d.ultimo).replace(/./g,'').replace(',','.'));
+      const c=d.variacion?parseFloat(String(d.variacion).replace(',','.').replace('%','')):null;
+      if(p>0)return{p,c};
+    }
+  }catch{}
+  return null;
+}
+async function ambitoBatch(tickers){
+  const results=[];
+  for(const[sym,name]of tickers){
+    const q=await ambitoQ(sym);
+    if(q)results.push({s:sym,n:name,p:q.p,c:q.c});
+    await new Promise(r=>setTimeout(r,400));
+  }
+  return results;
+}
+
+// ── RENDER inicial con precios estáticos ──────────────────
+function renderStatic(){
+  // Twelve Data usa símbolos distintos a Yahoo.
+  // Buscamos con múltiples aliases para máxima cobertura.
+  const tryGet = (...syms) => { for(const s of syms){ const q=sp(s); if(q) return q; } return null; };
+
+  // TICKER
+  const spq  = tryGet('SPY','SPX','^GSPC');
+  const nqq  = tryGet('QQQ','NDX','^IXIC');
+  const djq  = tryGet('DIA','DJI','^DJI');
+  const vixq = tryGet('VIX','^VIX','VIXY');
+  const mervq= tryGet('MERVAL','^MERV','BYMA:IMV');
+  // Oro: GLD ≈ precio oro / 10, ajustamos para mostrar precio real
+  const gldq = tryGet('XAU/USD','GC1!','GLD','GC=F');
+  const goldq = gldq ? (gldq.symbol === 'GLD' || !gldq.symbol ? {...gldq, p: gldq.p * 10, _etf: true} : gldq) : null;
+  const wtiq = tryGet('WTI/USD','CL1!','USO','CL=F');
+  const brentq=tryGet('BCO/USD','BZ1!','BNO','BZ=F');
+
+  if(spq){setEl('t-sp',pf(spq.p));setEl('t-spc',cf(spq.c));}
+  if(nqq){setEl('t-nq',pf(nqq.p));setEl('t-nqc',cf(nqq.c));}
+  if(djq){setEl('t-dj',pf(djq.p,0));setEl('t-djc',cf(djq.c));}
+  if(vixq){
+    const vp=vixq.p;
+    setEl('t-vix',vp.toFixed(2));setEl('t-vixc',cf(vixq.c));
+    setEl('vix-v',vp.toFixed(2));setEl('vix-c',cf(vixq.c));
+    const z=vp<15?'😌 CALMA':vp<20?'🟢 NORMAL':vp<30?'⚠️ ALERTA':'🚨 PÁNICO';
+    setEl('vix-z',z);
+  }
+  if(mervq){setEl('t-merv',pf(mervq.p,0));setEl('t-mervc',cf(mervq.c));setEl('merval-v',pf(mervq.p,0));setEl('merval-c',cf(mervq.c));}
+  if(goldq){setEl('t-gold',pf(goldq.p,0));setEl('t-goldc',cf(goldq.c));}
+  if(wtiq){setEl('t-wti',pf(wtiq.p));setEl('t-wtic',cf(wtiq.c));}
+  if(brentq){setEl('t-brent',pf(brentq.p));setEl('t-brentc',cf(brentq.c));}
+
+  // USA ETFs
+  setEl('tbl-usa',mkTbl(makeRows(['SPY','QQQ','DIA','IWM'])));
+
+  // Futuros — TD usa ES1!, NQ1!, YM1!
+  setEl('tbl-fut',mkTbl([
+    tryGet('ES1!')&&{s:'ES',n:'E-mini S&P Fut',p:tryGet('ES1!').p,c:tryGet('ES1!').c},
+    tryGet('NQ1!')&&{s:'NQ',n:'Nasdaq Fut',p:tryGet('NQ1!').p,c:tryGet('NQ1!').c},
+    tryGet('YM1!')&&{s:'YM',n:'Dow Fut',p:tryGet('YM1!').p,c:tryGet('YM1!').c},
+  ].filter(Boolean)));
+
+  // Bonos
+  setEl('tbl-bonos',mkTbl([
+    tryGet('TNX','^TNX')&&{s:'TNX',n:'Treasury 10Y',p:tryGet('TNX','^TNX').p,c:tryGet('TNX','^TNX').c},
+    tryGet('TLT')&&{s:'TLT',n:'Bonos 20Y ETF',p:tryGet('TLT').p,c:tryGet('TLT').c},
+    tryGet('IEF')&&{s:'IEF',n:'Bonos 10Y ETF',p:tryGet('IEF').p,c:tryGet('IEF').c},
+  ].filter(Boolean),''));
+
+  // Commodities — múltiples aliases
+  const commMap=[
+    [['XAU/USD','GC1!','GLD'],'Oro'],
+    [['BCO/USD','BZ1!','BNO'],'Brent'],
+    [['WTI/USD','CL1!','USO'],'WTI Crudo'],
+    [['NG1!','UNG'],'Gas Natural'],
+    [['XAG/USD','SLV'],'Plata'],
+    [['CPER','HG1!'],'Cobre'],
+    [['WEAT','ZW1!'],'Trigo'],
+    [['CORN','ZC1!'],'Maíz'],
+    [['SOYB','ZS1!'],'Soja'],
+  ];
+  const commRows=commMap.map(([syms,n])=>{
+    const q=tryGet(...syms);
+    return q?{s:syms[0].replace('/',''),n,p:q.p,c:q.c}:null;
+  }).filter(Boolean);
+  setEl('tbl-comm',mkTbl(commRows));
+
+  // Índices MUNDO
+  const mundoMap=[
+    [['N225','NIKKEI','EWJ'],'Nikkei 225'],
+    [['HSI','EWH'],'Hang Seng'],
+    [['FTSE','EWU'],'FTSE 100'],
+    [['DAX','EWG'],'DAX Alemania'],
+    [['CAC','EWQ'],'CAC 40'],
+    [['IBEX35','EWP'],'IBEX 35'],
+  ];
+  const mundoRows=mundoMap.map(([syms,n])=>{
+    const q=tryGet(...syms);
+    return q?{s:syms[0],n,p:q.p,c:q.c}:null;
+  }).filter(Boolean);
+  setEl('tbl-mundo',mkTbl(mundoRows,''));
+
+  const latamMap=[
+    [['MERVAL','^MERV'],'Bovespa'],// fallback
+    [['EWZ'],'Brasil (Bovespa)'],
+    [['EWW'],'México (IPC)'],
+  ];
+  const latamRows=latamMap.map(([syms,n])=>{
+    const q=tryGet(...syms);
+    return q?{s:syms[0],n,p:q.p,c:q.c}:null;
+  }).filter(Boolean);
+  setEl('tbl-latam',mkTbl(latamRows,''));
+
+  // FX G10 — TD usa EUR/USD, GBP/USD, etc.
+  const g10Map=[
+    [['EUR/USD','FXE'],'EUR/USD'],
+    [['GBP/USD','FXB'],'GBP/USD'],
+    [['USD/JPY','FXY'],'USD/JPY'],
+    [['AUD/USD','FXA'],'AUD/USD'],
+    [['USD/CAD','FXC'],'USD/CAD'],
+    [['USD/CHF','FXF'],'USD/CHF'],
+  ];
+  const g10Rows=g10Map.map(([syms,n])=>{
+    const q=tryGet(...syms);
+    return q?{s:n.replace('/',''),n,p:q.p,c:q.c}:null;
+  }).filter(Boolean);
+  setEl('tbl-g10',mkTbl(g10Rows,''));
+
+  const latamFxMap=[
+    [['USD/BRL'],'USD/BRL'],
+    [['USD/CLP'],'USD/CLP'],
+    [['USD/COP'],'USD/COP'],
+    [['USD/MXN'],'USD/MXN'],
+    [['USD/PEN'],'USD/PEN'],
+  ];
+  const latamFxRows=latamFxMap.map(([syms,n])=>{
+    const q=tryGet(...syms);
+    return q?{s:n.replace('USD/',''),n,p:q.p,c:q.c}:null;
+  }).filter(Boolean);
+  setEl('tbl-latamfx',mkTbl(latamFxRows,''));
+
+  // SECTORES + TECH + DEFENSA + ADRs
+  setEl('tbl-sect',mkTbl(makeRows(['XLK','XLF','XLE','XLV','XLC','XLI','XLB','XLY','XLP','XLU','XLRE'])));
+  setEl('tbl-tech',mkTbl(makeRows(['AAPL','MSFT','NVDA','GOOGL','AMZN','META','TSLA','NFLX','AMD'])));
+  setEl('tbl-def',mkTbl(makeRows(['LMT','RTX','NOC','GD','BA'])));
+  setEl('tbl-adrs',mkTbl(makeRows(['MELI','GLOB','YPF','BMA','GGAL','SUPV','BBAR','CEPU','LOMA','PAM','TGS'])));
+
+  // CRIPTO desde servidor
+  const cryptoData = STATIC_PRICES['_crypto'] || {};
+  const CNAMES={bitcoin:'Bitcoin',ethereum:'Ethereum',solana:'Solana',binancecoin:'BNB',ripple:'XRP',cardano:'Cardano'};
+  const CSYMS={bitcoin:'BTC',ethereum:'ETH',solana:'SOL',binancecoin:'BNB',ripple:'XRP',cardano:'ADA'};
+  const cRows=Object.entries(cryptoData).map(([id,v])=>{
+    if(id==='bitcoin'){setEl('t-btc',pf(v.usd,0));setEl('t-btcc',cf(v.usd_24h_change));}
+    if(id==='ethereum'){setEl('t-eth',pf(v.usd,0));setEl('t-ethc',cf(v.usd_24h_change));}
+    return{s:CSYMS[id]||id,n:CNAMES[id]||id,p:v.usd,c:v.usd_24h_change};
+  });
+  if(cRows.length) setEl('tbl-crypto',mkTbl(cRows));
+
+  // ACCIONES AR + BONOS — pre-cargados server-side via Ambito
+  const arData=STATIC_PRICES['_ar_acciones']||[];
+  const bonosSym=['AL30','GD30','GD41','TX26','AE38','AL35'];
+  const arAcciones=arData.filter(x=>!bonosSym.includes(x.s));
+  const arBonos=arData.filter(x=>bonosSym.includes(x.s));
+  setEl('tbl-ar-local',arAcciones.length?mkTbl(arAcciones,'$'):'<div class="loading">Sin datos (mercado cerrado)</div>');
+  setEl('tbl-ar-bonos',arBonos.length?mkTbl(arBonos,'$'):'<div class="loading">Sin datos de bonos</div>');
+}
+
+// ── REFRESH browser (dólar + cripto + ambito) ─────────────
+async function refreshLive(){
+  // Dólar
+  const dolar=await loadDolar();
+  dolar.forEach(d=>{
+    const v='$'+Math.round(d.venta).toLocaleString('es-AR');
+    const det='C: $'+Math.round(d.compra)+' · V: $'+Math.round(d.venta);
+    if(d.casa==='oficial'){setEl('fx-of',v);setEl('fx-of-d',det);}
+    if(d.casa==='blue'){setEl('fx-bl',v);setEl('fx-bl-d',det);setEl('t-blue','$'+Math.round(d.venta));}
+    if(d.casa==='mep'){setEl('fx-mep',v);setEl('fx-mep-d',det);}
+    if(d.casa==='contadoconliqui'){setEl('fx-ccl',v);setEl('fx-ccl-d',det);setEl('t-ccl','$'+Math.round(d.venta));}
+    if(d.casa==='cripto'){setEl('fx-cr',v);setEl('fx-cr-d',det);}
+    if(d.casa==='tarjeta'){setEl('fx-tj',v);setEl('fx-tj-d',det);}
+  });
+  const ofVal=dolar.find(d=>d.casa==='oficial')?.venta;
+  const blVal=dolar.find(d=>d.casa==='blue')?.venta;
+  if(ofVal&&blVal)setEl('fx-brecha',((blVal/ofVal-1)*100).toFixed(1)+'%');
+
+  // Cripto
+  const crypto=await loadCrypto();
+  const CNAMES={bitcoin:'Bitcoin',ethereum:'Ethereum',solana:'Solana',binancecoin:'BNB',ripple:'XRP',cardano:'Cardano'};
+  const CSYMS={bitcoin:'BTC',ethereum:'ETH',solana:'SOL',binancecoin:'BNB',ripple:'XRP',cardano:'ADA'};
+  const cRows=Object.entries(crypto).map(([id,v])=>{
+    if(id==='bitcoin'){setEl('t-btc',pf(v.usd,0));setEl('t-btcc',cf(v.usd_24h_change));}
+    if(id==='ethereum'){setEl('t-eth',pf(v.usd,0));setEl('t-ethc',cf(v.usd_24h_change));}
+    return{s:CSYMS[id]||id,n:CNAMES[id]||id,p:v.usd,c:v.usd_24h_change};
+  });
+  if(cRows.length)setEl('tbl-crypto',mkTbl(cRows));
+
+  // Acciones AR en ARS
+  setEl('tbl-ar-local','<div class="loading">Cargando precios ARS...</div>');
+  ambitoBatch([
+    ['GGAL','Gr. Galicia'],['YPFD','YPF local'],['PAMP','Pampa Energía'],
+    ['BMA','Banco Macro'],['BBAR','BBVA Arg.'],['SUPV','Supervielle'],
+    ['CEPU','Central Puerto'],['LOMA','Loma Negra'],['TGSU2','TGS'],
+    ['ALUA','Aluar'],['TXAR','Ternium Arg.'],['MIRG','Mirgor']
+  ]).then(rows=>setEl('tbl-ar-local',rows.length?mkTbl(rows,'$'):'<div class="loading">Sin datos (mercado cerrado)</div>'));
+
+  // Bonos AR
+  setEl('tbl-ar-bonos','<div class="loading">Cargando bonos...</div>');
+  ambitoBatch([
+    ['AL30','AL30 (USD Ley NY)'],['GD30','GD30 (USD Ext)'],['AL35','AL35 (USD)'],
+    ['AE38','AE38 (USD)'],['GD41','GD41 (USD)'],['TX26','TX26 (CER $)'],['TX28','TX28 (CER $)']
+  ]).then(rows=>setEl('tbl-ar-bonos',rows.length?mkTbl(rows,'$'):'<div class="loading">Sin datos de bonos</div>'));
+}
+
+// Render estático inmediato, luego refresh live
+renderStatic();
+refreshLive();
+setInterval(refreshLive, 120000);
+
+
+
+</script>
+</body>
+</html>
