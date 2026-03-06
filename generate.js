@@ -3,6 +3,7 @@
 //  Layout: grilla completa, sin solapas, todo visible
 // ══════════════════════════════════════════════════════════
 
+
 import Anthropic from '@anthropic-ai/sdk';
 import { writeFileSync } from 'fs';
 
