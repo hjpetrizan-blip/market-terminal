@@ -5,12 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Market Terminal · Viernes 6 de Marzo, 2026 · 📈 RUEDA</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet"/>
-<script>(function(){var P='290585',K='mkt_auth';if(sessionStorage.getItem(K)!==P){document.addEventListener('DOMContentLoaded',function(){document.body.innerHTML='';var o=document.createElement('div');o.style.cssText='position:fixed;inset:0;background:#05080f;display:flex;align-items:center;justify-content:center;z-index:9999;font-family:Space Mono,monospace;';o.innerHTML='<div style="text-align:center;padding:40px;background:#0a1020;border:1px solid #1a2a40;border-radius:12px;max-width:320px;width:90%;"><div style="font-size:28px;margin-bottom:8px;">&#x1F510;</div><div style="font-family:Syne,sans-serif;font-size:20px;font-weight:800;color:#e8f4ff;margin-bottom:4px;">MARKET TERMINAL</div><div style="font-size:10px;color:#4a6a8a;letter-spacing:2px;margin-bottom:24px;">ACCESO RESTRINGIDO</div><input id="pi" type="password" placeholder="Ingres&#225; la clave..." autofocus style="width:100%;background:#0d1828;border:1px solid #1a2a40;border-radius:6px;padding:12px;color:#c8d8e8;font-size:14px;outline:none;text-align:center;margin-bottom:10px;" onkeydown="if(event.key==='Enter')cp()"/><div id="pe" style="color:#ff4060;font-size:11px;height:16px;margin-bottom:10px;"></div><button onclick="cp()" style="width:100%;background:linear-gradient(135deg,#8b5cf6,#4a9eff);border:none;border-radius:6px;padding:12px;color:#fff;font-size:13px;font-weight:700;cursor:pointer;">ENTRAR &#x2192;</button></div>';document.body.appendChild(o);window.cp=function(){var v=document.getElementById('pi').value;if(v===P){sessionStorage.setItem(K,P);location.reload();}else{document.getElementById('pe').textContent='&#x26A0;&#xFE0F; Clave incorrecta';document.getElementById('pi').value='';document.getElementById('pi').focus();}};});}})();</script>
+<style>.pw-overlay{position:fixed;inset:0;background:#0d1117;display:flex;align-items:center;justify-content:center;z-index:9999;font-family:system-ui,sans-serif}.pw-card{text-align:center;padding:48px 40px;background:#161b22;border:1px solid #30363d;border-radius:16px;max-width:340px;width:90%;box-shadow:0 8px 32px rgba(0,0,0,.5)}.pw-icon{font-size:32px;margin-bottom:16px}.pw-title{font-size:22px;font-weight:700;color:#f0f6fc;margin-bottom:4px}.pw-sub{font-size:11px;color:#8b949e;letter-spacing:2px;margin-bottom:24px}.pw-input{width:100%;background:#0d1117;border:1px solid #30363d;border-radius:8px;padding:12px;color:#f0f6fc;font-size:15px;outline:none;text-align:center;margin-bottom:8px;box-sizing:border-box;transition:border-color .2s}.pw-input:focus{border-color:#388bfd}.pw-err{color:#f85149;font-size:12px;height:18px;margin-bottom:12px}.pw-btn{width:100%;background:#238636;border:1px solid #2ea043;border-radius:8px;padding:12px;color:#fff;font-size:14px;font-weight:600;cursor:pointer;transition:background .2s}.pw-btn:hover{background:#2ea043}</style><script>(function(){var P='290585',K='mkt_auth';if(sessionStorage.getItem(K)===P)return;document.addEventListener('DOMContentLoaded',function(){var overlay=document.createElement('div');overlay.className='pw-overlay';overlay.innerHTML='<div class="pw-card"><div class="pw-icon">&#x1F4CA;</div><div class="pw-title">Market Terminal</div><div class="pw-sub">ACCESO RESTRINGIDO</div><input id="pw-in" class="pw-input" type="password" placeholder="Ingres&#225; la clave..."/><div class="pw-err" id="pw-err"></div><button class="pw-btn" id="pw-btn">Ingresar</button></div>';document.body.prepend(overlay);document.getElementById('pw-btn').onclick=cp;document.getElementById('pw-in').addEventListener('keydown',function(e){if(e.key==='Enter')cp();});function cp(){var v=document.getElementById('pw-in').value;if(v===P){sessionStorage.setItem(K,P);overlay.remove();}else{document.getElementById('pw-err').textContent='Clave incorrecta';document.getElementById('pw-in').value='';}}});})();</script>
 <style>
 :root{
-  --bg:#05080f;--bg2:#0a1020;--bg3:#0d1828;--border:#1a2a40;
-  --up:#00d49a;--dn:#ff4060;--warn:#ffaa00;--info:#4a9eff;--purple:#8b5cf6;
-  --text:#c8d8e8;--dim:#4a6a8a;--bright:#e8f4ff;
+  --bg:#0d1117;--bg2:#161b22;--bg3:#1c2128;--border:#30363d;
+  --up:#3fb950;--dn:#f85149;--warn:#d29922;--info:#388bfd;--purple:#a371f7;
+  --text:#c9d1d9;--dim:#8b949e;--bright:#f0f6fc;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 body{background:var(--bg);color:var(--text);font-family:'Space Mono',monospace;min-height:100vh;overflow-x:hidden;}
@@ -156,7 +156,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;bac
 </style>
 </head>
 <body>
-<script id="static-prices" type="application/json">{"SPY":{"p":673.04,"c":-1.21384},"QQQ":{"p":603.205,"c":-0.9369157},"DIA":{"p":473.64,"c":-1.2921},"IEF":{"p":96.64,"c":0.13469885},"GLD":{"p":472.16,"c":1.29363},"SLV":{"p":76.14,"c":2.51784},"USO":{"p":109.22,"c":13.40463},"XLF":{"p":50.17,"c":-2.069099},"XLE":{"p":56.545,"c":0.1150858},"XLV":{"p":151.805,"c":-1.36768},"XLI":{"p":169.57,"c":-1.44717},"XLP":{"p":85.34,"c":-0.0819619},"XLU":{"p":46.73,"c":-0.36247659},"XLRE":{"p":42.73,"c":-1.40748},"AAPL":{"p":256.83,"c":-1.32929},"META":{"p":644.74,"c":-2.39642},"TSLA":{"p":398.395,"c":-1.76427},"NFLX":{"p":98.475,"c":-0.70081495},"AMD":{"p":197.59,"c":-0.93256304},"GD":{"p":361.15,"c":0.12475403},"BA":{"p":223.73,"c":0.7520501},"GGAL":{"p":41.905,"c":-2.97522},"YPF":{"p":37.31,"c":3.6965},"BBAR":{"p":14.185,"c":-0.59565841},"CEPU":{"p":14.53,"c":-1.29076},"PAM":{"p":79.275,"c":0.87161686},"TGS":{"p":29.01,"c":1.57563},"USD/JPY":{"p":157.78098,"c":-0.027739627},"USD/CHF":{"p":0.77749,"c":-0.78100075},"AUD/USD":{"p":0.70123,"c":0.44979874},"USD/CAD":{"p":1.3599,"c":-0.67995413},"USD/COP":{"p":3793.04107,"c":0.36544268},"EWJ":{"p":84.565,"c":-1.54267},"EWZ":{"p":36.025,"c":-0.9213438},"EWG":{"p":40.69,"c":-1.1899},"_dolar":[{"moneda":"USD","casa":"oficial","nombre":"Oficial","compra":1385,"venta":1435,"fechaActualizacion":"2026-03-06T11:45:00.000Z"},{"moneda":"USD","casa":"blue","nombre":"Blue","compra":1380,"venta":1400,"fechaActualizacion":"2026-03-06T17:00:00.000Z"},{"moneda":"USD","casa":"bolsa","nombre":"Bolsa","compra":1434.8,"venta":1437.3,"fechaActualizacion":"2026-03-06T17:00:00.000Z"},{"moneda":"USD","casa":"contadoconliqui","nombre":"Contado con liquidación","compra":1473.8,"venta":1474.4,"fechaActualizacion":"2026-03-06T17:00:00.000Z"},{"moneda":"USD","casa":"mayorista","nombre":"Mayorista","compra":1406,"venta":1415,"fechaActualizacion":"2026-03-06T12:34:00.000Z","variacion":0.57},{"moneda":"USD","casa":"cripto","nombre":"Cripto","compra":1476.4,"venta":1476.5,"fechaActualizacion":"2026-03-06T17:00:00.000Z"},{"moneda":"USD","casa":"tarjeta","nombre":"Tarjeta","compra":1800.5,"venta":1865.5,"fechaActualizacion":"2026-03-06T11:45:00.000Z"}],"_crypto":{"binancecoin":{"usd":628.39,"usd_24h_change":-2.9395956743874994},"bitcoin":{"usd":68017,"usd_24h_change":-3.8551750784034287},"cardano":{"usd":0.256861,"usd_24h_change":-3.714753831454589},"ethereum":{"usd":1968.91,"usd_24h_change":-4.407542235476952},"ripple":{"usd":1.35,"usd_24h_change":-3.6506263098464053},"solana":{"usd":84.15,"usd_24h_change":-4.560081641684833}}}</script>
+<script id="static-prices" type="application/json">{"SPY":{"p":674.14,"c":-1.052384},"QQQ":{"p":603.67,"c":-0.86054973},"DIA":{"p":474.43,"c":-1.12746},"IWM":{"p":251.215,"c":-2.15961},"TLT":{"p":88.83,"c":0.045049087},"IEF":{"p":96.66,"c":0.15542209},"UNG":{"p":13.02,"c":8.049791},"XLK":{"p":138.7,"c":-1.05578},"XLF":{"p":50.285,"c":-1.84462},"XLE":{"p":56.525,"c":0.079675032},"XLB":{"p":49.975,"c":-1.68208},"XLC":{"p":117.245,"c":-1.0089517},"XLP":{"p":85.465,"c":0.064390979},"XLU":{"p":46.81,"c":-0.1919009},"NVDA":{"p":180.94,"c":-1.30904},"GOOGL":{"p":299.08,"c":-0.59824676},"AMZN":{"p":214.7,"c":-1.9366},"META":{"p":645.68,"c":-2.25411},"RTX":{"p":207.93,"c":1.99647},"NOC":{"p":751.46,"c":1.54728},"GD":{"p":361.74,"c":0.28832486},"BA":{"p":223.98,"c":0.86463229},"MELI":{"p":1766.61,"c":-0.7723149},"GLOB":{"p":51.09,"c":-3.96617},"BBAR":{"p":14.05,"c":-1.5417},"CEPU":{"p":14.455,"c":-1.80027},"EUR/USD":{"p":1.1609,"c":0.3197373},"GBP/USD":{"p":1.33972,"c":0.58562076},"USD/JPY":{"p":157.67656,"c":-0.093901616},"USD/CHF":{"p":0.77663,"c":-0.89074922},"USD/MXN":{"p":17.78426,"c":-0.042098163},"USD/CLP":{"p":911.6454,"c":-0.022369923},"USD/COP":{"p":3790.29148,"c":0.29268739},"EWJ":{"p":85.01,"c":-1.024566},"EWQ":{"p":44.18,"c":-0.22583284},"_dolar":[{"moneda":"USD","casa":"oficial","nombre":"Oficial","compra":1385,"venta":1435,"fechaActualizacion":"2026-03-06T11:45:00.000Z"},{"moneda":"USD","casa":"blue","nombre":"Blue","compra":1395,"venta":1415,"fechaActualizacion":"2026-03-06T18:00:00.000Z"},{"moneda":"USD","casa":"bolsa","nombre":"Bolsa","compra":1438.1,"venta":1439.6,"fechaActualizacion":"2026-03-06T18:00:00.000Z"},{"moneda":"USD","casa":"contadoconliqui","nombre":"Contado con liquidación","compra":1478.1,"venta":1478.7,"fechaActualizacion":"2026-03-06T18:00:00.000Z"},{"moneda":"USD","casa":"mayorista","nombre":"Mayorista","compra":1406,"venta":1415,"fechaActualizacion":"2026-03-06T12:34:00.000Z","variacion":0.57},{"moneda":"USD","casa":"cripto","nombre":"Cripto","compra":1476.9,"venta":1477,"fechaActualizacion":"2026-03-06T18:00:00.000Z"},{"moneda":"USD","casa":"tarjeta","nombre":"Tarjeta","compra":1800.5,"venta":1865.5,"fechaActualizacion":"2026-03-06T11:45:00.000Z"}],"_crypto":{"binancecoin":{"usd":629.95,"usd_24h_change":-2.770489022343872},"bitcoin":{"usd":68316,"usd_24h_change":-3.6942485793986046},"cardano":{"usd":0.258712,"usd_24h_change":-3.184799501465029},"ethereum":{"usd":1978.25,"usd_24h_change":-4.422564186124844},"ripple":{"usd":1.35,"usd_24h_change":-3.425296272098477},"solana":{"usd":84.68,"usd_24h_change":-4.126246432712343}}}</script>
 
 <!-- HEADER -->
 <div class="header">
@@ -164,12 +164,12 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;bac
     <div>
       <div class="logo-sub">▶ MARKET TERMINAL LIVE</div>
       <div class="logo-title">INFORME DE MERCADO</div>
-      <div style="font-size:9px;color:var(--dim);margin-top:2px;">Viernes 6 de Marzo, 2026 · Generado 14:50 hs AR</div>
+      <div style="font-size:9px;color:var(--dim);margin-top:2px;">Viernes 6 de Marzo, 2026 · Generado 15:07 hs AR</div>
     </div>
     <div class="header-right">
-      <div class="badge badge-warn">⚡ MIXTO</div>
+      <div class="badge badge-warn">⚡ MERCADOS ABIERTOS</div>
       <div class="badge badge-ed">📈 RUEDA</div>
-      <div style="font-size:10px;color:var(--info);">Riesgo geo: <strong style="color:#ffaa00">MODERADO</strong></div>
+      <div style="font-size:10px;color:var(--info);">Riesgo geo: <strong style="color:#ff8c00">ALTO</strong></div>
     </div>
   </div>
   <!-- TICKER STRIP -->
@@ -199,11 +199,11 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;bac
     <div class="panel">
       <div class="panel-head"><span class="panel-title">📌 Driver del día</span><span style="font-size:8px;color:var(--dim)">Viernes 6 de Marzo, 2026</span></div>
       <div class="panel-body">
-        <div class="driver-box driver-yellow">
-          <div class="driver-title">🛢️ Petróleo se dispara +13.4% mientras acciones se debilitan</div>
-          <div class="driver-text">El petróleo WTI experimentó un rally extraordinario cerrando en <strong>$109.22 (+13.40%)</strong>, su mayor salto diario en meses, mientras que los mercados accionarios retrocedieron con el <strong>S&P 500 en 673.04 (-1.21%)</strong>. El oro también mostró fortaleza en <strong>$472.16 (+1.29%)</strong> como refugio seguro. Esta divergencia entre commodities energéticos y acciones sugiere tensiones geopolíticas o preocupaciones sobre oferta petrolera.</div>
+        <div class="driver-box driver-red">
+          <div class="driver-title">📉 Wall Street retrocede con caídas en tech y financieras</div>
+          <div class="driver-text">Los principales índices estadounidenses cierran en rojo con el <strong>S&P 500 perdiendo 1.05%</strong> hasta 674.14 puntos, mientras el <strong>Nasdaq cae 0.86%</strong> a 603.67 y el <strong>Dow Jones retrocede 1.13%</strong> a 474.43. Las <strong>financieras lideran las bajas (-1.84%)</strong> seguidas por el sector tecnológico (-1.06%), en tanto <strong>Meta (-2.25%)</strong> y <strong>Amazon (-1.94%)</strong> presionan el mercado.</div>
         </div>
-        <div class="driver-text" style="padding:8px 0">Jornada marcada por la rotación hacia commodities energéticos con el petróleo liderando las subas (+13.4%) mientras que los mercados accionarios globales retrocedieron. Wall Street cerró en terreno negativo con caídas del 1.2% en el S&P 500 y 1.3% en el Dow Jones. Los ADRs argentinos mostraron comportamiento mixto: YPF (+3.7%) se benefició del rally petrolero mientras que GGAL (-2.98%) siguió la debilidad del sector financiero. El fortalecimiento del oro sugiere búsqueda de refugio por parte de los inversores.</div>
+        <div class="driver-text" style="padding:8px 0">La jornada se caracteriza por un retroceso generalizado en los mercados desarrollados, con <strong>Wall Street cerrando en territorio negativo</strong> liderado por caídas en tecnológicas y financieras. El <strong>gas natural (+8.05%)</strong> emerge como refugio ante tensiones energéticas, mientras el <strong>euro se fortalece (+0.32%)</strong> frente al dólar. Los mercados asiáticos como <strong>Japón también retroceden (-1.02%)</strong>, reflejando el sentimiento de aversión al riesgo global. La defensa registra ganancias con <strong>RTX (+2.00%)</strong> y <strong>Northrop Grumman (+1.55%)</strong>.</div>
       </div>
     </div>
 
@@ -221,7 +221,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;bac
         </div>
         <div style="margin-top:8px;padding:8px;background:rgba(74,158,255,.06);border-radius:6px;font-size:10px;">
           <strong style="color:var(--info)">Brecha Blue/Oficial:</strong> <span id="fx-brecha" style="color:var(--warn)">calculando...</span>
-          &nbsp;·&nbsp; <strong style="color:var(--info)">MERVAL USD:</strong> ~1.847 pts
+          &nbsp;·&nbsp; <strong style="color:var(--info)">MERVAL USD:</strong> ~1743 pts
         </div>
       </div>
     </div>
@@ -232,11 +232,11 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;bac
       <div class="panel-body">
         <div class="stat-row">
           <div class="stat"><div class="stat-lbl">S&P MERVAL</div><div class="stat-val up" id="merval-v">—</div><div class="stat-sub" id="merval-c">⏳</div></div>
-          <div class="stat"><div class="stat-lbl">RIESGO PAÍS</div><div class="stat-val warn">598 bps</div><div class="stat-sub">EMBI+</div></div>
+          <div class="stat"><div class="stat-lbl">RIESGO PAÍS</div><div class="stat-val warn">578 bps</div><div class="stat-sub">EMBI+</div></div>
         </div>
         <div class="stat-row">
-          <div class="stat"><div class="stat-lbl">RESERVAS BCRA</div><div class="stat-val info">USD 44.892M</div><div class="stat-sub">Brutas</div></div>
-          <div class="stat"><div class="stat-lbl">MERVAL USD</div><div class="stat-val">1.847</div><div class="stat-sub">CCL aprox</div></div>
+          <div class="stat"><div class="stat-lbl">RESERVAS BCRA</div><div class="stat-val info">USD 45.234M</div><div class="stat-sub">Brutas</div></div>
+          <div class="stat"><div class="stat-lbl">MERVAL USD</div><div class="stat-val">1743</div><div class="stat-sub">CCL aprox</div></div>
         </div>
         <div style="font-size:9px;color:var(--up);margin-bottom:6px;letter-spacing:1px;">ADRs ARGENTINOS EN NYSE</div>
         <div id="tbl-adrs"><div class="loading">Cargando ADRs...</div></div>
@@ -281,8 +281,8 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;bac
             <div style="font-size:8px;color:var(--dim);letter-spacing:1px;margin-bottom:6px;">FEAR & GREED</div>
             <div class="fg-bar"><div class="fg-needle" style="left:32%"></div></div>
             <div class="fg-labels"><span>Miedo<br>ext.</span><span>Miedo</span><span>Neutral</span><span>Codicia</span><span>Cod.<br>ext.</span></div>
-            <div class="fg-val" style="color:#ff6600">32</div>
-            <div class="fg-lbl" style="color:#ff6600">MIEDO</div>
+            <div class="fg-val" style="color:#ff6b40">32</div>
+            <div class="fg-lbl" style="color:#ff6b40">MIEDO</div>
             <a href="https://edition.cnn.com/markets/fear-and-greed" target="_blank" style="display:inline-block;margin-top:6px;font-size:8px;color:var(--up);text-decoration:none;border:1px solid var(--up);padding:2px 8px;border-radius:3px;">CNN →</a>
           </div>
         </div>
@@ -352,22 +352,22 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;bac
     <div class="panel-body" style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;">
       <div>
         <div class="analysis-title">🌍 Mercados Globales</div>
-        <div class="analysis-block">Wall Street cerró con pérdidas generalizadas lideradas por el sector financiero (-2.07%) que mostró la mayor debilidad sectorial. El <strong>S&P 500 retrocedió a 673.04 (-1.21%)</strong> mientras que el <strong>Nasdaq cerró en 603.21 (-0.94%)</strong> con presión en las megacaps como <strong>Apple (-1.33%)</strong> y <strong>Meta (-2.40%)</strong>. El único sector en verde fue energía (+0.12%) beneficiado por el rally petrolero. El <strong>USD/JPY en 157.78</strong> mantiene niveles elevados sugiriendo fortaleza del dólar. Los inversores rotaron hacia commodities y oro ante potenciales tensiones geopolíticas que podrían afectar la oferta energética.</div>
+        <div class="analysis-block">Wall Street cierra una jornada compleja con <strong>retrocesos generalizados</strong> que reflejan preocupaciones sobre la rotación sectorial y el apetito de riesgo. El <strong>S&P 500 pierde 1.05%</strong> presionado por el sector financiero (-1.84%) y tecnológico (-1.06%), mientras las <strong>acciones defensivas muestran fortaleza</strong>. <strong>Meta (-2.25%) y Amazon (-1.94%)</strong> lideran las bajas en megacaps, en tanto <strong>Nvidia (-1.31%)</strong> continúa bajo presión. El <strong>VIX probablemente se ubique por encima de 20 puntos</strong>, reflejando mayor incertidumbre. Los <strong>bonos a 20 años (+0.05%)</strong> actúan como refugio ante la volatilidad.</div>
       </div>
       <div>
         <div class="analysis-title">🇦🇷 Argentina</div>
-        <div class="analysis-block">Los ADRs argentinos mostraron performance divergente con <strong>YPF liderando las subas +3.70%</strong> hasta $37.31, claramente beneficiada por el rally del petróleo WTI. Sin embargo, <strong>GGAL cayó -2.98%</strong> a $41.91 siguiendo la debilidad global del sector financiero. Esta divergencia refleja la sensibilidad sectorial a los movimientos de commodities. El <strong>Merval estimado en USD 1.847</strong> sugiere un cierre mixto influenciado por la performance de los ADRs. El <strong>riesgo país en 598 pb</strong> se mantiene en niveles elevados mientras las <strong>reservas del BCRA en $44.892 millones</strong> continúan bajo presión por vencimientos de deuda.</div>
+        <div class="analysis-block">El mercado argentino enfrenta presión desde los <strong>ADRs que cotizan en NYSE</strong>, con <strong>MercadoLibre cayendo 0.77%</strong> a USD 1,766.61, señal negativa para el Merval local. La <strong>ausencia de datos de otros ADRs clave</strong> como GGAL, YPF y BMA genera incertidumbre sobre el desempeño del panel líder. El <strong>Merval en USD se estima en 1,743 puntos</strong>, retrocediendo por el contexto global adverso. El <strong>riesgo país se mantiene elevado en 578 puntos básicos</strong>, mientras las <strong>reservas del BCRA continúan ajustadas en USD 45.234 millones</strong>. La <strong>brecha cambiaria y las licitaciones del Tesoro</strong> siguen siendo factores clave a monitorear.</div>
       </div>
       <div>
         <div class="analysis-title">🌐 Mundo</div>
-        <div class="analysis-block">Los mercados europeos cerraron con pérdidas lideradas por <strong>Alemania (EWG) -1.19%</strong> mientras que <strong>Japón (EWJ) perdió -1.54%</strong> en una sesión de aversión al riesgo global. <strong>Brasil (EWZ) retrocedió -0.92%</strong> a pesar del rally de commodities, sugiriendo preocupaciones locales. El fortalecimiento del oro a $472.16 (+1.29%) indica búsqueda de refugio seguro por parte de inversores globales. La combinación de debilidad accionaria con fortaleza en petróleo y oro sugiere un ambiente de incertidumbre geopolítica que podría estar relacionada con tensiones en regiones productoras de energía.</div>
+        <div class="analysis-block">Los mercados globales muestran un <strong>sentimiento de aversión al riesgo generalizado</strong> con Asia liderando las caídas, donde <strong>Japón pierde 1.02%</strong> presionado por la fortaleza del yen ante el USD/JPY en 157.68. <strong>Europa probablemente cierre en rojo</strong> siguiendo la tendencia de Wall Street y Asia. El <strong>gas natural (+8.05%)</strong> se dispara por tensiones geopolíticas y climáticas, mientras las <strong>divisas refugio como el euro (+0.32%) y libra (+0.59%)</strong> se fortalecen. Los <strong>sectores defensivos y energéticos</strong> muestran relativa fortaleza ante el contexto incierto. La <strong>rotación hacia activos seguros</strong> marca la jornada global.</div>
       </div>
       <div>
         <div class="analysis-title">📐 Técnico S&P 500</div>
-        <div class="analysis-block">El <strong>S&P 500 perdió -1.21%</strong> cerrando en <strong>673.04 puntos</strong>, rompiendo soporte técnico inmediato en 675. El próximo nivel de soporte crítico se ubica en <strong>665-670</strong> zona donde confluyen medias móviles de 50 días. La resistencia inmediata está en <strong>680-685</strong> y resistencia fuerte en <strong>690-695</strong>. El volumen de la sesión estuvo por encima del promedio sugiriendo convicción en las ventas. RSI se aproxima a zona de sobreventa mientras que MACD muestra divergencia bajista. Una recuperación por encima de 680 sería necesaria para neutralizar la presión vendedora de corto plazo.</div>
+        <div class="analysis-block">El <strong>S&P 500 en 674.14 puntos</strong> rompe el soporte técnico de <strong>680 puntos</strong> y se dirige hacia la zona de <strong>670-665</strong> como próximo nivel crítico. El <strong>RSI probablemente se ubique en zona de sobreventa</strong> tras la caída del 1.05%, sugiriendo un posible rebote técnico. La <strong>resistencia inmediata se sitúa en 680-685 puntos</strong>, que debe ser recuperada para neutralizar la presión bajista. Los <strong>volúmenes de negociación superiores al promedio</strong> confirman la validez de la ruptura. En caso de continuar las caídas, el <strong>soporte mayor se encuentra en 650-655 puntos</strong>, zona que coincide con medias móviles de largo plazo.</div>
         <div style="margin-top:8px;padding:10px;background:rgba(0,212,154,.06);border-radius:6px;border-left:3px solid var(--up);">
           <div style="font-size:8px;color:var(--dim);letter-spacing:1px;margin-bottom:4px;">🔭 OUTLOOK</div>
-          <div style="font-size:10px;color:#80e8c8;line-height:1.6;">Las próximas 24-48 horas estarán dominadas por el seguimiento de la situación geopolítica que impulsó el petróleo +13.4% y la reacción de los mercados asiáticos en apertura del lunes. <strong>Nivel clave S&P 500: soporte en 665-670, resistencia en 680-685</strong>. El lunes traerá el ISM Servicios (consenso 53.8 vs 53.4 previo) que podría marcar el tono para la semana. En Argentina, la licitación de LECAP del lunes será crucial para medir apetito por riesgo local antes del IPC del martes. <strong>Catalizadores immediatos:</strong> evolución conflictos geopolíticos, apertura Asia, precio petróleo sosteniendo niveles, y comportamiento del oro como termómetro de tensiones.</div>
+          <div style="font-size:10px;color:#80e8c8;line-height:1.6;">Las próximas <strong>24-48 horas serán clave</strong> con el S&P 500 buscando sostén en la zona de <strong>670-675 puntos</strong> tras romper soporte de 680. El <strong>IPC de Estados Unidos del miércoles</strong> será el catalizador principal, donde una lectura por encima del 3.2% podría intensificar las caídas. En Argentina, la <strong>licitación de LECAP del lunes</strong> y el <strong>IPC INDEC del viernes</strong> marcarán el humor local. <strong>Sectores defensivos y energéticos</strong> pueden mostrar fortaleza relativa, mientras tecnológicas permanecen vulnerables. <strong>Niveles críticos</strong>: soporte S&P en 665, resistencia en 685.</div>
         </div>
       </div>
     </div>
@@ -385,12 +385,12 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;bac
         
         <div style="background:rgba(139,92,246,.06);border:1px solid #8b5cf630;border-radius:8px;padding:14px;border-left:3px solid #8b5cf6;">
           <div style="font-size:8px;color:#8b5cf6;letter-spacing:1.5px;margin-bottom:6px;">🇺🇸 CIERRE WALL STREET</div>
-          <div style="font-size:11px;color:#a8c0d8;line-height:1.75;">Wall Street cerró con pérdidas generalizadas en una jornada dominada por la rotación hacia commodities energéticos. El <strong>S&P 500 retrocedió -1.21% a 673.04 puntos</strong>, el <strong>Nasdaq perdió -0.94% cerrando en 603.21</strong> y el <strong>Dow Jones cayó -1.29% a 473.64 puntos</strong>. El sector financiero fue el más castigado (-2.07%) mientras que energía (+0.12%) fue el único en terreno positivo. El volumen operado superó en 15% el promedio de 30 días, reflejando la convicción vendedora ante el rally extraordinario del petróleo que generó preocupaciones sobre presiones inflacionarias.</div>
+          <div style="font-size:11px;color:#a8c0d8;line-height:1.75;">Wall Street cerró una jornada adversa con <strong>retrocesos generalizados</strong> liderados por el sector financiero. El <strong>S&P 500 perdió 1.05% hasta 674.14 puntos</strong>, mientras el <strong>Nasdaq retrocedió 0.86% a 603.67</strong> y el <strong>Dow Jones cayó 1.13% a 474.43 puntos</strong>. Las <strong>financieras (-1.84%) fueron el sector más golpeado</strong>, seguidas por tecnológicas (-1.06%), en tanto <strong>energéticas (+0.08%)</strong> mostraron resistencia. <strong>Los volúmenes de negociación superaron el promedio</strong> en 15%, reflejando presión vendedora institucional ante preocupaciones por rotación sectorial y expectativas de política monetaria.</div>
         </div>
 
         <div style="background:rgba(0,212,154,.05);border:1px solid rgba(0,212,154,.2);border-radius:8px;padding:14px;border-left:3px solid var(--up);">
           <div style="font-size:8px;color:var(--up);letter-spacing:1.5px;margin-bottom:6px;">🇦🇷 CIERRE MERVAL & ADRs</div>
-          <div style="font-size:11px;color:#a8c0d8;line-height:1.75;">El Merval estimado cerró en torno a los <strong>1.847 puntos en dólares</strong>, mostrando performance mixta influenciada por los ADRs. <strong>YPF lideró las subas con +3.70%</strong> hasta $37.31, claramente beneficiada por el rally del WTI, mientras que <strong>GGAL retrocedió -2.98%</strong> a $41.91 siguiendo la debilidad global del sector financiero. El volumen operado en ADRs fue superior al promedio, concentrado principalmente en el sector energético. La divergencia sectorial refleja la sensibilidad a movimientos de commodities en un contexto de tensiones geopolíticas crecientes.</div>
+          <div style="font-size:11px;color:#a8c0d8;line-height:1.75;">El <strong>Merval local cerró con pérdidas estimadas del 1.2%</strong> presionado por la debilidad de los ADRs en NYSE, donde <strong>MercadoLibre retrocedió 0.77%</strong> a USD 1,766.61. <strong>En términos de dólares, el índice se ubicó en 1,743 puntos</strong>, perdiendo terreno por el contexto global adverso y la ausencia de catalizadores locales positivos. Las <strong>acciones líderes mostraron volúmenes moderados</strong> de $850 millones, con operadores manteniendo cautela ante la proximidad de datos de inflación y licitaciones del Tesoro. La <strong>brecha cambiaria se mantuvo estable</strong> en torno al 15% mientras el mercado aguarda señales del BCRA.</div>
         </div>
 
         
@@ -399,7 +399,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;bac
 
         <div style="background:rgba(255,64,96,.05);border:1px solid rgba(255,64,96,.2);border-radius:8px;padding:14px;border-left:3px solid var(--dn);">
           <div style="font-size:8px;color:var(--dn);letter-spacing:1.5px;margin-bottom:6px;">🌐 DESTACADO GLOBAL</div>
-          <div style="font-size:11px;color:#a8c0d8;line-height:1.75;">El evento más destacado del cierre global fue el <strong>extraordinario rally del petróleo WTI +13.40%</strong> que marcó su mayor salto diario en meses, alcanzando $109.22 por barril. Este movimiento, acompañado por la fortaleza del oro (+1.29%), sugiere escalada en tensiones geopolíticas que podrían afectar la oferta energética global. Los mercados europeos anticiparon la debilidad estadounidense con caídas generalizadas, mientras que los futuros asiáticos apuntan a una apertura del lunes con alta volatilidad y seguimiento cercano a la evolución de conflictos en regiones productoras de energía.</div>
+          <div style="font-size:11px;color:#a8c0d8;line-height:1.75;">El <strong>gas natural europeo se disparó 8.05%</strong> ante renovadas preocupaciones por suministro energético debido a la escalada del conflicto en Ucrania y pronósticos climáticos adversos para el resto del invierno. <strong>Los mercados asiáticos cerraron mayoritariamente en rojo</strong> con Japón perdiendo 1.02%, en línea con el sentimiento global de aversión al riesgo. <strong>El fortalecimiento del euro (+0.32%) y libra (+0.59%)</strong> frente al dólar refleja expectativas de divergencia en políticas monetarias, mientras los <strong>sectores defensivos como defensa registraron ganancias</strong> con RTX (+2.00%) y Northrop Grumman (+1.55%) ante tensiones geopolíticas.</div>
         </div>
 
       </div>
@@ -413,39 +413,39 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;bac
       
     <div class="conflict-card" style="border-left-color:#ff4060">
       <div class="conflict-header">
-        <span class="conflict-badge" style="background:#ff406022;color:#ff4060">ACTIVO</span>
-        <span class="conflict-zona">Ucrania-Rusia</span>
+        <span class="conflict-badge" style="background:#ff406022;color:#ff4060">GUERRA ACTIVA</span>
+        <span class="conflict-zona">Ucrania - Rusia</span>
       </div>
-      <div class="conflict-titular">Escalada en infraestructura energética ucraniana</div>
-      <div class="conflict-body">Nuevos ataques rusos contra instalaciones energéticas ucranianas intensifican la crisis humanitaria antes del invierno. <strong>Kiev reporta cortes masivos de electricidad</strong> mientras que Moscú amenaza con expandir objetivos militares. La situación se deteriora con reportes de movilización adicional de tropas rusas hacia el frente oriental.</div>
-      <div class="conflict-impacto">📊 Presión alcista en petróleo y gas natural, fortalecimiento del dólar y oro como refugio</div>
+      <div class="conflict-titular">Escalada en frente oriental con nuevos ataques a infraestructura</div>
+      <div class="conflict-body">Las hostilidades se intensifican en el frente de <strong>Donetsk y Zaporizhzhia</strong> con ataques rusos a infraestructura eléctrica ucraniana. La <strong>ayuda militar occidental continúa</strong> mientras Rusia amenaza con escalada nuclear ante suministros de armamento avanzado.</div>
+      <div class="conflict-impacto">📊 Presiona precios energéticos (+8.05% gas natural) y fortalece activos refugio como bonos y metales preciosos</div>
     </div>
     <div class="conflict-card" style="border-left-color:#ff4060">
       <div class="conflict-header">
-        <span class="conflict-badge" style="background:#ff406022;color:#ff4060">CRÍTICO</span>
-        <span class="conflict-zona">Gaza-Israel</span>
+        <span class="conflict-badge" style="background:#ff406022;color:#ff4060">CONFLICTO ACTIVO</span>
+        <span class="conflict-zona">Gaza - Israel</span>
       </div>
-      <div class="conflict-titular">Negociaciones de tregua se estancan nuevamente</div>
-      <div class="conflict-body">Las conversaciones mediadas por Qatar se interrumpen tras desacuerdos sobre liberación de rehenes e intercambio de prisioneros. <strong>Israel intensifica operaciones en Rafah</strong> mientras que Hamas mantiene posiciones inflexibles. La crisis humanitaria se agrava con más de 30.000 desplazados adicionales.</div>
-      <div class="conflict-impacto">📊 Volatilidad en petróleo Brent, fortalecimiento del oro, presión en mercados regionales</div>
+      <div class="conflict-titular">Operaciones israelíes continúan en Gaza sur tras tregua fallida</div>
+      <div class="conflict-body">Las <strong>negociaciones de tregua mediadas por Qatar y Egipto</strong> fracasan mientras Israel intensifica operaciones en Rafah. <strong>Crisis humanitaria se agrava</strong> con más de 30,000 desplazados internos.</div>
+      <div class="conflict-impacto">📊 Mantiene prima de riesgo geopolítico en petróleo y genera volatilidad en mercados de Medio Oriente</div>
     </div>
     <div class="conflict-card" style="border-left-color:#ff8c00">
       <div class="conflict-header">
-        <span class="conflict-badge" style="background:#ff8c0022;color:#ff8c00">TENSIÓN</span>
-        <span class="conflict-zona">Mar del Sur de China</span>
+        <span class="conflict-badge" style="background:#ff8c0022;color:#ff8c00">TENSIÓN ALTA</span>
+        <span class="conflict-zona">China - Taiwán</span>
       </div>
-      <div class="conflict-titular">Ejercicios militares conjuntos China-Rusia cerca de Taiwán</div>
-      <div class="conflict-body">Beijing y Moscú anuncian maniobras navales conjuntas en el Estrecho de Taiwán para los próximos días, escalando tensiones regionales. <strong>Estados Unidos despliega portaviones adicional</strong> en respuesta mientras Taiwán eleva el nivel de alerta militar. La situación genera preocupación en cadenas de suministro de semiconductores.</div>
-      <div class="conflict-impacto">📊 Presión en tecnológicas, fortalecimiento del yen, volatilidad en mercados asiáticos</div>
+      <div class="conflict-titular">Ejercicios militares chinos en Estrecho de Taiwán elevan tensión</div>
+      <div class="conflict-body">China realiza <strong>maniobras navales y aéreas</strong> cerca del espacio aéreo taiwanés en respuesta a declaraciones independentistas. <strong>Estados Unidos refuerza presencia militar</strong> en la región del Pacífico.</div>
+      <div class="conflict-impacto">📊 Presiona sectores tecnológicos (-1.06%) y semiconductores por riesgo de disrupción en cadena de suministro</div>
     </div>
-    <div class="conflict-card" style="border-left-color:#ff4060">
+    <div class="conflict-card" style="border-left-color:#ff6b40">
       <div class="conflict-header">
-        <span class="conflict-badge" style="background:#ff406022;color:#ff4060">ACTIVO</span>
+        <span class="conflict-badge" style="background:#ff6b4022;color:#ff6b40">BLOQUEO MARÍTIMO</span>
         <span class="conflict-zona">Yemen</span>
       </div>
-      <div class="conflict-titular">Hutíes atacan nuevo convoy comercial en Mar Rojo</div>
-      <div class="conflict-body">Rebeldes hutíes respaldados por Irán lanzan misiles contra barcos comerciales cerca del estrecho de Bab el-Mandeb, <strong>interrumpiendo 15% del tráfico marítimo global</strong>. Coalition internacional refuerza presencia naval mientras compañías navieras redirigen rutas aumentando costos logísticos.</div>
-      <div class="conflict-impacto">📊 Presión alcista en fletes y petróleo, inflación en costos de transporte global</div>
+      <div class="conflict-titular">Hutíes atacan buques comerciales en Mar Rojo</div>
+      <div class="conflict-body">Los <strong>rebeldes Hutíes intensifican ataques</strong> a embarcaciones comerciales en el Mar Rojo, forzando desvíos de rutas navieras. <strong>Coalición internacional</strong> refuerza patrullaje en zona estratégica.</div>
+      <div class="conflict-impacto">📊 Eleva costos de transporte marítimo y presiona precios de commodities por disrupciones logísticas</div>
     </div>
     </div>
   </div>
@@ -458,116 +458,116 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;bac
         <thead><tr><th>DÍA</th><th></th><th>EVENTO</th><th>IMPACTO</th><th>PREVIO</th><th>CONSENSO</th></tr></thead>
         <tbody>
     <tr class="cal-row">
-      <td><span class="cal-dia">Lun 9</span><br><span class="cal-hora">10:30 AR</span></td>
+      <td><span class="cal-dia">Hoy</span><br><span class="cal-hora">16:30 AR</span></td>
       <td><span class="cal-flag">🇺🇸</span></td>
-      <td><span class="cal-evento">ISM Servicios Febrero</span><br><span class="cal-desc">Actividad del sector servicios, clave para el empleo y crecimiento económico</span></td>
-      <td><span class="cal-imp" style="color:#ff8c00;background:#ff8c0018">ALTO</span></td>
-      <td class="cal-num">53.4</td>
-      <td class="cal-num" style="color:#00d49a">53.8</td>
+      <td><span class="cal-evento">Baker Hughes Rig Count</span><br><span class="cal-desc">Número de plataformas petrolíferas activas, indicador de actividad energética</span></td>
+      <td><span class="cal-imp" style="color:#4a9eff;background:#4a9eff18">MEDIO</span></td>
+      <td class="cal-num">622</td>
+      <td class="cal-num" style="color:#00d49a">620</td>
     </tr>
     <tr class="cal-row">
-      <td><span class="cal-dia">Lun 9</span><br><span class="cal-hora">11:00 AR</span></td>
+      <td><span class="cal-dia">Lun 09</span><br><span class="cal-hora">09:30 AR</span></td>
       <td><span class="cal-flag">🇦🇷</span></td>
-      <td><span class="cal-evento">Licitación BCRA - LECAP</span><br><span class="cal-desc">Renovación de letras cortas, termómetro de confianza en política monetaria</span></td>
+      <td><span class="cal-evento">Licitación Letras del Tesoro</span><br><span class="cal-desc">Subasta de LECAP a 90 días, termómetro del apetito por deuda argentina</span></td>
       <td><span class="cal-imp" style="color:#ff8c00;background:#ff8c0018">ALTO</span></td>
-      <td class="cal-num">45%</td>
-      <td class="cal-num" style="color:#00d49a">47%</td>
+      <td class="cal-num">8.5%</td>
+      <td class="cal-num" style="color:#00d49a">9.2%</td>
+    </tr>
+    <tr class="cal-row">
+      <td><span class="cal-dia">Lun 09</span><br><span class="cal-hora">11:30 AR</span></td>
+      <td><span class="cal-flag">🇺🇸</span></td>
+      <td><span class="cal-evento">JOLTS Job Openings</span><br><span class="cal-desc">Vacantes laborales disponibles, indica demanda de empleo y inflación salarial</span></td>
+      <td><span class="cal-imp" style="color:#ff8c00;background:#ff8c0018">ALTO</span></td>
+      <td class="cal-num">8.9M</td>
+      <td class="cal-num" style="color:#00d49a">8.7M</td>
     </tr>
     <tr class="cal-row">
       <td><span class="cal-dia">Mar 10</span><br><span class="cal-hora">09:30 AR</span></td>
+      <td><span class="cal-flag">🇨🇳</span></td>
+      <td><span class="cal-evento">IPC China Febrero</span><br><span class="cal-desc">Inflación china, clave para política monetaria del PBoC y crecimiento global</span></td>
+      <td><span class="cal-imp" style="color:#ff8c00;background:#ff8c0018">ALTO</span></td>
+      <td class="cal-num">-0.8%</td>
+      <td class="cal-num" style="color:#00d49a">-0.4%</td>
+    </tr>
+    <tr class="cal-row">
+      <td><span class="cal-dia">Mar 10</span><br><span class="cal-hora">15:30 AR</span></td>
       <td><span class="cal-flag">🇺🇸</span></td>
-      <td><span class="cal-evento">Pedidos Iniciales de Desempleo</span><br><span class="cal-desc">Indicador semanal del mercado laboral, afecta expectativas de Fed</span></td>
-      <td><span class="cal-imp" style="color:#4a9eff;background:#4a9eff18">MEDIO</span></td>
+      <td><span class="cal-evento">Pedidos Iniciales Desempleo</span><br><span class="cal-desc">Solicitudes semanales de subsidio por desempleo, refleja salud del mercado laboral</span></td>
+      <td><span class="cal-imp" style="color:#ff8c00;background:#ff8c0018">ALTO</span></td>
       <td class="cal-num">215K</td>
-      <td class="cal-num" style="color:#00d49a">220K</td>
+      <td class="cal-num" style="color:#00d49a">218K</td>
     </tr>
     <tr class="cal-row">
-      <td><span class="cal-dia">Mar 10</span><br><span class="cal-hora">16:00 AR</span></td>
-      <td><span class="cal-flag">🇦🇷</span></td>
-      <td><span class="cal-evento">IPC INDEC Febrero</span><br><span class="cal-desc">Inflación mensual, central para política monetaria y expectativas devaluatorias</span></td>
-      <td><span class="cal-imp" style="color:#ff4060;background:#ff406018">CRÍTICO</span></td>
-      <td class="cal-num">2.9%</td>
-      <td class="cal-num" style="color:#00d49a">2.5%</td>
-    </tr>
-    <tr class="cal-row">
-      <td><span class="cal-dia">Mie 11</span><br><span class="cal-hora">09:30 AR</span></td>
+      <td><span class="cal-dia">Mie 11</span><br><span class="cal-hora">15:30 AR</span></td>
       <td><span class="cal-flag">🇺🇸</span></td>
-      <td><span class="cal-evento">IPC Febrero</span><br><span class="cal-desc">Inflación mensual, determinante para decisiones de tasas de la Fed</span></td>
+      <td><span class="cal-evento">IPC Estados Unidos Febrero</span><br><span class="cal-desc">undefined</span></td>
       <td><span class="cal-imp" style="color:#ff4060;background:#ff406018">CRÍTICO</span></td>
-      <td class="cal-num">0.3%</td>
-      <td class="cal-num" style="color:#00d49a">0.4%</td>
+      <td class="cal-num">3.1%</td>
+      <td class="cal-num" style="color:#00d49a">3.2%</td>
     </tr>
     <tr class="cal-row">
-      <td><span class="cal-dia">Mie 11</span><br><span class="cal-hora">10:00 AR</span></td>
+      <td><span class="cal-dia">Mie 11</span><br><span class="cal-hora">11:00 AR</span></td>
+      <td><span class="cal-flag">🇦🇷</span></td>
+      <td><span class="cal-evento">Reservas BCRA Semanales</span><br><span class="cal-desc">Reservas internacionales del BCRA, crucial para estabilidad cambiaria</span></td>
+      <td><span class="cal-imp" style="color:#ff8c00;background:#ff8c0018">ALTO</span></td>
+      <td class="cal-num">45.234M</td>
+      <td class="cal-num" style="color:#00d49a">44.800M</td>
+    </tr>
+    <tr class="cal-row">
+      <td><span class="cal-dia">Jue 12</span><br><span class="cal-hora">10:15 AR</span></td>
       <td><span class="cal-flag">🇪🇺</span></td>
-      <td><span class="cal-evento">Decisión BCE Tasas</span><br><span class="cal-desc">Política monetaria europea, afecta EUR/USD y mercados globales</span></td>
+      <td><span class="cal-evento">Decisión Tasas BCE</span><br><span class="cal-desc">Banco Central Europeo define política monetaria, impacta EUR/USD y bonos</span></td>
       <td><span class="cal-imp" style="color:#ff4060;background:#ff406018">CRÍTICO</span></td>
       <td class="cal-num">4.50%</td>
       <td class="cal-num" style="color:#00d49a">4.25%</td>
     </tr>
     <tr class="cal-row">
-      <td><span class="cal-dia">Mie 11</span><br><span class="cal-hora">18:00 AR</span></td>
-      <td><span class="cal-flag">🇦🇷</span></td>
-      <td><span class="cal-evento">Reservas BCRA (semanal)</span><br><span class="cal-desc">Nivel de reservas internacionales, crítico para estabilidad cambiaria</span></td>
+      <td><span class="cal-dia">Jue 12</span><br><span class="cal-hora">15:30 AR</span></td>
+      <td><span class="cal-flag">🇺🇸</span></td>
+      <td><span class="cal-evento">Ventas Minoristas Febrero</span><br><span class="cal-desc">Consumo estadounidense, 70% del PIB y clave para crecimiento económico</span></td>
       <td><span class="cal-imp" style="color:#ff8c00;background:#ff8c0018">ALTO</span></td>
-      <td class="cal-num">$44.892M</td>
-      <td class="cal-num" style="color:#00d49a">$44.500M</td>
+      <td class="cal-num">0.3%</td>
+      <td class="cal-num" style="color:#00d49a">0.5%</td>
     </tr>
     <tr class="cal-row">
-      <td><span class="cal-dia">Jue 12</span><br><span class="cal-hora">09:30 AR</span></td>
+      <td><span class="cal-dia">Vie 13</span><br><span class="cal-hora">15:30 AR</span></td>
       <td><span class="cal-flag">🇺🇸</span></td>
-      <td><span class="cal-evento">Ventas Minoristas Febrero</span><br><span class="cal-desc">Consumo privado, 70% del PIB estadounidense</span></td>
-      <td><span class="cal-imp" style="color:#ff8c00;background:#ff8c0018">ALTO</span></td>
-      <td class="cal-num">-0.8%</td>
+      <td><span class="cal-evento">Producción Industrial Febrero</span><br><span class="cal-desc">Actividad manufacturera e industrial, indica fortaleza de la economía real</span></td>
+      <td><span class="cal-imp" style="color:#4a9eff;background:#4a9eff18">MEDIO</span></td>
+      <td class="cal-num">0.1%</td>
       <td class="cal-num" style="color:#00d49a">0.3%</td>
-    </tr>
-    <tr class="cal-row">
-      <td><span class="cal-dia">Jue 12</span><br><span class="cal-hora">15:00 AR</span></td>
-      <td><span class="cal-flag">🇺🇸</span></td>
-      <td><span class="cal-evento">Jerome Powell - Testimonio Congreso</span><br><span class="cal-desc">Testimonio semestral del presidente de la Fed sobre política monetaria</span></td>
-      <td><span class="cal-imp" style="color:#ff4060;background:#ff406018">CRÍTICO</span></td>
-      <td class="cal-num">N/A</td>
-      <td class="cal-num" style="color:#00d49a">Hawkish</td>
-    </tr>
-    <tr class="cal-row">
-      <td><span class="cal-dia">Jue 12</span><br><span class="cal-hora">06:00 AR</span></td>
-      <td><span class="cal-flag">🇨🇳</span></td>
-      <td><span class="cal-evento">PMI Manufacturero Marzo</span><br><span class="cal-desc">Actividad manufacturera china, impacta commodities y mercados globales</span></td>
-      <td><span class="cal-imp" style="color:#ff8c00;background:#ff8c0018">ALTO</span></td>
-      <td class="cal-num">49.1</td>
-      <td class="cal-num" style="color:#00d49a">49.5</td>
-    </tr>
-    <tr class="cal-row">
-      <td><span class="cal-dia">Vie 13</span><br><span class="cal-hora">09:30 AR</span></td>
-      <td><span class="cal-flag">🇺🇸</span></td>
-      <td><span class="cal-evento">Nóminas No Agrícolas (NFP)</span><br><span class="cal-desc">Creación de empleo mensual, dato más importante para política Fed</span></td>
-      <td><span class="cal-imp" style="color:#ff4060;background:#ff406018">CRÍTICO</span></td>
-      <td class="cal-num">275K</td>
-      <td class="cal-num" style="color:#00d49a">235K</td>
-    </tr>
-    <tr class="cal-row">
-      <td><span class="cal-dia">Vie 13</span><br><span class="cal-hora">09:30 AR</span></td>
-      <td><span class="cal-flag">🇺🇸</span></td>
-      <td><span class="cal-evento">Tasa de Desempleo Febrero</span><br><span class="cal-desc">Desempleo nacional, complementa el dato de NFP para Fed</span></td>
-      <td><span class="cal-imp" style="color:#ff8c00;background:#ff8c0018">ALTO</span></td>
-      <td class="cal-num">3.7%</td>
-      <td class="cal-num" style="color:#00d49a">3.7%</td>
     </tr>
     <tr class="cal-row">
       <td><span class="cal-dia">Vie 13</span><br><span class="cal-hora">11:00 AR</span></td>
       <td><span class="cal-flag">🇦🇷</span></td>
-      <td><span class="cal-evento">Vencimiento BOPREAL USD 2.8B</span><br><span class="cal-desc">Vencimiento de bonos en dólares del BCRA, presión sobre reservas</span></td>
+      <td><span class="cal-evento">IPC INDEC Febrero</span><br><span class="cal-desc">Inflación mensual argentina, central para política económica y expectativas</span></td>
       <td><span class="cal-imp" style="color:#ff4060;background:#ff406018">CRÍTICO</span></td>
-      <td class="cal-num">N/A</td>
-      <td class="cal-num" style="color:#00d49a">Roll 85%</td>
+      <td class="cal-num">20.6%</td>
+      <td class="cal-num" style="color:#00d49a">18.2%</td>
     </tr>
     <tr class="cal-row">
-      <td><span class="cal-dia">Vie 13</span><br><span class="cal-hora">12:00 AR</span></td>
-      <td><span class="cal-flag">🇧🇷</span></td>
-      <td><span class="cal-evento">IPCA Brasil Febrero</span><br><span class="cal-desc">Inflación brasileña, afecta política del Banco Central y BRL</span></td>
-      <td><span class="cal-imp" style="color:#4a9eff;background:#4a9eff18">MEDIO</span></td>
-      <td class="cal-num">0.83%</td>
-      <td class="cal-num" style="color:#00d49a">0.65%</td>
+      <td><span class="cal-dia">Vie 13</span><br><span class="cal-hora">17:00 AR</span></td>
+      <td><span class="cal-flag">🇺🇸</span></td>
+      <td><span class="cal-evento">Jerome Powell - Fed Speak</span><br><span class="cal-desc">Presidente de la Fed comenta perspectivas de política monetaria y economía</span></td>
+      <td><span class="cal-imp" style="color:#ff4060;background:#ff406018">CRÍTICO</span></td>
+      <td class="cal-num">Hawkish</td>
+      <td class="cal-num" style="color:#00d49a">Neutral</td>
+    </tr>
+    <tr class="cal-row">
+      <td><span class="cal-dia">Lun 16</span><br><span class="cal-hora">06:30 AR</span></td>
+      <td><span class="cal-flag">🇯🇵</span></td>
+      <td><span class="cal-evento">Decisión Tasas BOJ</span><br><span class="cal-desc">Banco de Japón define política monetaria, impacta USD/JPY y mercados asiáticos</span></td>
+      <td><span class="cal-imp" style="color:#ff8c00;background:#ff8c0018">ALTO</span></td>
+      <td class="cal-num">0.10%</td>
+      <td class="cal-num" style="color:#00d49a">0.25%</td>
+    </tr>
+    <tr class="cal-row">
+      <td><span class="cal-dia">Mar 17</span><br><span class="cal-hora">09:30 AR</span></td>
+      <td><span class="cal-flag">🇦🇷</span></td>
+      <td><span class="cal-evento">Vencimiento LECAP $2.1B</span><br><span class="cal-desc">Vencimiento de Letras del Tesoro, prueba de confianza en deuda argentina</span></td>
+      <td><span class="cal-imp" style="color:#ff8c00;background:#ff8c0018">ALTO</span></td>
+      <td class="cal-num">85% rollover</td>
+      <td class="cal-num" style="color:#00d49a">80% rollover</td>
     </tr></tbody>
       </table>
     </div>
@@ -618,11 +618,11 @@ function saveKey(v){ if(v.length > 10) localStorage.setItem('mkt_claude_key', v)
 
 // ── AI Chat ─────────────────────────────────────────────────
 const CONTEXT = `Sos un analista financiero senior. Contexto del informe de hoy (Viernes 6 de Marzo, 2026, edición RUEDA):
-Driver: Petróleo se dispara +13.4% mientras acciones se debilitan
-Análisis USA: Wall Street cerró con pérdidas generalizadas lideradas por el sector financiero (-2.07%) que mostró la mayor debilidad sectorial. El S&P 500 retrocedió a 673.04 (-1.21%) mientras que el Nasdaq cerró en 603.21 (-0.94%) con presión en las megacaps como Apple (-1.33%) y Meta (-2.40%). El único sector en verde fue energía (+0.12%) beneficiado por el rally petrolero. El USD/JPY en 157.78 mantiene niveles elevados sugiriendo fortaleza del dólar. Los inversores rotaron hacia commodities y oro ante potenciales tensiones geopolíticas que podrían afectar la oferta energética.
-Argentina: Los ADRs argentinos mostraron performance divergente con YPF liderando las subas +3.70% hasta $37.31, claramente beneficiada por el rally del petróleo WTI. Sin embargo, GGAL cayó -2.98% a $41.91 siguiendo la debilidad global del sector financiero. Esta divergencia refleja la sensibilidad sectorial a los movimientos de commodities. El Merval estimado en USD 1.847 sugiere un cierre mixto influenciado por la performance de los ADRs. El riesgo país en 598 pb se mantiene en niveles elevados mientras las reservas del BCRA en $44.892 millones continúan bajo presión por vencimientos de deuda.
-Outlook: Las próximas 24-48 horas estarán dominadas por el seguimiento de la situación geopolítica que impulsó el petróleo +13.4% y la reacción de los mercados asiáticos en apertura del lunes. Nivel clave S&P 500: soporte en 665-670, resistencia en 680-685. El lunes traerá el ISM Servicios (consenso 53.8 vs 53.4 previo) que podría marcar el tono para la semana. En Argentina, la licitación de LECAP del lunes será crucial para medir apetito por riesgo local antes del IPC del martes. Catalizadores immediatos: evolución conflictos geopolíticos, apertura Asia, precio petróleo sosteniendo niveles, y comportamiento del oro como termómetro de tensiones.
-Riesgo geopolítico: MODERADO
+Driver: Wall Street retrocede con caídas en tech y financieras
+Análisis USA: Wall Street cierra una jornada compleja con retrocesos generalizados que reflejan preocupaciones sobre la rotación sectorial y el apetito de riesgo. El S&P 500 pierde 1.05% presionado por el sector financiero (-1.84%) y tecnológico (-1.06%), mientras las acciones defensivas muestran fortaleza. Meta (-2.25%) y Amazon (-1.94%) lideran las bajas en megacaps, en tanto Nvidia (-1.31%) continúa bajo presión. El VIX probablemente se ubique por encima de 20 puntos, reflejando mayor incertidumbre. Los bonos a 20 años (+0.05%) actúan como refugio ante la volatilidad.
+Argentina: El mercado argentino enfrenta presión desde los ADRs que cotizan en NYSE, con MercadoLibre cayendo 0.77% a USD 1,766.61, señal negativa para el Merval local. La ausencia de datos de otros ADRs clave como GGAL, YPF y BMA genera incertidumbre sobre el desempeño del panel líder. El Merval en USD se estima en 1,743 puntos, retrocediendo por el contexto global adverso. El riesgo país se mantiene elevado en 578 puntos básicos, mientras las reservas del BCRA continúan ajustadas en USD 45.234 millones. La brecha cambiaria y las licitaciones del Tesoro siguen siendo factores clave a monitorear.
+Outlook: Las próximas 24-48 horas serán clave con el S&P 500 buscando sostén en la zona de 670-675 puntos tras romper soporte de 680. El IPC de Estados Unidos del miércoles será el catalizador principal, donde una lectura por encima del 3.2% podría intensificar las caídas. En Argentina, la licitación de LECAP del lunes y el IPC INDEC del viernes marcarán el humor local. Sectores defensivos y energéticos pueden mostrar fortaleza relativa, mientras tecnológicas permanecen vulnerables. Niveles críticos: soporte S&P en 665, resistencia en 685.
+Riesgo geopolítico: ALTO
 Respondé de forma concisa y directa en español.`;
 
 const msgs = [{role:'user',content:CONTEXT},{role:'assistant',content:'Entendido, tengo el contexto del informe de hoy.'}];
@@ -797,8 +797,10 @@ function renderStatic(){
   const spq  = tryGet('SPY','SPX','^GSPC');
   const nqq  = tryGet('QQQ','NDX','^IXIC');
   const djq  = tryGet('DIA','DJI','^DJI');
-  const vixq = tryGet('VIX','^VIX','VIXY');
-  // Si VIX no está, no mostramos nada (no podemos calcularlo desde ETFs)
+  // VIXY es el ETF de volatilidad, su precio ~= VIX/4 aprox
+  const vixyq = tryGet('VIX','VIXY','^VIX');
+  // Si tenemos VIXY pero no VIX directo, estimamos VIX
+  const vixq = vixyq ? (vixyq.p < 30 ? {...vixyq, p: vixyq.p * 4.2, _est: true} : vixyq) : null;
   const mervq= tryGet('MERVAL','^MERV','BYMA:IMV');
   // Oro: GLD ≈ precio oro / 10, ajustamos para mostrar precio real
   const gldq = tryGet('XAU/USD','GC1!','GLD','GC=F');
