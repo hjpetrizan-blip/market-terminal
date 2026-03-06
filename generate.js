@@ -149,7 +149,7 @@ const esRueda = horaNumNY >= 9.5 && horaNumNY < 16;       // 9:30-16:00 NY
 const esCierre = horaNumNY >= 16 || horaNumNY < 4;         // 16:00+ NY (post cierre)
 const EDICION = esCierre ? 'CIERRE' : esPreMarket ? 'PREMARKET' : 'RUEDA';
 const EDICION_EMOJI = esCierre ? '🌆' : esPreMarket ? '🌅' : '📈';
-const horaNum = horaNum || (now.getHours() + now.getMinutes() / 60); // keep compat
+const horaNum = now.getHours() + now.getMinutes() / 60;
 
 console.log(`📅 ${fechaLarga} · Edición ${EDICION} (${hora} AR)`);
 
