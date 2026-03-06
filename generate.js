@@ -1159,27 +1159,47 @@ async function main(){
     writeFileSync(filename, html, 'utf8');
     console.log(`✅ Generado: ${filename}`);
 
-    // index.html con clave y redirect
-    const sc = 'scr'+'ipt';
-    const pw = `(function(){var P='290585',K='mkt_auth';if(sessionStorage.getItem(K)!==P){document.addEventListener('DOMContentLoaded',function(){document.body.style.cssText='margin:0;background:#05080f;display:flex;align-items:center;justify-content:center;min-height:100vh;';var o=document.createElement('div');o.style.cssText='text-align:center;padding:40px;background:#0a1020;border:1px solid #1a2a40;border-radius:12px;max-width:320px;width:90%;';o.innerHTML='<div style=\"font-size:28px\">&#x1F510;</div><div style=\"font-family:Syne,sans-serif;font-size:20px;font-weight:800;color:#e8f4ff;margin:8px 0 4px\">MARKET TERMINAL</div><div style=\"font-size:10px;color:#4a6a8a;letter-spacing:2px;margin-bottom:20px\">ACCESO RESTRINGIDO</div><input id=\"pi\" type=\"password\" placeholder=\"Clave...\" autofocus style=\"width:100%;background:#0d1828;border:1px solid #1a2a40;border-radius:6px;padding:12px;color:#c8d8e8;font-size:14px;outline:none;text-align:center;margin-bottom:8px\" onkeydown=\"if(event.key===chr1)cp()\"/><div id=\"pe\" style=\"color:#ff4060;font-size:11px;height:16px;margin-bottom:8px\"></div><button onclick=\"cp()\" style=\"width:100%;background:linear-gradient(135deg,#8b5cf6,#4a9eff);border:none;border-radius:6px;padding:12px;color:#fff;font-size:13px;font-weight:700;cursor:pointer\">ENTRAR &#x2192;</button>';document.body.appendChild(o);var chr1="Enter";window.cp=function(){var v=document.getElementById('pi').value;if(v===P){sessionStorage.setItem(K,P);location.reload();}else{document.getElementById('pe').textContent='Clave incorrecta';document.getElementById('pi').value='';document.getElementById('pi').focus();}};});}})()`;
-    const idx = '<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"/>'
-      + '<meta name="viewport" content="width=device-width,initial-scale=1.0"/>'
-      + '<title>Market Terminal</title>'
-      + '<style>body{margin:0;background:#05080f;}</style>'
-      + '</head><body>'
-      + '<' + sc + '>(function(){'
-      + 'var P="290585",K="mkt_auth",TARGET="' + filename + '";'
-      + 'if(sessionStorage.getItem(K)===P){window.location.replace(TARGET);return;}'
-      + 'document.body.style.cssText="margin:0;background:#05080f;display:flex;align-items:center;justify-content:center;min-height:100vh;";'
-      + 'var o=document.createElement("div");'
-      + 'o.style.cssText="text-align:center;padding:40px;background:#0a1020;border:1px solid #1a2a40;border-radius:12px;max-width:320px;width:90%;";'
-      + 'o.innerHTML="<div style=\'font-size:28px\'>&#x1F510;</div><div style=\'font-family:sans-serif;font-size:20px;font-weight:800;color:#e8f4ff;margin:8px 0 4px\'>MARKET TERMINAL</div><div style=\'font-size:10px;color:#4a6a8a;letter-spacing:2px;margin-bottom:20px\'>ACCESO RESTRINGIDO</div><input id=\'pi\' type=\'password\' placeholder=\'Ingres&#225; la clave...\' autofocus style=\'width:100%;background:#0d1828;border:1px solid #1a2a40;border-radius:6px;padding:12px;color:#c8d8e8;font-size:14px;outline:none;text-align:center;margin-bottom:8px\' onkeydown=\'if(event.key===chr1)cp()\'/><div id=\'pe\' style=\'color:#ff4060;font-size:11px;height:16px;margin-bottom:8px\'></div><button onclick=\'cp()\' style=\'width:100%;background:linear-gradient(135deg,#8b5cf6,#4a9eff);border:none;border-radius:6px;padding:12px;color:#fff;font-size:13px;font-weight:700;cursor:pointer\'>ENTRAR &#x2192;</button>";'
-      + 'document.body.appendChild(o);'
-      + 'var chr1=("Ent"+"er");'
-      + 'window.cp=function(){var v=document.getElementById("pi").value;if(v===P){sessionStorage.setItem(K,P);window.location.replace(TARGET);}else{document.getElementById("pe").textContent="Clave incorrecta";document.getElementById("pi").value="";document.getElementById("pi").focus();}};'
-      + '})()</'
-      + sc + '>'
-      + '</body></html>';
+    // index.html con clave y redirect — versión limpia sin concatenaciones problemáticas
+    const target = filename;
+    const idx = `<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Market Terminal</title>
+<style>body{margin:0;background:#05080f;font-family:sans-serif;}
+.box{position:fixed;inset:0;background:#05080f;display:flex;align-items:center;justify-content:center;}
+.card{text-align:center;padding:40px;background:#0a1020;border:1px solid #1a2a40;border-radius:12px;max-width:320px;width:90%;}
+.title{font-size:20px;font-weight:800;color:#e8f4ff;margin:8px 0 4px;}
+.sub{font-size:10px;color:#4a6a8a;letter-spacing:2px;margin-bottom:20px;}
+input{width:100%;background:#0d1828;border:1px solid #1a2a40;border-radius:6px;padding:12px;color:#c8d8e8;font-size:14px;outline:none;text-align:center;margin-bottom:8px;box-sizing:border-box;}
+button{width:100%;background:linear-gradient(135deg,#8b5cf6,#4a9eff);border:none;border-radius:6px;padding:12px;color:#fff;font-size:13px;font-weight:700;cursor:pointer;}
+.err{color:#ff4060;font-size:11px;height:16px;margin-bottom:8px;}
+</style>
+</head>
+<body>
+<div class="box" id="box">
+<div class="card">
+<div style="font-size:28px">&#x1F510;</div>
+<div class="title">MARKET TERMINAL</div>
+<div class="sub">ACCESO RESTRINGIDO</div>
+<input id="pi" type="password" placeholder="Ingres&#225; la clave..." autofocus/>
+<div class="err" id="pe"></div>
+<button onclick="cp()">ENTRAR &#x2192;</button>
+</div>
+</div>
+<script>
+var P='290585',K='mkt_auth',T='${target}';
+if(sessionStorage.getItem(K)===P){window.location.replace(T);}
+document.getElementById('pi').addEventListener('keydown',function(e){if(e.key==='Enter')cp();});
+function cp(){
+  var v=document.getElementById('pi').value;
+  if(v===P){sessionStorage.setItem(K,P);window.location.replace(T);}
+  else{document.getElementById('pe').textContent='Clave incorrecta';document.getElementById('pi').value='';document.getElementById('pi').focus();}
+}
+</script>
+</body>
+</html>`;
     writeFileSync('index.html', idx, 'utf8');
     console.log(`✅ index.html → ${filename}`);
   } catch(e){
