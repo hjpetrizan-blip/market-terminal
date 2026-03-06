@@ -53,24 +53,24 @@ async function fetchAllPrices() {
   const allSymbols = [
     // Índices USA via ETFs
     'SPY','QQQ','DIA','IWM',
-    // Volatilidad
+    // Volatilidad - VIX en Twelve Data necesita exchange
     'VIX','TLT','IEF',
     // Commodities ETFs
     'GLD','SLV','USO','BNO','UNG',
     // Sectores clave
-    'XLK','XLF','XLE','XLV','XLI','XLY',
+    'XLK','XLF','XLE','XLV','XLI','XLY','XLB','XLC','XLP','XLU','XLRE',
     // Mega Tech
-    'AAPL','MSFT','NVDA','GOOGL','AMZN','META','TSLA',
+    'AAPL','MSFT','NVDA','GOOGL','AMZN','META','TSLA','NFLX','AMD',
     // Defensa
-    'LMT','RTX','NOC',
-    // ADRs argentinos
-    'GGAL','YPF','BMA','MELI','GLOB','BBAR','CEPU','PAM',
+    'LMT','RTX','NOC','GD','BA',
+    // ADRs argentinos - todos
+    'GGAL','YPF','BMA','MELI','GLOB','BBAR','CEPU','PAM','TGS','SUPV','LOMA',
     // FX G10
-    'EUR/USD','GBP/USD','USD/JPY',
+    'EUR/USD','GBP/USD','USD/JPY','USD/CHF','AUD/USD','USD/CAD',
     // FX LatAm
-    'USD/BRL','USD/MXN',
+    'USD/BRL','USD/MXN','USD/CLP','USD/COP',
     // Índices mundo via ETFs
-    'EWJ','EWZ','EWG',
+    'EWJ','EWZ','EWG','EWU','EWQ',
   ];
 
   console.log(`⏳ Cargando ${allSymbols.length} símbolos (8s delay cada uno)...`);
@@ -949,6 +949,7 @@ function renderStatic(){
   const nqq  = tryGet('QQQ','NDX','^IXIC');
   const djq  = tryGet('DIA','DJI','^DJI');
   const vixq = tryGet('VIX','^VIX','VIXY');
+  // Si VIX no está, no mostramos nada (no podemos calcularlo desde ETFs)
   const mervq= tryGet('MERVAL','^MERV','BYMA:IMV');
   // Oro: GLD ≈ precio oro / 10, ajustamos para mostrar precio real
   const gldq = tryGet('XAU/USD','GC1!','GLD','GC=F');
@@ -1174,7 +1175,7 @@ async function main(){
       + 'o.style.cssText="text-align:center;padding:40px;background:#0a1020;border:1px solid #1a2a40;border-radius:12px;max-width:320px;width:90%;";'
       + 'o.innerHTML="<div style=\'font-size:28px\'>&#x1F510;</div><div style=\'font-family:sans-serif;font-size:20px;font-weight:800;color:#e8f4ff;margin:8px 0 4px\'>MARKET TERMINAL</div><div style=\'font-size:10px;color:#4a6a8a;letter-spacing:2px;margin-bottom:20px\'>ACCESO RESTRINGIDO</div><input id=\'pi\' type=\'password\' placeholder=\'Ingres&#225; la clave...\' autofocus style=\'width:100%;background:#0d1828;border:1px solid #1a2a40;border-radius:6px;padding:12px;color:#c8d8e8;font-size:14px;outline:none;text-align:center;margin-bottom:8px\' onkeydown=\'if(event.key===chr1)cp()\'/><div id=\'pe\' style=\'color:#ff4060;font-size:11px;height:16px;margin-bottom:8px\'></div><button onclick=\'cp()\' style=\'width:100%;background:linear-gradient(135deg,#8b5cf6,#4a9eff);border:none;border-radius:6px;padding:12px;color:#fff;font-size:13px;font-weight:700;cursor:pointer\'>ENTRAR &#x2192;</button>";'
       + 'document.body.appendChild(o);'
-      + 'var chr1="Enter";'
+      + 'var chr1=("Ent"+"er");'
       + 'window.cp=function(){var v=document.getElementById("pi").value;if(v===P){sessionStorage.setItem(K,P);window.location.replace(TARGET);}else{document.getElementById("pe").textContent="Clave incorrecta";document.getElementById("pi").value="";document.getElementById("pi").focus();}};'
       + '})()</'
       + sc + '>'
