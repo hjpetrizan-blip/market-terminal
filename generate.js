@@ -50,29 +50,25 @@ async function fetchAllPrices() {
   // Free tier: 8 req/min → delay de 8s entre requests
   // Total símbolos: 45 → ~6 minutos de carga
   // Priorizamos los más importantes
+  // ORDEN DE PRIORIDAD: los más importantes primero
+  // Límite: 40 símbolos × 8s = ~5.4 min, dentro del rate limit free tier
   const allSymbols = [
-    // Índices USA via ETFs
-    'SPY','QQQ','DIA','IWM',
-    // Volatilidad - VIX en Twelve Data necesita exchange
-    'VIX','TLT','IEF',
-    // Commodities ETFs
-    'GLD','SLV','USO','BNO','UNG',
-    // Sectores clave
-    'XLK','XLF','XLE','XLV','XLI','XLY','XLB','XLC','XLP','XLU','XLRE',
-    // Mega Tech
-    'AAPL','MSFT','NVDA','GOOGL','AMZN','META','TSLA','NFLX','AMD',
-    // Defensa
-    'LMT','RTX','NOC','GD','BA',
-    // ADRs argentinos - los principales
+    // TIER 1: Índices USA + VIX (críticos)
+    'SPY','QQQ','DIA','IWM','VIXY',
+    // TIER 1: ADRs argentinos (alta prioridad — el usuario los necesita)
     'GGAL','YPF','BMA','MELI','GLOB','BBAR','CEPU','PAM',
-    // VIX via ETF (VVIX no soportado en free tier)
-    'VIXY',
-    // FX G10 - solo los más importantes
-    'EUR/USD','GBP/USD','USD/JPY',
-    // FX LatAm
-    'USD/BRL','USD/MXN',
-    // Índices mundo via ETFs
-    'EWJ','EWZ','EWG','EWQ',
+    // TIER 1: Mega Tech
+    'AAPL','MSFT','NVDA','GOOGL','AMZN','META','TSLA',
+    // TIER 2: Commodities
+    'GLD','SLV','USO','BNO',
+    // TIER 2: Sectores clave (solo 6 más importantes)
+    'XLK','XLF','XLE','XLV','XLI','XLY',
+    // TIER 2: Bonos
+    'TLT','IEF',
+    // TIER 3: FX
+    'EUR/USD','GBP/USD','USD/JPY','USD/BRL',
+    // TIER 3: Índices mundo
+    'EWZ','EWG','EWJ',
   ];
 
   console.log(`⏳ Cargando ${allSymbols.length} símbolos (8s delay cada uno)...`);
@@ -144,51 +140,97 @@ const meses  = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto
 const fechaLarga = `${dias[now.getDay()]} ${now.getDate()} de ${meses[now.getMonth()]}, ${now.getFullYear()}`;
 const fechaCorta = `${String(now.getDate()).padStart(2,'0')}${meses[now.getMonth()].slice(0,3).toLowerCase()}${now.getFullYear()}`;
 const hora = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
-const horaNum = now.getHours() + now.getMinutes() / 60;
-const esManana = horaNum < 10.5;
-const esCierre = horaNum >= 18;
-const EDICION = esCierre ? 'CIERRE' : esManana ? 'MAÑANA' : 'RUEDA';
-const EDICION_EMOJI = esCierre ? '🌆' : esManana ? '🌅' : '📈';
+
+// Hora en NY para detectar sesión correctamente
+const nowNY = new Date(new Date().toLocaleString('en-US', { timeZone: 'America/New_York' }));
+const horaNumNY = nowNY.getHours() + nowNY.getMinutes() / 60;
+const esPreMarket = horaNumNY >= 7 && horaNumNY < 9.5;   // 7:00-9:30 NY
+const esRueda = horaNumNY >= 9.5 && horaNumNY < 16;       // 9:30-16:00 NY
+const esCierre = horaNumNY >= 16 || horaNumNY < 4;         // 16:00+ NY (post cierre)
+const EDICION = esCierre ? 'CIERRE' : esPreMarket ? 'PREMARKET' : 'RUEDA';
+const EDICION_EMOJI = esCierre ? '🌆' : esPreMarket ? '🌅' : '📈';
+const horaNum = horaNum || (now.getHours() + now.getMinutes() / 60); // keep compat
 
 console.log(`📅 ${fechaLarga} · Edición ${EDICION} (${hora} AR)`);
 
 function buildPrompt(prices={}) {
-  // Construir resumen de precios reales para el prompt
-  const p = (sym, fallback='?') => {
+  // Solo incluir precios que realmente existen — nunca pasar '?' a Claude
+  const fmt = (sym) => {
     const syms = Array.isArray(sym) ? sym : [sym];
     for (const s of syms) {
-      if (prices[s]) return `${prices[s].p.toFixed(2)} (${prices[s].c>=0?'+':''}${prices[s].c.toFixed(2)}%)`;
+      if (prices[s] && prices[s].p > 0) {
+        return `${prices[s].p.toFixed(2)} (${prices[s].c>=0?'+':''}${prices[s].c.toFixed(2)}%)`;
+      }
     }
-    return fallback;
+    return null; // no data
   };
+
+  // Construir bloque solo con datos reales
+  const addLine = (label, sym) => {
+    const val = fmt(sym);
+    return val ? `- ${label}: ${val}` : null;
+  };
+
+  const lines = [
+    addLine('S&P 500 (SPY)', 'SPY'),
+    addLine('Nasdaq (QQQ)', 'QQQ'),
+    addLine('Dow Jones (DIA)', 'DIA'),
+    addLine('Russell 2000 (IWM)', 'IWM'),
+    addLine('Bonos 20Y (TLT)', 'TLT'),
+    addLine('Bonos 10Y (IEF)', 'IEF'),
+    addLine('VIX (via VIXY)', 'VIXY'),
+    addLine('Oro (XAUUSD)', ['XAU/USD','GLD']),
+    addLine('Plata (XAGUSD)', ['XAG/USD','SLV']),
+    // WTI/Brent: SOLO si tenemos el dato, y aclarar que es ETF proxy
+    fmt('USO') ? `- Petróleo WTI proxy (ETF USO, NO es precio real del crudo): ${fmt('USO')}` : null,
+    fmt('BNO') ? `- Brent proxy (ETF BNO, NO es precio real del Brent): ${fmt('BNO')}` : null,
+    addLine('Tech (XLK)', 'XLK'),
+    addLine('Finanzas (XLF)', 'XLF'),
+    addLine('Energía (XLE)', 'XLE'),
+    addLine('Salud (XLV)', 'XLV'),
+    addLine('AAPL', 'AAPL'),
+    addLine('MSFT', 'MSFT'),
+    addLine('NVDA', 'NVDA'),
+    addLine('GOOGL', 'GOOGL'),
+    addLine('AMZN', 'AMZN'),
+    addLine('META', 'META'),
+    addLine('TSLA', 'TSLA'),
+    addLine('GGAL ADR (NYSE)', 'GGAL'),
+    addLine('YPF ADR (NYSE)', 'YPF'),
+    addLine('BMA ADR (NYSE)', 'BMA'),
+    addLine('MELI (NYSE)', 'MELI'),
+    addLine('GLOB (NYSE)', 'GLOB'),
+    addLine('EUR/USD', 'EUR/USD'),
+    addLine('GBP/USD', 'GBP/USD'),
+    addLine('USD/JPY', 'USD/JPY'),
+    addLine('USD/BRL', 'USD/BRL'),
+    addLine('Brasil ETF (EWZ)', 'EWZ'),
+    addLine('Europa ETF (EWG)', 'EWG'),
+    addLine('Japón ETF (EWJ)', 'EWJ'),
+  ].filter(Boolean).join('\n');
+
+  const tieneWTI = !!fmt('USO');
+  const tieneBrent = !!fmt('BNO');
+
   const preciosResumen = `
-PRECIOS REALES EN ESTE MOMENTO (usá estos datos, no inventes):
-- S&P 500 (SPY): ${p('SPY')}
-- Nasdaq (QQQ): ${p('QQQ')}
-- Dow Jones (DIA): ${p('DIA')}
-- VIX: ${p('VIX')}
-- Oro (GLD): ${p('GLD')}
-- Petróleo WTI (USO): ${p('USO')}
-- Brent (BNO): ${p('BNO')}
-- Gas Natural (UNG): ${p('UNG')}
-- EUR/USD: ${p('EUR/USD')}
-- GBP/USD: ${p('GBP/USD')}
-- USD/JPY: ${p('USD/JPY')}
-- USD/BRL: ${p('USD/BRL')}
-- USD/MXN: ${p('USD/MXN')}
-- Bonos 20Y (TLT): ${p('TLT')}
-- Tech (XLK): ${p('XLK')} | Finanzas (XLF): ${p('XLF')} | Energía (XLE): ${p('XLE')}
-- AAPL: ${p('AAPL')} | MSFT: ${p('MSFT')} | NVDA: ${p('NVDA')} | GOOGL: ${p('GOOGL')}
-- AMZN: ${p('AMZN')} | META: ${p('META')} | TSLA: ${p('TSLA')}
-- GGAL: ${p('GGAL')} | YPF: ${p('YPF')} | BMA: ${p('BMA')} | MELI: ${p('MELI')}
-- LMT: ${p('LMT')} | RTX: ${p('RTX')} | NOC: ${p('NOC')}
-- Brasil (EWZ): ${p('EWZ')} | Alemania (EWG): ${p('EWG')} | Japón (EWJ): ${p('EWJ')}
-- GGAL ADR: ${p('GGAL')} | YPF ADR: ${p('YPF')} | BMA ADR: ${p('BMA')} | MELI: ${p('MELI')}
-IMPORTANTE: El análisis de Argentina debe basarse en los ADRs de arriba (cotizan en NYSE en tiempo real).
-Si los ADRs argentinos bajan, el Merval probablemente también baja. No inventes datos positivos si los ADRs caen.`;
+PRECIOS REALES DISPONIBLES (solo comentá lo que aparece acá, NO inventes):
+${lines}
+
+REGLAS CRÍTICAS:
+1. SOLO mencionar activos que aparecen en la lista de arriba con precio real.
+2. ${tieneWTI ? 'USO es un ETF proxy del WTI, su precio NO equivale al crudo real. NO reportes USO como si fuera el precio del WTI.' : 'NO HAY DATO DE WTI NI BRENT — no los menciones ni inventes su precio.'}
+3. Para Argentina: usá los ADRs (GGAL, YPF, BMA, MELI) como proxy del mercado local.
+4. Si un activo no está en la lista, no lo menciones ni inventes su valor.
+5. El análisis debe reflejar la realidad: si los índices caen, el análisis debe decir que caen.`;
 
   return `Sos un analista financiero senior especializado en mercados argentinos y globales.
-Hoy es ${fechaLarga}, hora actual en Argentina: ${hora}. Edición: ${EDICION}.
+Hoy es ${fechaLarga}, hora actual en Argentina: ${hora} (NY: ${horaNumNY.toFixed(0)}hs).
+Edición: ${EDICION}.
+
+${EDICION === 'PREMARKET' ? `PRE-MARKET: Comentá futuros, lo que se espera para la sesión, catalizadores del día. Wall Street aún no abrió.` : ''}
+${EDICION === 'RUEDA' ? `DURANTE RUEDA: Analizá el movimiento en tiempo real, qué está pasando en este momento.` : ''}
+${EDICION === 'CIERRE' ? `POST CIERRE: Hacé el resumen del día, qué cerró, qué pasó, análisis del cierre completo.` : ''}
+
 Respondé SOLO con JSON válido, sin texto extra, sin markdown, sin backticks.
 Usá EXACTAMENTE los datos de precios que te paso abajo. NO inventes ni uses datos distintos.
 ${preciosResumen}
