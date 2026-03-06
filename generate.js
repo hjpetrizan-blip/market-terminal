@@ -3,7 +3,6 @@
 //  Layout: grilla completa, sin solapas, todo visible
 // ══════════════════════════════════════════════════════════
 
-
 import Anthropic from '@anthropic-ai/sdk';
 import { writeFileSync } from 'fs';
 
@@ -64,14 +63,16 @@ async function fetchAllPrices() {
     'AAPL','MSFT','NVDA','GOOGL','AMZN','META','TSLA','NFLX','AMD',
     // Defensa
     'LMT','RTX','NOC','GD','BA',
-    // ADRs argentinos - todos
-    'GGAL','YPF','BMA','MELI','GLOB','BBAR','CEPU','PAM','TGS','SUPV','LOMA',
-    // FX G10
-    'EUR/USD','GBP/USD','USD/JPY','USD/CHF','AUD/USD','USD/CAD',
+    // ADRs argentinos - los principales
+    'GGAL','YPF','BMA','MELI','GLOB','BBAR','CEPU','PAM',
+    // VIX via ETF (VVIX no soportado en free tier)
+    'VIXY',
+    // FX G10 - solo los más importantes
+    'EUR/USD','GBP/USD','USD/JPY',
     // FX LatAm
-    'USD/BRL','USD/MXN','USD/CLP','USD/COP',
+    'USD/BRL','USD/MXN',
     // Índices mundo via ETFs
-    'EWJ','EWZ','EWG','EWU','EWQ',
+    'EWJ','EWZ','EWG','EWQ',
   ];
 
   console.log(`⏳ Cargando ${allSymbols.length} símbolos (8s delay cada uno)...`);
@@ -266,6 +267,9 @@ async function getContent(prices={}) {
 
 function generateHTML(d, prices={}) {
   console.log('🎨 Generando HTML Bloomberg...');
+  // Server-side price helpers para el HTML template
+  const vvixq = prices['VVIX'] || null;
+  const vixServerq = prices['VIX'] || prices['VIXY'] || null;
 
   const conflictCards = (d.conflictos || []).map(c => `
     <div class="conflict-card" style="border-left-color:${c.color}">
@@ -568,6 +572,11 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;bac
             <div class="tick-chg" id="vix-c" style="font-size:10px;margin:2px 0">⏳</div>
             <div class="vix-zone" id="vix-z" style="background:rgba(255,170,0,.1);color:var(--warn)">—</div>
             <div style="font-size:8px;color:var(--dim);margin-top:6px;">&lt;15 Calma · 15-20 Normal<br>20-30 ⚠ Alerta · &gt;30 🚨</div>
+            <div style="margin-top:8px;padding:6px;background:var(--bg2);border-radius:4px;">
+              <div style="font-size:8px;color:var(--dim);letter-spacing:1px;">VVIX <span style="font-size:7px;opacity:.6">(vol. del VIX)</span></div>
+              <div style="font-size:16px;font-weight:700;color:var(--purple)" id="vvix-v">${vvixq ? vvixq.p.toFixed(1) : '—'}</div>
+              <div style="font-size:9px;" id="vvix-c">${vvixq ? (vvixq.c >= 0 ? '+' : '') + vvixq.c.toFixed(2) + '%' : '⏳'}</div>
+            </div>
           </div>
           <div class="fg-wrap" style="background:var(--bg3);border-radius:6px;">
             <div style="font-size:8px;color:var(--dim);letter-spacing:1px;margin-bottom:6px;">FEAR & GREED</div>
@@ -949,10 +958,12 @@ function renderStatic(){
   const spq  = tryGet('SPY','SPX','^GSPC');
   const nqq  = tryGet('QQQ','NDX','^IXIC');
   const djq  = tryGet('DIA','DJI','^DJI');
-  // VIXY es el ETF de volatilidad, su precio ~= VIX/4 aprox
-  const vixyq = tryGet('VIX','VIXY','^VIX');
-  // Si tenemos VIXY pero no VIX directo, estimamos VIX
-  const vixq = vixyq ? (vixyq.p < 30 ? {...vixyq, p: vixyq.p * 4.2, _est: true} : vixyq) : null;
+  // VIX: intentamos directo, si no estimamos desde VIXY
+  const vixDirect = tryGet('VIX','^VIX');
+  const vixyq = tryGet('VIXY');
+  const vixq = vixDirect || (vixyq ? {...vixyq, p: parseFloat((vixyq.p * 4.2).toFixed(2))} : null);
+  // VVIX: volatilidad de la volatilidad
+  const vvixq = tryGet('VVIX');
   const mervq= tryGet('MERVAL','^MERV','BYMA:IMV');
   // Oro: GLD ≈ precio oro / 10, ajustamos para mostrar precio real
   const gldq = tryGet('XAU/USD','GC1!','GLD','GC=F');
@@ -975,6 +986,8 @@ function renderStatic(){
     setEl('vix-z',z);
   }
   if(mervq){setEl('t-merv',pf(mervq.p,0));setEl('t-mervc',cf(mervq.c));setEl('merval-v',pf(mervq.p,0));setEl('merval-c',cf(mervq.c));}
+  // VVIX en panel volatilidad
+  if(vvixq){setEl('vvix-v',vvixq.p.toFixed(1));setEl('vvix-c',cf(vvixq.c));}
   if(goldq){setEl('t-gold',pf(goldq.p,0));setEl('t-goldc',cf(goldq.c));}
   if(wtiq){setEl('t-wti',pf(wtiq.p,2));setEl('t-wtic',cf(wtiq.c));}
   if(brentq){setEl('t-brent',pf(brentq.p,2));setEl('t-brentc',cf(brentq.c));}
@@ -1072,7 +1085,7 @@ function renderStatic(){
   setEl('tbl-sect',mkTbl(makeRows(['XLK','XLF','XLE','XLV','XLC','XLI','XLB','XLY','XLP','XLU','XLRE'])));
   setEl('tbl-tech',mkTbl(makeRows(['AAPL','MSFT','NVDA','GOOGL','AMZN','META','TSLA','NFLX','AMD'])));
   setEl('tbl-def',mkTbl(makeRows(['LMT','RTX','NOC','GD','BA'])));
-  setEl('tbl-adrs',mkTbl(makeRows(['MELI','GLOB','YPF','BMA','GGAL','SUPV','BBAR','CEPU','LOMA','PAM','TGS'])));
+  setEl('tbl-adrs',mkTbl(makeRows(['GGAL','YPF','BMA','MELI','GLOB','BBAR','CEPU','PAM','TGS','SUPV','LOMA'])));
 
   // CRIPTO desde servidor
   const cryptoData = STATIC_PRICES['_crypto'] || {};
@@ -1140,10 +1153,18 @@ async function refreshLive(){
   ]).then(rows=>setEl('tbl-ar-bonos',rows.length?mkTbl(rows,'$'):'<div class="loading">Sin datos de bonos</div>'));
 }
 
-// Render estático inmediato, luego refresh live
-renderStatic();
-refreshLive();
-setInterval(refreshLive, 120000);
+// Render cuando DOM esté listo
+if(document.readyState === 'loading'){
+  document.addEventListener('DOMContentLoaded', function(){
+    renderStatic();
+    refreshLive();
+    setInterval(refreshLive, 120000);
+  });
+} else {
+  renderStatic();
+  refreshLive();
+  setInterval(refreshLive, 120000);
+}
 
 
 
