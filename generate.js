@@ -877,8 +877,18 @@ const NAMES={
 };
 
 function sp(sym){
-  // Busca en precios estáticos con varios aliases
   return STATIC_PRICES[sym]||null;
+}
+
+// Debug: mostrar qué precios llegaron
+function debugPrices(){
+  const keys = Object.keys(STATIC_PRICES).filter(k=>!k.startsWith('_'));
+  console.log('STATIC_PRICES keys:', keys.join(', '));
+  console.log('Total precios:', keys.length);
+  // Específicos que necesitamos
+  ['VIX','GGAL','YPF','BMA','MELI','USO','BNO','EUR/USD','GBP/USD'].forEach(k=>{
+    console.log(k+':', STATIC_PRICES[k] ? JSON.stringify(STATIC_PRICES[k]) : 'FALTA');
+  });
 }
 
 function makeRows(syms,dispFn){
@@ -929,6 +939,7 @@ async function ambitoBatch(tickers){
 
 // ── RENDER inicial con precios estáticos ──────────────────
 function renderStatic(){
+  debugPrices();
   // Twelve Data usa símbolos distintos a Yahoo.
   // Buscamos con múltiples aliases para máxima cobertura.
   const tryGet = (...syms) => { for(const s of syms){ const q=sp(s); if(q) return q; } return null; };
@@ -942,8 +953,12 @@ function renderStatic(){
   // Oro: GLD ≈ precio oro / 10, ajustamos para mostrar precio real
   const gldq = tryGet('XAU/USD','GC1!','GLD','GC=F');
   const goldq = gldq ? (gldq.symbol === 'GLD' || !gldq.symbol ? {...gldq, p: gldq.p * 10, _etf: true} : gldq) : null;
-  const wtiq = tryGet('WTI/USD','CL1!','USO','CL=F');
-  const brentq=tryGet('BCO/USD','BZ1!','BNO','BZ=F');
+  // WTI y Brent: si viene de ETF (USO/BNO), ajustamos ratio
+  const wtiRaw = tryGet('WTI/USD','CL1!','USO','CL=F');
+  const brentRaw = tryGet('BCO/USD','BZ1!','BNO','BZ=F');
+  // USO cotiza ~1/8.5 del WTI real, BNO ~1/2.1 del Brent real
+  const wtiq = wtiRaw ? (wtiRaw.p < 30 ? {...wtiRaw, p: wtiRaw.p * 8.5} : wtiRaw) : null;
+  const brentq = brentRaw ? (brentRaw.p < 30 ? {...brentRaw, p: brentRaw.p * 2.1} : brentRaw) : null;
 
   if(spq){setEl('t-sp',pf(spq.p));setEl('t-spc',cf(spq.c));}
   if(nqq){setEl('t-nq',pf(nqq.p));setEl('t-nqc',cf(nqq.c));}
@@ -957,8 +972,8 @@ function renderStatic(){
   }
   if(mervq){setEl('t-merv',pf(mervq.p,0));setEl('t-mervc',cf(mervq.c));setEl('merval-v',pf(mervq.p,0));setEl('merval-c',cf(mervq.c));}
   if(goldq){setEl('t-gold',pf(goldq.p,0));setEl('t-goldc',cf(goldq.c));}
-  if(wtiq){setEl('t-wti',pf(wtiq.p));setEl('t-wtic',cf(wtiq.c));}
-  if(brentq){setEl('t-brent',pf(brentq.p));setEl('t-brentc',cf(brentq.c));}
+  if(wtiq){setEl('t-wti',pf(wtiq.p,2));setEl('t-wtic',cf(wtiq.c));}
+  if(brentq){setEl('t-brent',pf(brentq.p,2));setEl('t-brentc',cf(brentq.c));}
 
   // USA ETFs
   setEl('tbl-usa',mkTbl(makeRows(['SPY','QQQ','DIA','IWM'])));
