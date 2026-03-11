@@ -18,14 +18,14 @@ const fechaLarga = `${dias[now.getDay()]} ${now.getDate()} de ${meses[now.getMon
 const fechaCorta = `${String(now.getDate()).padStart(2,'0')}${meses[now.getMonth()].slice(0,3).toLowerCase()}${now.getFullYear()}`;
 const hora       = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
 
-// Detección de sesión basada en hora NY
-const horaNumNY = nowNY.getHours() + nowNY.getMinutes() / 60;
-const esPreMarket = horaNumNY >= 7 && horaNumNY < 9.5;    // 7:00-9:30 NY
-const esRueda     = horaNumNY >= 9.5 && horaNumNY < 16;   // 9:30-16:00 NY
-const esCierre    = horaNumNY >= 16 || horaNumNY < 7;      // 16:00+ NY
-const EDICION     = esCierre ? 'CIERRE' : esPreMarket ? 'MAÑANA' : 'RUEDA';
-const EDICION_EMOJI = esCierre ? '🌆' : esPreMarket ? '🌅' : '📈';
-const esManana    = EDICION === 'MAÑANA'; // compat
+// Detección de sesión basada en hora AR (= hora NY desde cambio de horario 2026)
+const horaAR     = now.getHours() + now.getMinutes() / 60;
+const esPreMarket = horaAR >= 9 && horaAR < 10.5;    // 9:00-10:30 AR (pre-apertura)
+const esRueda     = horaAR >= 10.5 && horaAR < 17;   // 10:30-17:00 AR (rueda)
+const esCierre    = horaAR >= 17 || horaAR < 9;      // 17:00+ AR (post-cierre)
+const EDICION      = esCierre ? 'CIERRE' : esPreMarket ? 'MAÑANA' : 'RUEDA';
+const EDICION_EMOJI = esCierre ? '🔴' : esPreMarket ? '🌅' : '📊';
+const esManana     = EDICION === 'MAÑANA'; // compat
 
 console.log(`📅 ${fechaLarga} · Edición ${EDICION} (${hora} AR / NY ${nowNY.getHours()}:${String(nowNY.getMinutes()).padStart(2,'0')})`);
 
