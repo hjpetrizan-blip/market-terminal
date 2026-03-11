@@ -1,9 +1,9 @@
-name: 📊 Generar Informe Diario de Mercado
+name: Generar Informe Diario de Mercado
 
 on:
   schedule:
-    - cron: '0 11 * * 1-5'
-    - cron: '0 22 * * 1-5'
+    - cron: '0 13 * * 1-5'
+    - cron: '0 21 * * 1-5'
   workflow_dispatch:
   push:
     branches: [main]
@@ -36,5 +36,5 @@ jobs:
           git config user.name "Market Terminal Bot"
           git config user.email "bot@market-terminal"
           git add informe-mercado-*.html index.html
-          git diff --staged --quiet || git commit -m "📊 Informe $(date +'%d-%b-%Y %H:%M') AR generado"
+          git diff --staged --quiet || git commit -m "Informe AR generado"
           git push --force origin main
