@@ -523,11 +523,15 @@
 
 <script>
 const YF='https://query1.finance.yahoo.com/v8/finance/chart/';
-const PROXIES=[u=>`https://corsproxy.io/?${encodeURIComponent(u)}`,u=>`https://api.allorigins.win/raw?url=${encodeURIComponent(u)}`];
+async function fetchYahooRaw(url){
+  try{const r=await fetch('https://query2.finance.yahoo.com/v8/finance/chart/'+url.split('/chart/')[1],{signal:AbortSignal.timeout(7000)});if(r.ok){const d=await r.json();if(d?.chart?.result?.[0])return d;}}catch(e){}
+  try{const r=await fetch('https://api.allorigins.win/get?url='+encodeURIComponent(url),{signal:AbortSignal.timeout(9000)});if(r.ok){const w=await r.json();return JSON.parse(w.contents);}}catch(e){}
+  return null;
+}
 async function fetchPrice(ticker){
   if(ticker.startsWith('CG:'))return fetchCG(ticker.slice(3));
   const url=YF+encodeURIComponent(ticker)+'?interval=1d&range=2d';
-  for(const proxy of PROXIES){try{const r=await fetch(proxy(url),{signal:AbortSignal.timeout(7000)});if(!r.ok)continue;const d=await r.json();const m=d.chart.result[0].meta;const prev=m.chartPreviousClose||m.previousClose;return{price:m.regularMarketPrice,chg:prev?(m.regularMarketPrice-prev)/prev*100:0,mktState:m.marketState,currency:m.currency};}catch(e){continue;}}return null;
+  try{const d=await fetchYahooRaw(url);if(d?.chart?.result?.[0]){const m=d.chart.result[0].meta;const prev=m.chartPreviousClose||m.previousClose;return{price:m.regularMarketPrice,chg:prev?(m.regularMarketPrice-prev)/prev*100:0,mktState:m.marketState,currency:m.currency};}}catch(e){}return null;
 }
 async function fetchCG(id){try{const r=await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${id}&vs_currencies=usd&include_24hr_change=true`,{signal:AbortSignal.timeout(7000)});const d=await r.json();return{price:d[id].usd,chg:d[id].usd_24h_change,mktState:'REGULAR',currency:'USD'};}catch(e){return null;}}
 function fmt(n,cur='USD'){if(!n&&n!==0)return'—';if(cur==='ARS')return n.toLocaleString('es-AR',{maximumFractionDigits:0});if(n>=10000)return n.toLocaleString('en-US',{maximumFractionDigits:0});if(n>=1)return n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});return n.toLocaleString('en-US',{minimumFractionDigits:4,maximumFractionDigits:4});}
@@ -615,6 +619,17 @@ async function fetchDolares(){
     }
   }catch(e){console.error('fetchDolares error:',e);}
 }
+
+// Fecha dinámica
+(function(){
+  const d=new Date();
+  const dias=['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+  const meses=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+  const fechaStr=dias[d.getDay()]+' '+d.getDate()+' de '+meses[d.getMonth()]+', '+d.getFullYear();
+  const hora=d.toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit',timeZone:'America/Argentina/Buenos_Aires'})+' hs AR';
+  document.querySelectorAll('.logo-date').forEach(el=>el.textContent=fechaStr+' · '+hora);
+  document.title=document.title.replace(/[A-Za-záéíóúÁÉÍÓÚü]+ \d+ de [A-Za-záéíóúÁÉÍÓÚü]+, \d+/,fechaStr);
+})();
 </script>
 </body>
-</html>
+  </html>
