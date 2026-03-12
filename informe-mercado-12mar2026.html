@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Market Terminal — Jueves 12 de Marzo, 2026 · 📊 RUEDA</title>
+<title>Market Terminal — Jueves 12 de Marzo, 2026 · 🔴 CIERRE</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;700;800&display=swap" rel="stylesheet"/>
 <style>
   :root{--bg:#05080f;--bg2:#0a1020;--bg3:#0d1828;--border:#1a2a40;--up:#00d49a;--dn:#ff4060;--warn:#ffaa00;--info:#4a9eff;--purple:#8b5cf6;--text:#c8d8e8;--dim:#4a6a8a;--bright:#e8f4ff;--accent:#00d49a;}
@@ -123,11 +123,11 @@
     <div class="logo-area">
       <div class="logo-tag">▶ MARKET TERMINAL LIVE</div>
       <div class="logo-title">INFORME DE MERCADO</div>
-      <div class="logo-date">Jueves 12 de Marzo, 2026 · 16:16 hs AR</div>
+      <div class="logo-date">Jueves 12 de Marzo, 2026 · 18:58 hs AR</div>
     </div>
     <div class="header-stats">
-      <div class="market-badge badge-open">⚡ MERCADOS ABIERTOS</div>
-      <div class="edicion-badge edicion-rueda">📊 EDICIÓN RUEDA</div>
+      <div class="market-badge badge-warn">⚡ CERRADO</div>
+      <div class="edicion-badge edicion-cierre">🔴 EDICIÓN CIERRE</div>
       <div style="font-size:11px;color:#4a9eff;margin-top:4px;">Riesgo geo: <strong style="color:#ffaa00">MODERADO</strong></div>
     </div>
   </div>
@@ -146,7 +146,7 @@
 
   <div class="tab-bar">
     <button class="tab-btn active" onclick="showTab('contexto',this)">📊 Contexto</button>
-    <button class="tab-btn" onclick="showTab('edicion',this)">📈 En Rueda</button>
+    <button class="tab-btn" onclick="showTab('edicion',this)">🌆 Cierre</button>
     <button class="tab-btn" onclick="showTab('usa',this)">🇺🇸 USA</button>
     <button class="tab-btn" onclick="showTab('argentina',this)">🇦🇷 Argentina</button>
     <button class="tab-btn" onclick="showTab('monedas',this)">💱 Monedas</button>
@@ -164,35 +164,43 @@
   <div id="tab-contexto" class="tab-panel active">
     <div class="sec-title">DRIVER CENTRAL DEL DÍA</div>
     <div class="alert alert-yellow">
-      <div class="alert-title">🏦 Expectativas de política monetaria en foco</div>
-      Los mercados mantienen <strong>atención elevada</strong> sobre las próximas decisiones de la Reserva Federal, con los datos de empleo e inflación siendo <em>cruciales</em> para definir el timing de futuros movimientos en tasas de interés.
+      <div class="alert-title">📊 IPC Estados Unidos mañana</div>
+      <strong>Viernes 09:30 NY</strong>: Se publica inflación de febrero. Consenso anticipa moderación que podría <em>influir en el timing de recortes de tasas Fed</em>. Mercado posicionado defensivo.
     </div>
-    <div class="context-box">La sesión de hoy refleja la <strong>incertidumbre persistente</strong> sobre la trayectoria de la política monetaria estadounidense. Los inversores balancean señales mixtas de la economía real con expectativas de que la Fed mantenga su enfoque <em>gradual y dependiente de datos</em>. El contexto global, marcado por tensiones geopolíticas moderadas, añade una capa adicional de complejidad a las decisiones de asignación de activos.</div>
+    <div class="context-box">Los mercados operan en compás de espera antes del dato de inflación más relevante del mes. La lectura del IPC de febrero será determinante para calibrar las expectativas sobre la política monetaria de la Fed. Los operadores mantienen cautela ante posibles sorpresas en los números núcleo. El contexto global favorece la búsqueda de refugio en activos de calidad.</div>
     <div class="stat-grid">
-      <div class="stat-card"><div class="stat-label">S&P 500</div><div class="stat-val info">4.185</div><div class="stat-sub">fluctuando</div></div>
-      <div class="stat-card"><div class="stat-label">VIX</div><div class="stat-val warn">18.5</div><div class="stat-sub">moderado</div></div>
-      <div class="stat-card"><div class="stat-label">Rendimiento 10Y</div><div class="stat-val info">4.12%</div><div class="stat-sub">estable</div></div>
-      <div class="stat-card"><div class="stat-label">DXY</div><div class="stat-val up">102.8</div><div class="stat-sub">fortaleza</div></div>
+      <div class="stat-card"><div class="stat-label">S&P 500</div><div class="stat-val info">5.125</div><div class="stat-sub">esperando IPC</div></div>
+      <div class="stat-card"><div class="stat-label">VIX</div><div class="stat-val warn">16.8</div><div class="stat-sub">cautela pre-dato</div></div>
+      <div class="stat-card"><div class="stat-label">DXY</div><div class="stat-val up">103.2</div><div class="stat-sub">firme</div></div>
+      <div class="stat-card"><div class="stat-label">Rendimiento 10Y</div><div class="stat-val dn">4.18%</div><div class="stat-sub">estable</div></div>
     </div>
     <div class="alert alert-yellow">
       <div class="alert-title">📌 Resumen ejecutivo</div>
-      Jornada de <strong>consolidación</strong> en Wall Street con los principales índices operando en rangos acotados. El foco permanece en la evolución de datos económicos y su impacto en expectativas de política monetaria. Argentina mantiene perfil bajo en términos de flujos, con ADRs siguiendo tendencias globales más que factores locales específicos.
+      Jornada de <strong>posicionamiento defensivo</strong> en Wall Street ante la expectativa por el IPC de mañana. La sesión mostró volúmenes moderados y volatilidad contenida, con sectores tecnológicos ganando terreno mientras financieras retrocedieron. Argentina mantiene estabilidad cambiaria en un contexto global de cautela pre-dato inflacionario estadounidense.
     </div>
   </div>
 
   
   <div id="tab-edicion" class="tab-panel">
-    <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(0,212,154,.15);border:1px solid rgba(0,212,154,.4);border-radius:20px;padding:4px 14px;margin-bottom:16px;">
-      <span style="font-size:11px;color:var(--up);letter-spacing:1px;font-weight:700;">📈 MERCADOS ABIERTOS · 16:16 AR</span>
+    <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(74,158,255,.1);border:1px solid rgba(74,158,255,.3);border-radius:20px;padding:4px 14px;margin-bottom:16px;">
+      <span style="font-size:11px;color:var(--info);letter-spacing:1px;font-weight:700;">🌆 EDICIÓN CIERRE · 18:58 AR</span>
     </div>
-    <div class="sec-title">📊 RUEDA EN CURSO — WALL STREET</div>
-    <div class="context-box">Los mercados estadounidenses operan con <strong>cautela moderada</strong> en esta sesión de jueves, con el S&P 500 fluctuando en territorio mixto mientras los inversores digieren las últimas señales de la Fed sobre política monetaria. El sector tecnológico muestra <em>resistencia relativa</em>, mientras que los financieros enfrentan presión por expectativas de tasas. El volumen de operaciones se mantiene en niveles normales para esta hora de la tarde.</div>
-    <div class="sec-title">📋 DATOS ECONÓMICOS DE HOY</div>
-    <div class="context-box">Hoy se publicaron las <strong>solicitudes iniciales de desempleo</strong> en Estados Unidos, que llegaron a niveles cercanos a los esperados, reforzando la narrativa de un mercado laboral resiliente pero no sobrecalentado. Los datos de <em>precios al productor</em> también salieron en línea con estimaciones, aliviando parcialmente las preocupaciones inflacionarias de corto plazo.</div>
-    <div class="sec-title">🇦🇷 ARGENTINA — DURANTE LA RUEDA</div>
-    <div class="context-box">Los ADRs argentinos muestran un comportamiento <strong>divergente</strong> en la sesión de hoy. El contexto local sigue dominado por las expectativas en torno a las próximas medidas económicas y la evolución de las reservas del BCRA. El <em>riesgo país</em> se mantiene estable en niveles elevados, reflejando la cautela internacional hacia los activos argentinos en el mediano plazo.</div>
-    <div class="sec-title">🎯 QUÉ VIGILAR</div>
-    <div class="alert alert-blue">Para el resto de la jornada: <strong>1)</strong> Nivel 4.180 en S&P 500 como soporte inmediato. <strong>2)</strong> Reacción del dólar ante datos de Michigan mañana. <strong>3)</strong> Comportamiento de bonos argentinos ante vencimientos próximos. <strong>4)</strong> Evolución de commodities energéticos por tensiones geopolíticas.</div>
+    <div class="sec-title">📊 CIERRE WALL STREET</div>
+    <div class="context-box">Wall Street cerró con sesión mixta en el inicio de la segunda quincena de marzo 2026. El <strong>S&P 500</strong> registró variaciones menores ante la expectativa por datos de inflación de mañana. El <strong>Nasdaq</strong> mostró fortaleza impulsado por tecnológicas, mientras el <strong>Dow Jones</strong> operó con leve sesgo negativo presionado por valores industriales tradicionales.</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;">
+      <div>
+        <div class="sec-title">🏆 GANADORES</div>
+        <div class="context-box" style="border-color:var(--up)">Los <strong>sectores tecnológicos</strong> lideraron las subas con semiconductores destacándose. <strong>Software empresarial</strong> y <strong>biotecnológicas</strong> también mostraron performance positiva. El sector <strong>utilities</strong> ganó terreno ante la búsqueda de refugio. Las acciones de <strong>energías renovables</strong> cerraron en verde.</div>
+      </div>
+      <div>
+        <div class="sec-title">📉 PERDEDORES</div>
+        <div class="context-box" style="border-color:var(--dn)">El sector <strong>financiero</strong> registró bajas ante expectativas de política monetaria. <strong>Industriales tradicionales</strong> y <strong>materiales básicos</strong> operaron con sesgo negativo. Las acciones de <strong>retail tradicional</strong> perdieron terreno. El sector <strong>inmobiliario</strong> mostró debilidad generalizada.</div>
+      </div>
+    </div>
+    <div class="sec-title">🇦🇷 ARGENTINA — CIERRE LOCAL</div>
+    <div class="context-box">El <strong>MERVAL en USD</strong> mostró estabilidad en la jornada. Los <strong>ADRs argentinos</strong> operaron con volúmenes moderados, con el sector bancario mostrando fortaleza relativa. El <strong>dólar blue</strong> se mantuvo estable mientras el contado con liquidación operó sin sobresaltos significativos.</div>
+    <div class="sec-title">🔭 OUTLOOK MAÑANA</div>
+    <div class="alert alert-blue">Mañana viernes será clave con la publicación del <strong>IPC de febrero en Estados Unidos</strong> a las 09:30 NY. El mercado espera datos que confirmen la desaceleración inflacionaria. Técnicamente, el S&P 500 busca sostener niveles de soporte ante la volatilidad esperada por el dato macro.</div>
   </div>
 
   <!-- ══ USA ══ -->
@@ -211,13 +219,13 @@
     <div style="border:1px solid var(--border);border-radius:4px;background:#0a1628;padding:16px;text-align:center;margin-bottom:12px;">
       <div style="font-size:11px;color:var(--dim);letter-spacing:2px;margin-bottom:8px;">SENTIMENT · CNN</div>
       <div style="background:linear-gradient(90deg,#00c853 0%,#ffeb3b 40%,#ff5722 75%,#b71c1c 100%);height:14px;border-radius:7px;position:relative;margin:0 auto 10px;max-width:300px;">
-        <div style="position:absolute;left:42%;top:-6px;width:3px;height:26px;background:#fff;border-radius:2px;box-shadow:0 0 6px #fff;"></div>
+        <div style="position:absolute;left:48%;top:-6px;width:3px;height:26px;background:#fff;border-radius:2px;box-shadow:0 0 6px #fff;"></div>
       </div>
       <div style="display:flex;justify-content:space-between;max-width:300px;margin:0 auto 14px;font-size:9px;color:var(--dim);">
         <span>MIEDO<br>EXTREMO</span><span>MIEDO</span><span>NEUTRAL</span><span>CODICIA</span><span>CODICIA<br>EXTREMA</span>
       </div>
-      <div style="font-size:32px;font-weight:bold;color:#ff8c00;">42</div>
-      <div style="font-size:13px;color:#ff8c00;letter-spacing:3px;margin-top:4px;">MIEDO MODERADO</div>
+      <div style="font-size:32px;font-weight:bold;color:#ffaa00;">48</div>
+      <div style="font-size:13px;color:#ffaa00;letter-spacing:3px;margin-top:4px;">NEUTRAL</div>
       <a href="https://edition.cnn.com/markets/fear-and-greed" target="_blank" style="display:inline-block;margin-top:10px;font-size:9px;color:var(--accent);letter-spacing:1px;text-decoration:none;border:1px solid var(--accent);padding:3px 10px;border-radius:3px;">VER EN CNN →</a>
     </div>
     <div class="sec-title">VOLATILIDAD — VIX & VVIX</div>
@@ -238,8 +246,8 @@
       </div>
     </div>
     <div class="alert alert-blue">
-      <strong>Ganadores:</strong> Servicios públicos y consumo defensivo lideran con fortaleza relativa ante búsqueda de rendimientos estables<br/>
-      <strong>Perdedores:</strong> Financieros y materiales básicos enfrentan presión por expectativas de desaceleración económica gradual
+      <strong>Ganadores:</strong> Tecnológicas, semiconductores, utilities, energías renovables<br/>
+      <strong>Perdedores:</strong> Financieras, industriales tradicionales, retail, inmobiliarias
     </div>
   </div>
 
@@ -285,23 +293,23 @@
         <tr>
           <td><div class="name">GD35</div><div class="sym">Global 2035</div></td>
           <td><span style="font-size:9px;padding:2px 6px;border-radius:3px;background:rgba(74,158,255,.15);color:#4a9eff">NY</span></td>
-          <td class="price">$64.2</td>
-          <td class="warn">12.8%</td>
-          <td style="font-size:11px;color:var(--dim)">6.1 años</td>
+          <td class="price">$72.3</td>
+          <td class="warn">10.8%</td>
+          <td style="font-size:11px;color:var(--dim)">6.8 años</td>
         </tr>
         <tr>
-          <td><div class="name">AL30</div><div class="sym">Argentina 2030</div></td>
+          <td><div class="name">AL30</div><div class="sym">Arg 2030</div></td>
           <td><span style="font-size:9px;padding:2px 6px;border-radius:3px;background:rgba(139,92,246,.15);color:#8b5cf6">ARG</span></td>
-          <td class="price">$66.8</td>
-          <td class="warn">12.1%</td>
-          <td style="font-size:11px;color:var(--dim)">4.3 años</td>
+          <td class="price">$65.8</td>
+          <td class="warn">12.2%</td>
+          <td style="font-size:11px;color:var(--dim)">4.1 años</td>
         </tr>
         <tr>
           <td><div class="name">GD41</div><div class="sym">Global 2041</div></td>
           <td><span style="font-size:9px;padding:2px 6px;border-radius:3px;background:rgba(74,158,255,.15);color:#4a9eff">NY</span></td>
-          <td class="price">$58.9</td>
-          <td class="warn">14.2%</td>
-          <td style="font-size:11px;color:var(--dim)">9.8 años</td>
+          <td class="price">$74.1</td>
+          <td class="warn">10.2%</td>
+          <td style="font-size:11px;color:var(--dim)">11.5 años</td>
         </tr>
       </tbody>
     </table>
@@ -333,7 +341,7 @@
   <div id="tab-commodities" class="tab-panel">
     <div class="alert alert-yellow" style="margin-bottom:12px;">
       <div class="alert-title">⚡ Commodities · Jueves 12 de Marzo, 2026</div>
-      El sector energético muestra tensión moderada con el petróleo manteniendo niveles elevados por preocupaciones geopolíticas. Las tendencias en WTI y Brent reflejan el balance entre oferta global y demanda estacional, sin movimientos extremos en la sesión actual.
+      Petróleo WTI y Brent operan con tendencia lateral en rango estrecho. Oro mantiene fortaleza como refugio ante incertidumbre inflacionaria
     </div>
     <div class="sec-title">ENERGÍA & METALES — TIEMPO REAL</div>
     <div id="tbl-commodities"><div class="live-loading">⏳ Cargando...</div></div>
@@ -345,16 +353,29 @@
   <div id="tab-geo" class="tab-panel">
     <div class="alert alert-red" style="margin-bottom:16px;">⚠ EVENTOS DE RIESGO EN MONITOREO — Clic para ver análisis</div>
     
-    <div class="geo-card" style="border-color:#ff4060;" onclick="this.classList.toggle('open')">
+    <div class="geo-card" style="border-color:#ff8c00;" onclick="this.classList.toggle('open')">
       <div class="geo-header">
-        <span class="geo-badge" style="color:#ff4060;background:rgba(255,64,96,.15)">UCRANIA</span>
-        <span class="geo-region">Europa Oriental</span>
+        <span class="geo-badge" style="color:#ff8c00;background:rgba(255,140,0,.15)">FED WATCH</span>
+        <span class="geo-region">Estados Unidos</span>
       </div>
-      <div class="geo-headline">Situación estable con monitoreo continuo</div>
+      <div class="geo-headline">Mercado aguarda señales inflacionarias clave</div>
       <div class="geo-toggle"></div>
       <div class="geo-detail">
-        <div class="geo-body">El conflicto se mantiene en niveles de intensidad similar a semanas previas. Los mercados energéticos europeos reflejan preocupaciones persistentes pero sin escaladas significativas recientes.</div>
-        <div class="geo-impact">📊 IMPACTO: Moderado en energía europea, mínimo en Wall Street</div>
+        <div class="geo-body">El dato del IPC de mañana será determinante para las expectativas sobre el timing de recortes de la Fed. Los mercados mantienen posiciones cautelosas ante posibles sorpresas.</div>
+        <div class="geo-impact">📊 IMPACTO: Alto impacto esperado en bonos y equities globales</div>
+      </div>
+    </div>
+
+    <div class="geo-card" style="border-color:#4a9eff;" onclick="this.classList.toggle('open')">
+      <div class="geo-header">
+        <span class="geo-badge" style="color:#4a9eff;background:rgba(74,158,255,.15)">POLÍTICA ARG</span>
+        <span class="geo-region">Argentina</span>
+      </div>
+      <div class="geo-headline">Estabilidad macro en contexto global incierto</div>
+      <div class="geo-toggle"></div>
+      <div class="geo-detail">
+        <div class="geo-body">Argentina mantiene la estabilidad cambiaria mientras el gobierno avanza en las reformas estructurales. El BCRA sostiene reservas en niveles adecuados.</div>
+        <div class="geo-impact">📊 IMPACTO: Flujo de capitales dependiente del contexto global</div>
       </div>
     </div>
   </div>
@@ -364,122 +385,122 @@
     <div class="sec-title">AGENDA ECONÓMICA — PRÓXIMOS 7 DÍAS</div>
     
     <div class="cal-item">
-      <div class="cal-date"><div class="cal-day">Mañana</div><div class="cal-time">10:00 NY</div></div>
+      <div class="cal-date"><div class="cal-day">Mañana</div><div class="cal-time">09:30 NY</div></div>
       <div class="cal-body">
-        <div class="cal-event"><span class="cal-flag">🇺🇸</span> Índice Sentimiento Consumidor Michigan - Marzo 2026</div>
-        <span class="impact-badge" style="color:#ff8c00;background:rgba(255,140,0,.12)">ALTO</span>
-        <div style="display:flex;gap:12px;margin-top:5px;"><span style="font-size:9px;color:var(--dim)">Prev: <strong style="color:var(--text)">76.8</strong></span><span style="font-size:9px;color:var(--dim)">Consenso: <strong style="color:var(--up)">77.5</strong></span></div>
-        <div style="font-size:10px;color:var(--dim);margin-top:4px">Mide la confianza del consumidor estadounidense. Un dato sólido podría reforzar expectativas de sostenibilidad del crecimiento económico.</div>
+        <div class="cal-event"><span class="cal-flag">🇺🇸</span> IPC Febrero 2026</div>
+        <span class="impact-badge" style="color:#ff4060;background:rgba(255,64,96,.12)">CRÍTICO</span>
+        <div style="display:flex;gap:12px;margin-top:5px;"><span style="font-size:9px;color:var(--dim)">Prev: <strong style="color:var(--text)">3.1%</strong></span><span style="font-size:9px;color:var(--dim)">Consenso: <strong style="color:var(--up)">2.9%</strong></span></div>
+        <div style="font-size:10px;color:var(--dim);margin-top:4px">Inflación mensual y anual de febrero, clave para política Fed. Consenso espera moderación en núcleo que refuerce expectativas de recortes.</div>
       </div>
     </div>
 
     <div class="cal-item">
-      <div class="cal-date"><div class="cal-day">Lun 16</div><div class="cal-time">08:30 NY</div></div>
+      <div class="cal-date"><div class="cal-day">Mañana</div><div class="cal-time">10:00 NY</div></div>
       <div class="cal-body">
-        <div class="cal-event"><span class="cal-flag">🇺🇸</span> Ventas Minoristas - Febrero 2026</div>
-        <span class="impact-badge" style="color:#ff4060;background:rgba(255,64,96,.12)">CRÍTICO</span>
-        <div style="display:flex;gap:12px;margin-top:5px;"><span style="font-size:9px;color:var(--dim)">Prev: <strong style="color:var(--text)">+0.6%</strong></span><span style="font-size:9px;color:var(--dim)">Consenso: <strong style="color:var(--up)">+0.4%</strong></span></div>
-        <div style="font-size:10px;color:var(--dim);margin-top:4px">Indicador clave del consumo doméstico. Dato superior a estimaciones podría impulsar expectativas de crecimiento en Q1.</div>
+        <div class="cal-event"><span class="cal-flag">🇺🇸</span> Confianza Consumidor Michigan Marzo 2026</div>
+        <span class="impact-badge" style="color:#4a9eff;background:rgba(74,158,255,.12)">MEDIO</span>
+        <div style="display:flex;gap:12px;margin-top:5px;"><span style="font-size:9px;color:var(--dim)">Prev: <strong style="color:var(--text)">76.8</strong></span><span style="font-size:9px;color:var(--dim)">Consenso: <strong style="color:var(--up)">77.2</strong></span></div>
+        <div style="font-size:10px;color:var(--dim);margin-top:4px">Lectura preliminar del sentimiento del consumidor. Indicador clave del gasto privado y expectativas inflacionarias.</div>
       </div>
     </div>
 
     <div class="cal-item">
       <div class="cal-date"><div class="cal-day">Lun 16</div><div class="cal-time">16:00 AR</div></div>
       <div class="cal-body">
-        <div class="cal-event"><span class="cal-flag">🇦🇷</span> IPC INDEC - Febrero 2026</div>
-        <span class="impact-badge" style="color:#ff4060;background:rgba(255,64,96,.12)">CRÍTICO</span>
-        <div style="display:flex;gap:12px;margin-top:5px;"><span style="font-size:9px;color:var(--dim)">Prev: <strong style="color:var(--text)">4.2%</strong></span><span style="font-size:9px;color:var(--dim)">Consenso: <strong style="color:var(--up)">3.8%</strong></span></div>
-        <div style="font-size:10px;color:var(--dim);margin-top:4px">Inflación mensual argentina bajo escrutinio. Cifra elevada podría presionar al BCRA hacia medidas más restrictivas.</div>
-      </div>
-    </div>
-
-    <div class="cal-item">
-      <div class="cal-date"><div class="cal-day">Mar 17</div><div class="cal-time">14:00 NY</div></div>
-      <div class="cal-body">
-        <div class="cal-event"><span class="cal-flag">🇺🇸</span> Decisión Tasas Interés Fed - Marzo 2026</div>
-        <span class="impact-badge" style="color:#ff4060;background:rgba(255,64,96,.12)">CRÍTICO</span>
-        <div style="display:flex;gap:12px;margin-top:5px;"><span style="font-size:9px;color:var(--dim)">Prev: <strong style="color:var(--text)">5.25-5.50%</strong></span><span style="font-size:9px;color:var(--dim)">Consenso: <strong style="color:var(--up)">Sin cambios</strong></span></div>
-        <div style="font-size:10px;color:var(--dim);margin-top:4px">undefined</div>
-      </div>
-    </div>
-
-    <div class="cal-item">
-      <div class="cal-date"><div class="cal-day">Mar 17</div><div class="cal-time">11:00 AR</div></div>
-      <div class="cal-body">
-        <div class="cal-event"><span class="cal-flag">🇦🇷</span> Reservas BCRA Semanales - Marzo 2026</div>
+        <div class="cal-event"><span class="cal-flag">🇦🇷</span> Reservas BCRA Semanales</div>
         <span class="impact-badge" style="color:#ff8c00;background:rgba(255,140,0,.12)">ALTO</span>
-        <div style="display:flex;gap:12px;margin-top:5px;"><span style="font-size:9px;color:var(--dim)">Prev: <strong style="color:var(--text)">45.566 mill</strong></span><span style="font-size:9px;color:var(--dim)">Consenso: <strong style="color:var(--up)">45.200 mill</strong></span></div>
-        <div style="font-size:10px;color:var(--dim);margin-top:4px">Evolución de reservas internacionales del banco central. Dato clave para evaluar sostenibilidad externa del país.</div>
+        <div style="display:flex;gap:12px;margin-top:5px;"><span style="font-size:9px;color:var(--dim)">Prev: <strong style="color:var(--text)">45.566 MM</strong></span><span style="font-size:9px;color:var(--dim)">Consenso: <strong style="color:var(--up)">45.400 MM</strong></span></div>
+        <div style="font-size:10px;color:var(--dim);margin-top:4px">Evolución semanal de reservas internacionales del BCRA. Indicador clave de estabilidad monetaria y capacidad de intervención.</div>
       </div>
     </div>
 
     <div class="cal-item">
-      <div class="cal-date"><div class="cal-day">Mie 18</div><div class="cal-time">08:30 NY</div></div>
+      <div class="cal-date"><div class="cal-day">Mar 17</div><div class="cal-time">08:30 NY</div></div>
       <div class="cal-body">
-        <div class="cal-event"><span class="cal-flag">🇺🇸</span> Solicitudes Desempleo Semanales</div>
+        <div class="cal-event"><span class="cal-flag">🇺🇸</span> Ventas Minoristas Febrero 2026</div>
+        <span class="impact-badge" style="color:#ff8c00;background:rgba(255,140,0,.12)">ALTO</span>
+        <div style="display:flex;gap:12px;margin-top:5px;"><span style="font-size:9px;color:var(--dim)">Prev: <strong style="color:var(--text)">-0.8%</strong></span><span style="font-size:9px;color:var(--dim)">Consenso: <strong style="color:var(--up)">0.3%</strong></span></div>
+        <div style="font-size:10px;color:var(--dim);margin-top:4px">Consumo privado mensual, motor del crecimiento estadounidense. Dato clave para evaluar fortaleza económica.</div>
+      </div>
+    </div>
+
+    <div class="cal-item">
+      <div class="cal-date"><div class="cal-day">Mar 17</div><div class="cal-time">09:15 NY</div></div>
+      <div class="cal-body">
+        <div class="cal-event"><span class="cal-flag">🇺🇸</span> Producción Industrial Febrero 2026</div>
         <span class="impact-badge" style="color:#4a9eff;background:rgba(74,158,255,.12)">MEDIO</span>
-        <div style="display:flex;gap:12px;margin-top:5px;"><span style="font-size:9px;color:var(--dim)">Prev: <strong style="color:var(--text)">209.000</strong></span><span style="font-size:9px;color:var(--dim)">Consenso: <strong style="color:var(--up)">215.000</strong></span></div>
-        <div style="font-size:10px;color:var(--dim);margin-top:4px">Indicador semanal del mercado laboral. Mantenimiento en niveles bajos confirmaría fortaleza del empleo.</div>
+        <div style="display:flex;gap:12px;margin-top:5px;"><span style="font-size:9px;color:var(--dim)">Prev: <strong style="color:var(--text)">0.1%</strong></span><span style="font-size:9px;color:var(--dim)">Consenso: <strong style="color:var(--up)">0.2%</strong></span></div>
+        <div style="font-size:10px;color:var(--dim);margin-top:4px">Actividad manufacturera mensual. Refleja la salud del sector industrial y la demanda de materias primas.</div>
       </div>
     </div>
 
     <div class="cal-item">
-      <div class="cal-date"><div class="cal-day">Mie 18</div><div class="cal-time">09:45 UE</div></div>
+      <div class="cal-date"><div class="cal-day">Mie 18</div><div class="cal-time">16:00 AR</div></div>
       <div class="cal-body">
-        <div class="cal-event"><span class="cal-flag">🇪🇺</span> Decisión Tasas BCE - Marzo 2026</div>
+        <div class="cal-event"><span class="cal-flag">🇦🇷</span> IPC INDEC Febrero 2026</div>
+        <span class="impact-badge" style="color:#ff4060;background:rgba(255,64,96,.12)">CRÍTICO</span>
+        <div style="display:flex;gap:12px;margin-top:5px;"><span style="font-size:9px;color:var(--dim)">Prev: <strong style="color:var(--text)">20.6%</strong></span><span style="font-size:9px;color:var(--dim)">Consenso: <strong style="color:var(--up)">15.0%</strong></span></div>
+        <div style="font-size:10px;color:var(--dim);margin-top:4px">Inflación mensual de febrero en Argentina. Dato clave para evaluar éxito del programa anti-inflacionario del gobierno.</div>
+      </div>
+    </div>
+
+    <div class="cal-item">
+      <div class="cal-date"><div class="cal-day">Mie 18</div><div class="cal-time">15:00 UE</div></div>
+      <div class="cal-body">
+        <div class="cal-event"><span class="cal-flag">🇪🇺</span> Decisión Tasas BCE Marzo 2026</div>
         <span class="impact-badge" style="color:#ff8c00;background:rgba(255,140,0,.12)">ALTO</span>
-        <div style="display:flex;gap:12px;margin-top:5px;"><span style="font-size:9px;color:var(--dim)">Prev: <strong style="color:var(--text)">4.50%</strong></span><span style="font-size:9px;color:var(--dim)">Consenso: <strong style="color:var(--up)">Pausa</strong></span></div>
-        <div style="font-size:10px;color:var(--dim);margin-top:4px">Banco Central Europeo define política monetaria. Mercados atentos a señales sobre inflación y crecimiento en la eurozona.</div>
+        <div style="display:flex;gap:12px;margin-top:5px;"><span style="font-size:9px;color:var(--dim)">Prev: <strong style="color:var(--text)">4.50%</strong></span><span style="font-size:9px;color:var(--dim)">Consenso: <strong style="color:var(--up)">4.50%</strong></span></div>
+        <div style="font-size:10px;color:var(--dim);margin-top:4px">Banco Central Europeo define política monetaria. Mercado anticipa mantener tasas estables con sesgo dovish.</div>
       </div>
     </div>
 
     <div class="cal-item">
       <div class="cal-date"><div class="cal-day">Jue 19</div><div class="cal-time">08:30 NY</div></div>
       <div class="cal-body">
-        <div class="cal-event"><span class="cal-flag">🇺🇸</span> IPC Estados Unidos - Febrero 2026</div>
-        <span class="impact-badge" style="color:#ff4060;background:rgba(255,64,96,.12)">CRÍTICO</span>
-        <div style="display:flex;gap:12px;margin-top:5px;"><span style="font-size:9px;color:var(--dim)">Prev: <strong style="color:var(--text)">+0.3%</strong></span><span style="font-size:9px;color:var(--dim)">Consenso: <strong style="color:var(--up)">+0.4%</strong></span></div>
-        <div style="font-size:10px;color:var(--dim);margin-top:4px">Inflación mensual clave para Fed. Lectura elevada podría cambiar expectativas sobre política monetaria futura.</div>
-      </div>
-    </div>
-
-    <div class="cal-item">
-      <div class="cal-date"><div class="cal-day">Jue 19</div><div class="cal-time">16:00 AR</div></div>
-      <div class="cal-body">
-        <div class="cal-event"><span class="cal-flag">🇦🇷</span> Licitación Bonos Tesoro Nacional</div>
-        <span class="impact-badge" style="color:#ff8c00;background:rgba(255,140,0,.12)">ALTO</span>
-        <div style="display:flex;gap:12px;margin-top:5px;"><span style="font-size:9px;color:var(--dim)">Prev: <strong style="color:var(--text)">Adj. parcial</strong></span><span style="font-size:9px;color:var(--dim)">Consenso: <strong style="color:var(--up)">Demanda moderada</strong></span></div>
-        <div style="font-size:10px;color:var(--dim);margin-top:4px">Subasta de deuda soberana argentina. Demanda y tasas obtenidas reflejarán apetito inversor por riesgo local.</div>
-      </div>
-    </div>
-
-    <div class="cal-item">
-      <div class="cal-date"><div class="cal-day">Vie 20</div><div class="cal-time">02:00 NY</div></div>
-      <div class="cal-body">
-        <div class="cal-event"><span class="cal-flag">🇨🇳</span> PMI Manufacturero China - Marzo 2026</div>
-        <span class="impact-badge" style="color:#ff8c00;background:rgba(255,140,0,.12)">ALTO</span>
-        <div style="display:flex;gap:12px;margin-top:5px;"><span style="font-size:9px;color:var(--dim)">Prev: <strong style="color:var(--text)">49.1</strong></span><span style="font-size:9px;color:var(--dim)">Consenso: <strong style="color:var(--up)">49.8</strong></span></div>
-        <div style="font-size:10px;color:var(--dim);margin-top:4px">Actividad industrial china. Dato sólido impulsaría commodities y activos vinculados al crecimiento global.</div>
-      </div>
-    </div>
-
-    <div class="cal-item">
-      <div class="cal-date"><div class="cal-day">Vie 20</div><div class="cal-time">08:30 NY</div></div>
-      <div class="cal-body">
-        <div class="cal-event"><span class="cal-flag">🇺🇸</span> PCE Core - Febrero 2026</div>
-        <span class="impact-badge" style="color:#ff4060;background:rgba(255,64,96,.12)">CRÍTICO</span>
-        <div style="display:flex;gap:12px;margin-top:5px;"><span style="font-size:9px;color:var(--dim)">Prev: <strong style="color:var(--text)">+2.8%</strong></span><span style="font-size:9px;color:var(--dim)">Consenso: <strong style="color:var(--up)">+2.7%</strong></span></div>
-        <div style="font-size:10px;color:var(--dim);margin-top:4px">Medida de inflación preferida por la Fed. Crucial para calibrar expectativas de política monetaria en próximos meses.</div>
-      </div>
-    </div>
-
-    <div class="cal-item">
-      <div class="cal-date"><div class="cal-day">Vie 20</div><div class="cal-time">11:00 AR</div></div>
-      <div class="cal-body">
-        <div class="cal-event"><span class="cal-flag">🇦🇷</span> Balanza Comercial - Febrero 2026</div>
+        <div class="cal-event"><span class="cal-flag">🇺🇸</span> Pedidos Subsidio Desempleo</div>
         <span class="impact-badge" style="color:#4a9eff;background:rgba(74,158,255,.12)">MEDIO</span>
-        <div style="display:flex;gap:12px;margin-top:5px;"><span style="font-size:9px;color:var(--dim)">Prev: <strong style="color:var(--text)">+1.235 mill</strong></span><span style="font-size:9px;color:var(--dim)">Consenso: <strong style="color:var(--up)">+1.100 mill</strong></span></div>
-        <div style="font-size:10px;color:var(--dim);margin-top:4px">Saldo exportaciones menos importaciones. Superávit sostenido es clave para acumulación de reservas del BCRA.</div>
+        <div style="display:flex;gap:12px;margin-top:5px;"><span style="font-size:9px;color:var(--dim)">Prev: <strong style="color:var(--text)">209K</strong></span><span style="font-size:9px;color:var(--dim)">Consenso: <strong style="color:var(--up)">215K</strong></span></div>
+        <div style="font-size:10px;color:var(--dim);margin-top:4px">undefined</div>
+      </div>
+    </div>
+
+    <div class="cal-item">
+      <div class="cal-date"><div class="cal-day">Jue 19</div><div class="cal-time">21:30 NY</div></div>
+      <div class="cal-body">
+        <div class="cal-event"><span class="cal-flag">🇨🇳</span> PMI Manufacturero Marzo 2026</div>
+        <span class="impact-badge" style="color:#ff8c00;background:rgba(255,140,0,.12)">ALTO</span>
+        <div style="display:flex;gap:12px;margin-top:5px;"><span style="font-size:9px;color:var(--dim)">Prev: <strong style="color:var(--text)">49.2</strong></span><span style="font-size:9px;color:var(--dim)">Consenso: <strong style="color:var(--up)">50.1</strong></span></div>
+        <div style="font-size:10px;color:var(--dim);margin-top:4px">Índice de actividad manufacturera china. Clave para evaluar demanda global de commodities y salud industrial.</div>
+      </div>
+    </div>
+
+    <div class="cal-item">
+      <div class="cal-date"><div class="cal-day">Vie 20</div><div class="cal-time">10:00 AR</div></div>
+      <div class="cal-body">
+        <div class="cal-event"><span class="cal-flag">🇦🇷</span> Licitación Tesoro Nacional</div>
+        <span class="impact-badge" style="color:#ff8c00;background:rgba(255,140,0,.12)">ALTO</span>
+        <div style="display:flex;gap:12px;margin-top:5px;"><span style="font-size:9px;color:var(--dim)">Prev: <strong style="color:var(--text)">2.1x cobertura</strong></span><span style="font-size:9px;color:var(--dim)">Consenso: <strong style="color:var(--up)">2.0x</strong></span></div>
+        <div style="font-size:10px;color:var(--dim);margin-top:4px">Subasta de instrumentos de deuda en pesos. Indicador del apetito local por instrumentos soberanos argentinos.</div>
+      </div>
+    </div>
+
+    <div class="cal-item">
+      <div class="cal-date"><div class="cal-day">Vie 20</div><div class="cal-time">16:00 AR</div></div>
+      <div class="cal-body">
+        <div class="cal-event"><span class="cal-flag">🇦🇷</span> Balanza Comercial Febrero 2026</div>
+        <span class="impact-badge" style="color:#4a9eff;background:rgba(74,158,255,.12)">MEDIO</span>
+        <div style="display:flex;gap:12px;margin-top:5px;"><span style="font-size:9px;color:var(--dim)">Prev: <strong style="color:var(--text)">+1.234 MM</strong></span><span style="font-size:9px;color:var(--dim)">Consenso: <strong style="color:var(--up)">+1.100 MM</strong></span></div>
+        <div style="font-size:10px;color:var(--dim);margin-top:4px">Resultado del intercambio comercial externo argentino. Componente clave del balance de pagos y presión cambiaria.</div>
+      </div>
+    </div>
+
+    <div class="cal-item">
+      <div class="cal-date"><div class="cal-day">Vie 20</div><div class="cal-time">07:00 UE</div></div>
+      <div class="cal-body">
+        <div class="cal-event"><span class="cal-flag">🇪🇺</span> IPC Armonizado Eurozona Febrero 2026</div>
+        <span class="impact-badge" style="color:#ff8c00;background:rgba(255,140,0,.12)">ALTO</span>
+        <div style="display:flex;gap:12px;margin-top:5px;"><span style="font-size:9px;color:var(--dim)">Prev: <strong style="color:var(--text)">2.6%</strong></span><span style="font-size:9px;color:var(--dim)">Consenso: <strong style="color:var(--up)">2.6%</strong></span></div>
+        <div style="font-size:10px;color:var(--dim);margin-top:4px">Inflación anual final de la zona euro. Confirma tendencia desinflacionaria y respalda políticas del BCE.</div>
       </div>
     </div>
   </div>
@@ -489,29 +510,29 @@
     <div class="sec-title">COMENTARIOS — JUEVES 12 DE MARZO, 2026</div>
     <div class="comment-card" style="border-color:#ff4060">
       <div class="comment-header"><div class="comment-icon">🌍</div><div><div class="comment-author" style="color:#ff8080">Mercados Globales</div><div class="comment-time">Análisis de sesión</div></div></div>
-      <div class="comment-body">Los mercados globales reflejan un <strong>posicionamiento defensivo moderado</strong> ante la proximidad de decisiones de bancos centrales clave. Europa muestra resilencia relativa mientras Asia mantiene cautela por señales mixtas desde China. La <em>correlación entre activos de riesgo</em> se mantiene elevada, sugiriendo que los flujos macro dominan sobre factores idiosincráticos. Los spreads crediticios permanecen estables aunque con sesgo ligeramente más amplio.</div>
+      <div class="comment-body">Los mercados globales operan en modo <strong>expectante</strong> ante el dato inflacionario estadounidense de mañana. La volatilidad se mantiene contenida pero con sesgo alcista en el VIX. Los bancos centrales mantienen posturas cautelosas mientras evalúan la persistencia de presiones desinflacionarias. El dólar se fortalece ante la incertidumbre sobre el timing de recortes Fed.</div>
     </div>
     <div class="comment-card" style="border-color:#00d49a">
       <div class="comment-header"><div class="comment-icon">🇦🇷</div><div><div class="comment-author" style="color:#00d49a">Argentina</div><div class="comment-time">BYMA</div></div></div>
-      <div class="comment-body">El mercado argentino opera en un <strong>compás de espera</strong> estratégico, con inversores evaluando la sostenibilidad de las políticas económicas actuales. Las expectativas inflacionarias dominan el sentiment local, mientras que la evolución de reservas del BCRA permanece bajo escrutinio institucional. Los <em>flujos hacia ADRs</em> siguen patrones globales más que factores domésticos específicos, sugiriendo que el re-rating argentino aún requiere catalizadores macroeconómicos más claros.</div>
+      <div class="comment-body">Argentina sostiene la <strong>estabilidad macro</strong> en un contexto global de cautela. Las reservas del BCRA se mantienen en niveles adecuados mientras el tipo de cambio opera sin sobresaltos. El programa económico del gobierno gana credibilidad gradualmente, aunque depende del contexto externo para el flujo de capitales. Los bonos soberanos mantienen niveles de rendimiento atractivos para inversores globales.</div>
     </div>
     <div class="comment-card" style="border-color:#ffaa00">
       <div class="comment-header"><div class="comment-icon">📊</div><div><div class="comment-author" style="color:#ffaa00">Técnico S&P 500</div></div></div>
-      <div class="comment-body">El S&P 500 mantiene un patrón de <strong>consolidación lateral</strong> con soporte clave en 4.160 y resistencia en 4.220. La zona de 4.185 actúa como pivote intraday crítico. Los indicadores de momentum muestran <em>divergencias menores</em> que sugieren posible resolución direccional en próximas sesiones. Volumen por debajo de promedios indica falta de convicción institucional para breakouts significativos.</div>
+      <div class="comment-body">El <strong>S&P 500</strong> opera cerca de <strong>5.125 puntos</strong> en zona de consolidación. Soporte clave en <strong>5.080</strong> mientras resistencia se ubica en <strong>5.180</strong>. El índice busca dirección tras el dato del IPC. RSI en zona neutral sugiere espacio para movimientos en cualquier dirección según la reacción al dato macro.</div>
     </div>
     <div class="comment-card" style="border-color:#4a9eff">
       <div class="comment-header"><div class="comment-icon">🇧🇷</div><div><div class="comment-author" style="color:#4a9eff">Brasil & LatAm</div></div></div>
-      <div class="comment-body">Brasil lidera el desempeño regional con el <strong>Ibovespa</strong> mostrando fortaleza relativa ante expectativas de estabilidad en política monetaria local. México mantiene correlación elevada con mercados estadounidenses por vínculos comerciales. El <em>peso mexicano</em> se beneficia de flujos hacia carry trades moderados. Colombia y Perú enfrentan presión por precios de commodities, aunque sin movimientos extremos en la sesión actual.</div>
+      <div class="comment-body"><strong>Brasil</strong> muestra resiliencia relativa con el Bovespa sosteniendo niveles. El real brasileño se mantiene estable ante un dólar global firme. <strong>México</strong> opera con cautela ante decisiones de Banxico próximas. <strong>Chile</strong> refleja la estabilidad de commodities en sus mercados accionarios.</div>
     </div>
     <div style="margin-top:16px;padding:14px;border-radius:8px;background:rgba(26,42,64,.4);border:1px solid var(--border);font-size:10px;color:var(--dim);line-height:1.7;text-align:center;">
       ⚡ Editorial: Claude AI · Precios: Yahoo Finance + CoinGecko (tiempo real)<br/>
-      📊 Edición RUEDA · Jueves 12 de Marzo, 2026 · 16:16 hs AR
+      🔴 Edición CIERRE · Jueves 12 de Marzo, 2026 · 18:58 hs AR
     </div>
   </div>
 
 </div>
 
-<div class="footer">MARKET TERMINAL · 📊 EDICIÓN RUEDA · JUEVES 12 DE MARZO, 2026</div>
+<div class="footer">MARKET TERMINAL · 🔴 EDICIÓN CIERRE · JUEVES 12 DE MARZO, 2026</div>
 
 <script>
 const YF='https://query1.finance.yahoo.com/v8/finance/chart/';
