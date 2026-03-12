@@ -608,7 +608,16 @@ async function fetchCG(id){try{const r=await fetch(\`https://api.coingecko.com/a
 function fmt(n,cur='USD'){if(!n&&n!==0)return'—';if(cur==='ARS')return n.toLocaleString('es-AR',{maximumFractionDigits:0});if(n>=10000)return n.toLocaleString('en-US',{maximumFractionDigits:0});if(n>=1)return n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});return n.toLocaleString('en-US',{minimumFractionDigits:4,maximumFractionDigits:4});}
 function chgHtml(chg){if(chg==null)return'<span style="color:var(--dim)">—</span>';const cls=chg>0.05?'lv-up':chg<-0.05?'lv-dn':'lv-flat';const arrow=chg>0.05?'▲':chg<-0.05?'▼':'=';return\`<span class="\${cls}">\${arrow} \${Math.abs(chg).toFixed(2)}%</span>\`;}
 function buildTable(rows){const body=rows.map(r=>{const p=r.data;if(!p)return\`<tr><td><span class="lv-name">\${r.label}</span></td><td class="lv-sym">\${r.ticker}</td><td class="lv-err" colspan="2">⚠ Sin datos</td></tr>\`;const badge=p.mktState==='REGULAR'?'<span class="live-badge badge-live">● LIVE</span>':'<span class="live-badge badge-closed">Cierre</span>';const sym=r.ticker.startsWith('CG:')?r.ticker.slice(3):r.ticker;return\`<tr><td><div class="lv-name">\${r.label}\${badge}</div><div class="lv-sym">\${r.sector||''}</div></td><td class="lv-sym">\${sym}</td><td class="lv-price">$\${fmt(p.price,p.currency)}</td><td>\${chgHtml(p.chg)}</td></tr>\`;}).join('');return\`<table class="live-tbl"><thead><tr><th>ACTIVO</th><th>SÍMBOLO</th><th>PRECIO</th><th>VAR. DÍA</th></tr></thead><tbody>\${body}</tbody></table>\`;}
-async function loadGroup(divId,items){const el=document.getElementById(divId);if(!el)return;el.innerHTML='<div class="live-loading">⏳ Cargando...</div>';const results=await Promise.all(items.map(async i=>({...i,data:await fetchPrice(i.ticker)})));el.innerHTML=buildTable(results);}
+async function loadGroup(divId,items){
+  const el=document.getElementById(divId);if(!el)return;
+  el.innerHTML='<div class="live-loading">⏳ Cargando...</div>';
+  const results=[];
+  for(const i of items){
+    results.push({...i,data:await fetchPrice(i.ticker)});
+    await new Promise(r=>setTimeout(r,300));
+  }
+  el.innerHTML=buildTable(results);
+}
 async function updateHero(){
   const heroes=[{id:'hs-sp500',idc:'hs-sp500c',t:'^GSPC'},{id:'hs-nq',idc:'hs-nqc',t:'^NDX'},{id:'hs-vix',idc:'hs-vixc',t:'^VIX'},{id:'hs-merv',idc:'hs-mervc',t:'^MERV'},{id:'hs-wti',idc:'hs-wtic',t:'CL=F'},{id:'hs-gold',idc:'hs-goldc',t:'GC=F'},{id:'hs-btc',idc:'hs-btcc',t:'CG:bitcoin'}];
   await Promise.all(heroes.map(async h=>{const p=await fetchPrice(h.t);if(!p)return;const el=document.getElementById(h.id);const elc=document.getElementById(h.idc);if(el)el.textContent=(h.t==='CL=F'||h.t==='GC=F'?'$':'')+(h.t==='^VIX'?fmt(p.price):(h.t.startsWith('CG:')?'$':'')+fmt(p.price));if(elc)elc.innerHTML=chgHtml(p.chg);}));
