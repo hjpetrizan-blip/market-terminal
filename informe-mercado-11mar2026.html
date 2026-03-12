@@ -524,8 +524,10 @@
 <script>
 const YF='https://query1.finance.yahoo.com/v8/finance/chart/';
 async function fetchYahooRaw(url){
-  try{const r=await fetch('https://query2.finance.yahoo.com/v8/finance/chart/'+url.split('/chart/')[1],{signal:AbortSignal.timeout(7000)});if(r.ok){const d=await r.json();if(d?.chart?.result?.[0])return d;}}catch(e){}
-  try{const r=await fetch('https://api.allorigins.win/get?url='+encodeURIComponent(url),{signal:AbortSignal.timeout(9000)});if(r.ok){const w=await r.json();return JSON.parse(w.contents);}}catch(e){}
+  try{
+    const r=await fetch('https://api.allorigins.win/get?url='+encodeURIComponent(url),{signal:AbortSignal.timeout(9000)});
+    if(r.ok){const w=await r.json();return JSON.parse(w.contents);}
+  }catch(e){}
   return null;
 }
 async function fetchPrice(ticker){
