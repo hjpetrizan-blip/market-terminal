@@ -219,12 +219,12 @@ async function prefetchSymbols(tdSymbols){
 // Definición de grupos con símbolo TD
 const G={
   'tbl-usa-indices':[
-    {label:'S&P 500',td:'SPX',sector:'EEUU'},{label:'Nasdaq 100',td:'NDX',sector:'Tech'},
-    {label:'Dow Jones',td:'DJI',sector:'Industrial'},{label:'Russell 2000',td:'RUT',sector:'Small Caps'},
-    {label:'VIX',td:'VIX',sector:'Volatilidad'},{label:'S&P Fut.',td:'ES1!',sector:'CME'},{label:'Nasdaq Fut.',td:'NQ1!',sector:'CME'}
+    {label:'S&P 500 (SPY)',td:'SPY',sector:'ETF EEUU'},{label:'Nasdaq 100 (QQQ)',td:'QQQ',sector:'ETF Tech'},
+    {label:'Dow Jones (DIA)',td:'DIA',sector:'ETF Industrial'},{label:'Russell 2000 (IWM)',td:'IWM',sector:'ETF Small Caps'},
+    {label:'VIX (UVXY)',td:'UVXY',sector:'ETF Volatilidad'},{label:'S&P Fut. (ES)',td:'ES',sector:'CME'},{label:'Nasdaq Fut. (NQ)',td:'NQ',sector:'CME'}
   ],
   'tbl-usa-bonos':[
-    {label:'T-Note 10Y',td:'TNX',sector:'Tesoro'},{label:'T-Bond 30Y',td:'TYX',sector:'Tesoro'},{label:'T-Note 2Y',td:'IRX',sector:'Tesoro'}
+    {label:'T-Bond 20Y (TLT)',td:'TLT',sector:'ETF Tesoro'},{label:'T-Note 7-10Y (IEF)',td:'IEF',sector:'ETF Tesoro'},{label:'T-Note 1-3Y (SHY)',td:'SHY',sector:'ETF Tesoro'}
   ],
   'tbl-usa-tech':[
     {label:'Apple',td:'AAPL',sector:'NASDAQ'},{label:'Microsoft',td:'MSFT',sector:'NASDAQ'},
@@ -258,7 +258,7 @@ const G={
     {label:'Euro Stoxx 50',td:'SX5E',sector:'Europa'},{label:'DAX',td:'DAX',sector:'Alemania'},
     {label:'FTSE 100',td:'UKX',sector:'UK'},{label:'CAC 40',td:'PX1',sector:'Francia'},
     {label:'Nikkei 225',td:'NI225',sector:'Japón'},{label:'Hang Seng',td:'HSI',sector:'HK'},
-    {label:'Merval',td:'MERVAL',sector:'Argentina'}
+    {label:'Galicia (GGAL)',td:'GGAL',sector:'Argentina·NASDAQ'}
   ],
   'tbl-energia':[
     {label:'WTI Crude',td:'WTI',sector:'NYMEX'},{label:'Brent',td:'BRENT',sector:'ICE'},
@@ -308,7 +308,7 @@ async function updateHeroes(){
   // Heroes: SPX, NDX, VIX, MERVAL, WTI, XAU/USD, BTC
   const heroSyms=['SPX','NDX','VIX','MERVAL','WTI','XAU/USD'];
   await fetchTD(heroSyms);
-  const map={sp500:'SPX',nasdaq:'NDX',vix:'VIX',merval:'MERVAL',wti:'WTI',gold:'XAU/USD'};
+  const map={sp500:'SPY',nasdaq:'QQQ',vix:'UVXY',merval:'GGAL',wti:'WTI',gold:'XAU/USD'};
   for(const[id,sym]of Object.entries(map)){
     const p=CACHE[sym];
     const ve=document.getElementById('hv-'+id),ce=document.getElementById('hc2-'+id);
