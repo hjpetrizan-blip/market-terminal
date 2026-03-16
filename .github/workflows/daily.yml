@@ -1,40 +1,13 @@
+# Workflow desactivado - nueva arquitectura usa index.html estático
+# Para reactivar, descomentar el schedule
 name: Generar Informe Diario de Mercado
 
 on:
-  schedule:
-    - cron: '0 13 * * 1-5'
-    - cron: '0 21 * * 1-5'
-  workflow_dispatch:
-  push:
-    branches: [main]
+  workflow_dispatch: # solo manual ahora
 
 jobs:
-  generate:
+  build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Install dependencies
-        run: npm install @anthropic-ai/sdk node-fetch
-
-      - name: Generate report
-        env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: node generate.js
-
-      - name: Commit and push
-        run: |
-          git config user.name "Market Terminal Bot"
-          git config user.email "bot@market-terminal"
-          git add informe-mercado-*.html index.html
-          git diff --staged --quiet || git commit -m "Informe AR generado"
-          git push --force origin main
+      - name: Info
+        run: echo "Workflow desactivado. La nueva app usa index.html estático."
