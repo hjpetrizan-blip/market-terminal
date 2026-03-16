@@ -35,7 +35,7 @@ body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradi
 .tab-btn:hover{color:var(--text);}.tab-btn.active{color:var(--amber);border-bottom-color:var(--amber);}
 #main{display:grid;grid-template-columns:1fr 310px;min-height:calc(100vh - 108px);}
 #content{padding:16px;}
-#sidebar{border-left:1px solid var(--border);background:var(--bg2);padding:16px;}
+#sidebar{border-left:1px solid var(--border);background:var(--bg2);padding:16px;overflow-y:auto;}
 .sec-title{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--amber);font-weight:600;margin:16px 0 8px;padding-bottom:4px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px;}
 .sec-title:first-child{margin-top:0;}.sec-dot{width:4px;height:4px;border-radius:50%;background:var(--amber);flex-shrink:0;}
 .price-table{width:100%;border-collapse:collapse;margin-bottom:16px;}
@@ -48,8 +48,7 @@ body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradi
 .no-data{color:var(--dim2);}
 .live-tag{font-size:8px;padding:1px 4px;background:rgba(0,208,132,.1);color:var(--green);border:1px solid rgba(0,208,132,.2);margin-left:4px;}
 .close-tag{font-size:8px;padding:1px 4px;background:rgba(102,102,102,.1);color:var(--dim);border:1px solid var(--border);margin-left:4px;}
-.tab-panel{display:none;animation:fadeIn .2s ease;}.tab-panel.active{display:block;}
-@keyframes fadeIn{from{opacity:0;transform:translateY(4px);}to{opacity:1;}}
+.tab-panel{display:none;}.tab-panel.active{display:block;}
 #ai-session-badge{font-size:9px;letter-spacing:1px;padding:2px 6px;border-radius:2px;text-transform:uppercase;font-weight:600;}
 .session-pre{background:rgba(255,183,0,.15);color:var(--amber);border:1px solid rgba(255,183,0,.3);}
 .session-rueda{background:rgba(0,208,132,.15);color:var(--green);border:1px solid rgba(0,208,132,.3);}
@@ -88,7 +87,7 @@ body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradi
 </style></head><body>
 <div id="topbar"><div class="topbar-left"><div class="logo">BT <span>//</span> Market Terminal</div><div class="topbar-clock" id="clock">--:-- hs AR</div></div><div class="topbar-right"><div id="mkt-badge" class="badge-closed">CERRADO</div></div></div>
 <div id="herostrip">
-<div class="hero-chip"><span class="lbl">S&P 500</span><span class="val loading-pulse" id="hv-sp500">—</span><span class="chg flat" id="hc2-sp500">⏳</span></div>
+<div class="hero-chip"><span class="lbl">S&amp;P 500</span><span class="val loading-pulse" id="hv-sp500">—</span><span class="chg flat" id="hc2-sp500">⏳</span></div>
 <div class="hero-chip"><span class="lbl">Nasdaq</span><span class="val loading-pulse" id="hv-nasdaq">—</span><span class="chg flat" id="hc2-nasdaq">⏳</span></div>
 <div class="hero-chip"><span class="lbl">VIX</span><span class="val loading-pulse" id="hv-vix">—</span><span class="chg flat" id="hc2-vix">⏳</span></div>
 <div class="hero-chip"><span class="lbl">Merval</span><span class="val loading-pulse" id="hv-merval">—</span><span class="chg flat" id="hc2-merval">⏳</span></div>
@@ -149,37 +148,249 @@ body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradi
 </div>
 </div>
 <div id="footer"><span>BT Securities Argentina · CNV 232 · BYMA 90 · MAV 487</span><span id="last-update">—</span></div><script>
-const YF='https://query1.finance.yahoo.com/v8/finance/chart/';
-const DELAY=350,REFRESH=90000,REFRESH_AI=3600000;
+const TD='e504f37b2f954bfaa12e69dccd2a1efe';
 const MKT_OH=10,MKT_OM=30,MKT_CH=17,MKT_CM=0;
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 function getAR(){return new Date(new Date().toLocaleString('en-US',{timeZone:'America/Argentina/Buenos_Aires'}));}
 function getMkt(){const t=getAR(),d=t.getDay();if(d===0||d===6)return'closed';const m=t.getHours()*60+t.getMinutes(),o=MKT_OH*60+MKT_OM,c=MKT_CH*60+MKT_CM;if(m<o)return'pre';if(m>=c)return'closed';return'open';}
 function getSess(){const t=getAR(),m=t.getHours()*60+t.getMinutes(),o=MKT_OH*60+MKT_OM,c=MKT_CH*60+MKT_CM;if(m<o)return{l:'Pre-Apertura',cls:'session-pre'};if(m>=c)return{l:'Post-Cierre',cls:'session-cierre'};return{l:'En Rueda',cls:'session-rueda'};}
-function fmt(n,cur='USD'){if(n==null||isNaN(n))return'—';if(cur==='ARS')return'$'+Math.round(n).toLocaleString('es-AR');if(n>10000)return n.toLocaleString('en-US',{maximumFractionDigits:0});if(n>1)return n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});return n.toLocaleString('en-US',{minimumFractionDigits:4,maximumFractionDigits:4});}
-function chgHtml(c){if(c==null)return'<span class="flat">—</span>';const s=c>0?'+':'',cls=c>0.05?'up':c<-0.05?'dn':'flat';return `<span class="${cls}">${s}${c.toFixed(2)}%</span>`;}
-function mktTag(s){if(!s)return'';return s==='REGULAR'?'<span class="live-tag">LIVE</span>':'<span class="close-tag">CIERRE</span>';}
-async function fetchRaw(url){try{const r=await fetch('https://api.allorigins.win/get?url='+encodeURIComponent(url),{signal:AbortSignal.timeout(9000)});if(r.ok){const w=await r.json();if(w.contents)return JSON.parse(w.contents);}}catch(e){}try{const r=await fetch('https://thingproxy.freeboard.io/fetch/'+url,{signal:AbortSignal.timeout(8000)});if(r.ok)return await r.json();}catch(e){}return null;}
-async function fetchP(ticker){if(ticker.startsWith('CG:'))return fetchCG(ticker.slice(3));const url=YF+encodeURIComponent(ticker)+'?interval=1d&range=2d';try{const d=await fetchRaw(url);if(d?.chart?.result?.[0]){const m=d.chart.result[0].meta,prev=m.chartPreviousClose||m.previousClose;return{price:m.regularMarketPrice,chg:prev?(m.regularMarketPrice-prev)/prev*100:0,mktState:m.marketState,currency:m.currency};}}catch(e){}return null;}
-async function fetchCG(id){try{const r=await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${id}&vs_currencies=usd&include_24hr_change=true`,{signal:AbortSignal.timeout(7000)});const d=await r.json();return{price:d[id].usd,chg:d[id].usd_24h_change,mktState:'REGULAR',currency:'USD'};}catch(e){return null;}}
-async function fetchDolares(){try{const r=await fetch('https://dolarapi.com/v1/dolares',{signal:AbortSignal.timeout(8000)});const data=await r.json();const map={};data.forEach(d=>{map[d.casa.toLowerCase()]=d;});const set=(id,cid,casa)=>{const d=map[casa];if(!d)return;const el=document.getElementById(id),elc=document.getElementById(cid);if(el)el.textContent='$'+Math.round(d.venta).toLocaleString('es-AR');if(elc)elc.textContent='C: $'+Math.round(d.compra).toLocaleString('es-AR')+' · V: $'+Math.round(d.venta).toLocaleString('es-AR');};set('fx-oficial','fx-oficial-comp','oficial');set('fx-blue','fx-blue-comp','blue');set('fx-mep','fx-mep-comp','bolsa');set('fx-ccl','fx-ccl-comp','contadoconliqui');set('fx-cripto','fx-cripto-comp','cripto');set('fx-tarjeta','fx-tarjeta-comp','tarjeta');const be=document.getElementById('hv-blue'),ce=document.getElementById('hv-ccl');if(map.blue&&be)be.textContent='$'+Math.round(map.blue.venta).toLocaleString('es-AR');if(map.contadoconliqui&&ce)ce.textContent='$'+Math.round(map.contadoconliqui.venta).toLocaleString('es-AR');if(map.oficial&&map.blue){const b=((map.blue.venta-map.oficial.venta)/map.oficial.venta*100).toFixed(1),el=document.getElementById('fx-brecha');if(el){const col=b>100?'var(--red)':b>50?'var(--amber)':'var(--green)';el.innerHTML=`<strong style="color:${col}">${b}%</strong>`;}}}catch(e){}}
-function buildTable(res){if(!res.length)return'<div class="no-data">Sin datos</div>';const rows=res.map(r=>{const p=r.data,sym=r.ticker.startsWith('CG:')?r.ticker.slice(3):r.ticker;if(!p)return`<tr><td><div class="td-name">${r.label}</div><div class="td-sub">${r.sector||''}</div></td><td class="td-sym">${sym}</td><td class="td-price no-data">—</td><td class="td-chg no-data">—</td></tr>`;const pc=p.currency==='ARS'?'var(--amber)':'var(--text)';return`<tr><td><div class="td-name">${r.label}${mktTag(p.mktState)}</div><div class="td-sub">${r.sector||''}</div></td><td class="td-sym">${sym}</td><td class="td-price" style="color:${pc}">${fmt(p.price,p.currency)}</td><td class="td-chg">${chgHtml(p.chg)}</td></tr>`;}).join('');return`<table class="price-table"><thead><tr><th>ACTIVO</th><th>SÍMBOLO</th><th class="r">PRECIO</th><th class="r">VAR.DÍA</th></tr></thead><tbody>${rows}</tbody></table>`;}
-async function loadGroup(divId,items){const el=document.getElementById(divId);if(!el)return;el.innerHTML='<div class="loading-pulse" style="color:var(--dim);padding:12px 0">⏳ Cargando...</div>';const res=[];for(const i of items){res.push({...i,data:await fetchP(i.ticker)});await sleep(DELAY);}el.innerHTML=buildTable(res);}
-const G={'tbl-usa-indices':[{label:'S&P 500',ticker:'^GSPC',sector:'EEUU'},{label:'Nasdaq 100',ticker:'^NDX',sector:'Tech'},{label:'Dow Jones',ticker:'^DJI',sector:'Industrial'},{label:'Russell 2000',ticker:'^RUT',sector:'Small Caps'},{label:'VIX',ticker:'^VIX',sector:'Volatilidad'},{label:'S&P Fut.',ticker:'ES=F',sector:'CME'},{label:'Nasdaq Fut.',ticker:'NQ=F',sector:'CME'}],'tbl-usa-bonos':[{label:'T-Note 10Y',ticker:'^TNX',sector:'Tesoro'},{label:'T-Bond 30Y',ticker:'^TYX',sector:'Tesoro'},{label:'T-Note 2Y',ticker:'^IRX',sector:'Tesoro'}],'tbl-usa-tech':[{label:'Apple',ticker:'AAPL',sector:'NASDAQ'},{label:'Microsoft',ticker:'MSFT',sector:'NASDAQ'},{label:'NVIDIA',ticker:'NVDA',sector:'NASDAQ'},{label:'Alphabet',ticker:'GOOGL',sector:'NASDAQ'},{label:'Amazon',ticker:'AMZN',sector:'NASDAQ'},{label:'Meta',ticker:'META',sector:'NASDAQ'},{label:'Tesla',ticker:'TSLA',sector:'NASDAQ'}],'tbl-usa-defensa':[{label:'Lockheed',ticker:'LMT',sector:'Defensa'},{label:'RTX Corp',ticker:'RTX',sector:'Defensa'},{label:'Northrop',ticker:'NOC',sector:'Defensa'},{label:'Boeing',ticker:'BA',sector:'Aero'},{label:'Gen. Dynamics',ticker:'GD',sector:'Defensa'}],'tbl-adrs':[{label:'Galicia',ticker:'GGAL',sector:'Banco·NASDAQ'},{label:'Banco Macro',ticker:'BMA',sector:'Banco·NYSE'},{label:'BBVA Arg',ticker:'BBAR',sector:'Banco·NYSE'},{label:'Supervielle',ticker:'SUPV',sector:'Banco·NYSE'},{label:'YPF',ticker:'YPF',sector:'Energía·NYSE'},{label:'Vista Energy',ticker:'VIST',sector:'Vaca Muerta'},{label:'Pampa',ticker:'PAM',sector:'Energía·NYSE'},{label:'TGS',ticker:'TGS',sector:'Gas·NYSE'},{label:'MercadoLibre',ticker:'MELI',sector:'Tech·NASDAQ'},{label:'Globant',ticker:'GLOB',sector:'Tech·NYSE'},{label:'Loma Negra',ticker:'LOMA',sector:'Cemento·NYSE'},{label:'Cresud',ticker:'CRESY',sector:'Agro·NASDAQ'},{label:'Tenaris',ticker:'TS',sector:'Acero·NYSE'}],'tbl-cripto':[{label:'Bitcoin',ticker:'CG:bitcoin',sector:'Cripto'},{label:'Ethereum',ticker:'CG:ethereum',sector:'Cripto'},{label:'Solana',ticker:'CG:solana',sector:'Cripto'}],'tbl-latam':[{label:'USD/BRL',ticker:'BRL=X',sector:'Brasil'},{label:'USD/MXN',ticker:'MXN=X',sector:'México'},{label:'USD/CLP',ticker:'CLP=X',sector:'Chile'},{label:'Bovespa',ticker:'^BVSP',sector:'Brasil'}],'tbl-g10':[{label:'EUR/USD',ticker:'EURUSD=X',sector:'Forex'},{label:'GBP/USD',ticker:'GBPUSD=X',sector:'Forex'},{label:'USD/JPY',ticker:'JPY=X',sector:'Forex'},{label:'DXY',ticker:'DX-Y.NYB',sector:'Dólar Index'}],'tbl-mundo-indices':[{label:'Euro Stoxx 50',ticker:'^STOXX50E',sector:'Europa'},{label:'DAX',ticker:'^GDAXI',sector:'Alemania'},{label:'FTSE 100',ticker:'^FTSE',sector:'UK'},{label:'CAC 40',ticker:'^FCHI',sector:'Francia'},{label:'Nikkei 225',ticker:'^N225',sector:'Japón'},{label:'Hang Seng',ticker:'^HSI',sector:'HK'},{label:'Merval',ticker:'^MERV',sector:'Argentina'}],'tbl-energia':[{label:'WTI Crude',ticker:'CL=F',sector:'NYMEX'},{label:'Brent',ticker:'BZ=F',sector:'ICE'},{label:'Gas Natural',ticker:'NG=F',sector:'NYMEX'},{label:'Oro',ticker:'GC=F',sector:'COMEX'},{label:'Plata',ticker:'SI=F',sector:'COMEX'},{label:'Cobre',ticker:'HG=F',sector:'COMEX'}],'tbl-agricolas':[{label:'Soja',ticker:'ZS=F',sector:'CBOT'},{label:'Maíz',ticker:'ZC=F',sector:'CBOT'},{label:'Trigo',ticker:'ZW=F',sector:'CBOT'}]};
+function fmt(n,ars=false){if(n==null||isNaN(n))return'—';if(ars)return'$'+Math.round(n).toLocaleString('es-AR');if(n>10000)return n.toLocaleString('en-US',{maximumFractionDigits:0});if(n>1)return n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});return n.toLocaleString('en-US',{minimumFractionDigits:4,maximumFractionDigits:4});}
+function chgHtml(c){if(c==null)return'<span class="flat">—</span>';const s=c>0?'+':'',cls=c>0.05?'up':c<-0.05?'dn':'flat';return `<span class="${cls}">${s}${parseFloat(c).toFixed(2)}%</span>`;}
+
+// Cache global de precios
+const CACHE={};
+let LAST_FETCH=0;
+
+// Fetch batch de hasta 8 símbolos Twelve Data
+async function fetchTD(symbols){
+  const syms=symbols.join(',');
+  try{
+    const r=await fetch(`https://api.twelvedata.com/quote?symbol=${syms}&apikey=${TD}`,{signal:AbortSignal.timeout(10000)});
+    const d=await r.json();
+    if(d.code===429){console.warn('TD rate limit');return{};}
+    if(d.code){console.warn('TD error:',d.message);return{};}
+    // Si es un solo símbolo, la respuesta no está en sub-objetos
+    if(symbols.length===1){
+      const k=symbols[0];
+      if(d.close)CACHE[k]={price:parseFloat(d.close),chg:parseFloat(d.percent_change||0),sym:k};
+      return CACHE;
+    }
+    for(const[k,v]of Object.entries(d)){
+      if(v.close)CACHE[k]={price:parseFloat(v.close),chg:parseFloat(v.percent_change||0),sym:k};
+    }
+    return CACHE;
+  }catch(e){console.warn('TD fetch error:',e.message);return{};}
+}
+
+// Fetch CoinGecko para cripto
+async function fetchCG(id){
+  try{
+    const r=await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${id}&vs_currencies=usd&include_24hr_change=true`,{signal:AbortSignal.timeout(7000)});
+    const d=await r.json();
+    return{price:d[id].usd,chg:d[id].usd_24h_change};
+  }catch(e){return null;}
+}
+
+// Fetch dólares AR
+async function fetchDolares(){
+  try{
+    const r=await fetch('https://dolarapi.com/v1/dolares',{signal:AbortSignal.timeout(8000)});
+    const data=await r.json();
+    const map={};data.forEach(d=>{map[d.casa.toLowerCase()]=d;});
+    const set=(id,cid,casa)=>{const d=map[casa];if(!d)return;const el=document.getElementById(id),elc=document.getElementById(cid);if(el)el.textContent='$'+Math.round(d.venta).toLocaleString('es-AR');if(elc)elc.textContent='C: $'+Math.round(d.compra).toLocaleString('es-AR')+' · V: $'+Math.round(d.venta).toLocaleString('es-AR');};
+    set('fx-oficial','fx-oficial-comp','oficial');set('fx-blue','fx-blue-comp','blue');set('fx-mep','fx-mep-comp','bolsa');set('fx-ccl','fx-ccl-comp','contadoconliqui');set('fx-cripto','fx-cripto-comp','cripto');set('fx-tarjeta','fx-tarjeta-comp','tarjeta');
+    const be=document.getElementById('hv-blue'),ce=document.getElementById('hv-ccl');
+    if(map.blue&&be)be.textContent='$'+Math.round(map.blue.venta).toLocaleString('es-AR');
+    if(map.contadoconliqui&&ce)ce.textContent='$'+Math.round(map.contadoconliqui.venta).toLocaleString('es-AR');
+    if(map.oficial&&map.blue){const b=((map.blue.venta-map.oficial.venta)/map.oficial.venta*100).toFixed(1),el=document.getElementById('fx-brecha');if(el){const col=b>100?'var(--red)':b>50?'var(--amber)':'var(--green)';el.innerHTML=`<strong style="color:${col}">${b}%</strong>`;}}
+  }catch(e){}
+}
+
+// Pre-fetch inteligente: batch de 8 con 62s entre batches
+async function prefetchSymbols(tdSymbols){
+  const batches=[];
+  for(let i=0;i<tdSymbols.length;i+=8)batches.push(tdSymbols.slice(i,i+8));
+  for(let i=0;i<batches.length;i++){
+    await fetchTD(batches[i]);
+    if(i<batches.length-1)await sleep(62000); // 62s entre batches
+  }
+}
+
+// Definición de grupos con símbolo TD
+const G={
+  'tbl-usa-indices':[
+    {label:'S&P 500',td:'SPX',sector:'EEUU'},{label:'Nasdaq 100',td:'NDX',sector:'Tech'},
+    {label:'Dow Jones',td:'DJI',sector:'Industrial'},{label:'Russell 2000',td:'RUT',sector:'Small Caps'},
+    {label:'VIX',td:'VIX',sector:'Volatilidad'},{label:'S&P Fut.',td:'ES1!',sector:'CME'},{label:'Nasdaq Fut.',td:'NQ1!',sector:'CME'}
+  ],
+  'tbl-usa-bonos':[
+    {label:'T-Note 10Y',td:'TNX',sector:'Tesoro'},{label:'T-Bond 30Y',td:'TYX',sector:'Tesoro'},{label:'T-Note 2Y',td:'IRX',sector:'Tesoro'}
+  ],
+  'tbl-usa-tech':[
+    {label:'Apple',td:'AAPL',sector:'NASDAQ'},{label:'Microsoft',td:'MSFT',sector:'NASDAQ'},
+    {label:'NVIDIA',td:'NVDA',sector:'NASDAQ'},{label:'Alphabet',td:'GOOGL',sector:'NASDAQ'},
+    {label:'Amazon',td:'AMZN',sector:'NASDAQ'},{label:'Meta',td:'META',sector:'NASDAQ'},{label:'Tesla',td:'TSLA',sector:'NASDAQ'}
+  ],
+  'tbl-usa-defensa':[
+    {label:'Lockheed',td:'LMT',sector:'Defensa'},{label:'RTX Corp',td:'RTX',sector:'Defensa'},
+    {label:'Northrop',td:'NOC',sector:'Defensa'},{label:'Boeing',td:'BA',sector:'Aero'},{label:'Gen. Dynamics',td:'GD',sector:'Defensa'}
+  ],
+  'tbl-adrs':[
+    {label:'Galicia',td:'GGAL',sector:'Banco·NASDAQ'},{label:'Banco Macro',td:'BMA',sector:'Banco·NYSE'},
+    {label:'BBVA Arg',td:'BBAR',sector:'Banco·NYSE'},{label:'Supervielle',td:'SUPV',sector:'Banco·NYSE'},
+    {label:'YPF',td:'YPF',sector:'Energía·NYSE'},{label:'Vista Energy',td:'VIST',sector:'Vaca Muerta'},
+    {label:'Pampa',td:'PAM',sector:'Energía·NYSE'},{label:'TGS',td:'TGS',sector:'Gas·NYSE'},
+    {label:'MercadoLibre',td:'MELI',sector:'Tech·NASDAQ'},{label:'Globant',td:'GLOB',sector:'Tech·NYSE'},
+    {label:'Loma Negra',td:'LOMA',sector:'Cemento·NYSE'},{label:'Cresud',td:'CRESY',sector:'Agro·NASDAQ'},{label:'Tenaris',td:'TS',sector:'Acero·NYSE'}
+  ],
+  'tbl-cripto':[
+    {label:'Bitcoin',cg:'bitcoin',sector:'Cripto'},{label:'Ethereum',cg:'ethereum',sector:'Cripto'},{label:'Solana',cg:'solana',sector:'Cripto'}
+  ],
+  'tbl-latam':[
+    {label:'USD/BRL',td:'USD/BRL',sector:'Brasil'},{label:'USD/MXN',td:'USD/MXN',sector:'México'},
+    {label:'USD/CLP',td:'USD/CLP',sector:'Chile'},{label:'Bovespa',td:'IBOV',sector:'Brasil'}
+  ],
+  'tbl-g10':[
+    {label:'EUR/USD',td:'EUR/USD',sector:'Forex'},{label:'GBP/USD',td:'GBP/USD',sector:'Forex'},
+    {label:'USD/JPY',td:'USD/JPY',sector:'Forex'},{label:'DXY',td:'DXY',sector:'Dólar Index'}
+  ],
+  'tbl-mundo-indices':[
+    {label:'Euro Stoxx 50',td:'SX5E',sector:'Europa'},{label:'DAX',td:'DAX',sector:'Alemania'},
+    {label:'FTSE 100',td:'UKX',sector:'UK'},{label:'CAC 40',td:'PX1',sector:'Francia'},
+    {label:'Nikkei 225',td:'NI225',sector:'Japón'},{label:'Hang Seng',td:'HSI',sector:'HK'},
+    {label:'Merval',td:'MERVAL',sector:'Argentina'}
+  ],
+  'tbl-energia':[
+    {label:'WTI Crude',td:'WTI',sector:'NYMEX'},{label:'Brent',td:'BRENT',sector:'ICE'},
+    {label:'Gas Natural',td:'NG1!',sector:'NYMEX'},{label:'Oro',td:'XAU/USD',sector:'COMEX'},
+    {label:'Plata',td:'XAG/USD',sector:'COMEX'},{label:'Cobre',td:'HG1!',sector:'COMEX'}
+  ],
+  'tbl-agricolas':[
+    {label:'Soja',td:'SOYBEAN',sector:'CBOT'},{label:'Maíz',td:'CORN',sector:'CBOT'},{label:'Trigo',td:'WHEAT',sector:'CBOT'}
+  ]
+};
+
 const TG={usa:['tbl-usa-indices','tbl-usa-bonos','tbl-usa-tech','tbl-usa-defensa'],argentina:['tbl-adrs','tbl-cripto'],monedas:['tbl-latam','tbl-g10'],mundo:['tbl-mundo-indices'],commodities:['tbl-energia','tbl-agricolas']};
-async function updateHeroes(){const hs=[{id:'sp500',t:'^GSPC'},{id:'nasdaq',t:'^NDX'},{id:'vix',t:'^VIX'},{id:'merval',t:'^MERV'},{id:'wti',t:'CL=F'},{id:'gold',t:'GC=F'},{id:'btc',t:'CG:bitcoin'}];for(const h of hs){const p=await fetchP(h.t);const ve=document.getElementById('hv-'+h.id),ce=document.getElementById('hc2-'+h.id);if(ve){ve.classList.remove('loading-pulse');ve.textContent=p?fmt(p.price,p.currency):'—';}if(ce&&p){const s=p.chg>0?'+':'',cls=p.chg>0.05?'up':p.chg<-0.05?'dn':'flat';ce.className='chg '+cls;ce.textContent=s+p.chg.toFixed(2)+'%';}await sleep(DELAY);}fetchDolares();}
-function updateClock(){const t=getAR(),hh=String(t.getHours()).padStart(2,'0'),mm=String(t.getMinutes()).padStart(2,'0'),ss=String(t.getSeconds()).padStart(2,'0');document.getElementById('clock').textContent=hh+':'+mm+':'+ss+' hs AR';const b=document.getElementById('mkt-badge'),st=getMkt();if(st==='open'){b.className='badge-open';b.textContent='⬤ MERCADOS ABIERTOS';}else if(st==='pre'){b.className='badge-pre';b.textContent='◐ PRE-APERTURA';}else{b.className='badge-closed';b.textContent='○ MERCADOS CERRADOS';}const sess=getSess(),sb=document.getElementById('ai-session-badge');if(sb){sb.textContent=sess.l;sb.className=sess.cls;}}
-async function genAI(){const le=document.getElementById('ai-loading'),ce=document.getElementById('ai-content'),de=document.getElementById('driver-content');if(le)le.style.display='flex';if(ce)ce.style.display='none';const sess=getSess(),fecha=getAR().toLocaleDateString('es-AR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});const prompt=`Analista senior BT Securities Argentina. ${fecha}. Sesión: ${sess.l}. JSON al inicio exacto: {"dt":"título driver","db":"texto driver una oración"}. Luego análisis 180 palabras para traders. Usa <strong> y <em>.`;try{const resp=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:700,messages:[{role:'user',content:prompt}]})});const data=await resp.json();const text=data.content?.[0]?.text||'';const jm=text.match(/{"dt":"([^"]+)","db":"([^"]+)"}/);const dt=jm?jm[1]:'Driver',db=jm?jm[2]:'';const at=text.replace(/{[^}]+}/,'').trim();if(de)de.innerHTML=`<div class="driver-box"><div class="driver-title">📌 ${dt}</div><div class="driver-body">${db}</div></div>`;if(le)le.style.display='none';if(ce){ce.style.display='block';ce.innerHTML=at.split('\n').filter(l=>l.trim()).map(l=>`<p>${l}</p>`).join('');}}catch(e){if(le)le.style.display='none';if(ce){ce.style.display='block';ce.innerHTML='<p style="color:var(--dim)">Análisis no disponible.</p>';}}}
-async function genGeo(){const el=document.getElementById('geo-content');if(!el)return;try{const resp=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:500,messages:[{role:'user',content:'4 riesgos geopolíticos relevantes HOY para mercados argentinos. Solo JSON: [{"titulo":"...","impacto":"alto|medio|bajo","texto":"..."}]'}]})});const data=await resp.json();const items=JSON.parse((data.content?.[0]?.text||'[]').replace(/```json|```/g,'').trim());el.innerHTML=items.map(i=>`<div class="geo-item ${i.impacto}"><span class="geo-tag tag-${i.impacto}">${i.impacto.toUpperCase()}</span><div class="g-title">${i.titulo}</div><div class="g-body">${i.texto}</div></div>`).join('');}catch(e){el.innerHTML='<div style="color:var(--dim)">No disponible.</div>';}}
+
+function buildTable(items){
+  if(!items.length)return'<div class="no-data">Sin datos</div>';
+  const rows=items.map(r=>{
+    const p=r.cg?r._cgData:CACHE[r.td];
+    if(!p)return`<tr><td><div class="td-name">${r.label}</div><div class="td-sub">${r.sector||''}</div></td><td class="td-sym">${r.td||r.cg||''}</td><td class="td-price no-data">—</td><td class="td-chg no-data">—</td></tr>`;
+    return`<tr><td><div class="td-name">${r.label}</div><div class="td-sub">${r.sector||''}</div></td><td class="td-sym">${r.td||r.cg}</td><td class="td-price">${fmt(p.price)}</td><td class="td-chg">${chgHtml(p.chg)}</td></tr>`;
+  }).join('');
+  return`<table class="price-table"><thead><tr><th>ACTIVO</th><th>SÍMBOLO</th><th class="r">PRECIO</th><th class="r">VAR.DÍA</th></tr></thead><tbody>${rows}</tbody></table>`;
+}
+
+async function loadGroup(divId,items){
+  const el=document.getElementById(divId);if(!el)return;
+  // Para cripto, fetchear CoinGecko
+  for(const item of items){
+    if(item.cg){
+      const p=await fetchCG(item.cg);
+      item._cgData=p;
+    }
+  }
+  el.innerHTML=buildTable(items);
+}
+
+async function loadTabGroups(tabId){
+  const groups=TG[tabId]||[];
+  // Recolectar todos los símbolos TD del tab
+  const tdSymbols=[...new Set(groups.flatMap(g=>(G[g]||[]).filter(i=>i.td).map(i=>i.td)))];
+  // Pre-fetch en batches
+  await prefetchSymbols(tdSymbols);
+  // Renderizar
+  for(const g of groups)await loadGroup(g,G[g]||[]);
+}
+
+async function updateHeroes(){
+  // Heroes: SPX, NDX, VIX, MERVAL, WTI, XAU/USD, BTC
+  const heroSyms=['SPX','NDX','VIX','MERVAL','WTI','XAU/USD'];
+  await fetchTD(heroSyms);
+  const map={sp500:'SPX',nasdaq:'NDX',vix:'VIX',merval:'MERVAL',wti:'WTI',gold:'XAU/USD'};
+  for(const[id,sym]of Object.entries(map)){
+    const p=CACHE[sym];
+    const ve=document.getElementById('hv-'+id),ce=document.getElementById('hc2-'+id);
+    if(ve){ve.classList.remove('loading-pulse');ve.textContent=p?fmt(p.price):'—';}
+    if(ce&&p){const s=p.chg>0?'+':'',cls=p.chg>0.05?'up':p.chg<-0.05?'dn':'flat';ce.className='chg '+cls;ce.textContent=s+parseFloat(p.chg).toFixed(2)+'%';}
+  }
+  // BTC separado via CoinGecko
+  const btc=await fetchCG('bitcoin');
+  const bve=document.getElementById('hv-btc'),bce=document.getElementById('hc2-btc');
+  if(bve){bve.classList.remove('loading-pulse');bve.textContent=btc?fmt(btc.price):'—';}
+  if(bce&&btc){const s=btc.chg>0?'+':'',cls=btc.chg>0.05?'up':btc.chg<-0.05?'dn':'flat';bce.className='chg '+cls;bce.textContent=s+parseFloat(btc.chg).toFixed(2)+'%';}
+  fetchDolares();
+}
+
+function updateClock(){
+  const t=getAR(),hh=String(t.getHours()).padStart(2,'0'),mm=String(t.getMinutes()).padStart(2,'0'),ss=String(t.getSeconds()).padStart(2,'0');
+  document.getElementById('clock').textContent=hh+':'+mm+':'+ss+' hs AR';
+  const b=document.getElementById('mkt-badge'),st=getMkt();
+  if(st==='open'){b.className='badge-open';b.textContent='⬤ MERCADOS ABIERTOS';}
+  else if(st==='pre'){b.className='badge-pre';b.textContent='◐ PRE-APERTURA';}
+  else{b.className='badge-closed';b.textContent='○ MERCADOS CERRADOS';}
+  const sess=getSess(),sb=document.getElementById('ai-session-badge');
+  if(sb){sb.textContent=sess.l;sb.className=sess.cls;}
+}
+
+async function genAI(){
+  const le=document.getElementById('ai-loading'),ce=document.getElementById('ai-content'),de=document.getElementById('driver-content');
+  if(le)le.style.display='flex';if(ce)ce.style.display='none';
+  const sess=getSess(),fecha=getAR().toLocaleDateString('es-AR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  const prompt=`Analista senior BT Securities Argentina. ${fecha}. Sesión: ${sess.l}. JSON exacto al inicio: {"dt":"título driver","db":"texto driver"}. Luego análisis conciso 180 palabras para traders. Usa <strong> y <em>.`;
+  try{
+    const resp=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:700,messages:[{role:'user',content:prompt}]})});
+    const data=await resp.json();const text=data.content?.[0]?.text||'';
+    const jm=text.match(/{"dt":"([^"]+)","db":"([^"]+)"}/);
+    const dt=jm?jm[1]:'Driver',db=jm?jm[2]:'';
+    const at=text.replace(/{[^}]+}/,'').trim();
+    if(de)de.innerHTML=`<div class="driver-box"><div class="driver-title">📌 ${dt}</div><div class="driver-body">${db}</div></div>`;
+    if(le)le.style.display='none';
+    if(ce){ce.style.display='block';ce.innerHTML=at.split('\n').filter(l=>l.trim()).map(l=>`<p>${l}</p>`).join('');}
+  }catch(e){if(le)le.style.display='none';if(ce){ce.style.display='block';ce.innerHTML='<p style="color:var(--dim)">Análisis no disponible.</p>';}}
+}
+
+async function genGeo(){
+  const el=document.getElementById('geo-content');if(!el)return;
+  try{
+    const resp=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:500,messages:[{role:'user',content:'4 riesgos geopolíticos relevantes HOY para mercados argentinos. Solo JSON: [{"titulo":"...","impacto":"alto|medio|bajo","texto":"..."}]'}]})});
+    const data=await resp.json();
+    const items=JSON.parse((data.content?.[0]?.text||'[]').replace(/```json|```/g,'').trim());
+    el.innerHTML=items.map(i=>`<div class="geo-item ${i.impacto}"><span class="geo-tag tag-${i.impacto}">${i.impacto.toUpperCase()}</span><div class="g-title">${i.titulo}</div><div class="g-body">${i.texto}</div></div>`).join('');
+  }catch(e){el.innerHTML='<div style="color:var(--dim)">No disponible.</div>';}
+}
+
 const CAL=[{f:'Hoy',h:'15:30 NY',p:'🇺🇸',t:'Inventarios Petróleo EIA',i:'medio'},{f:'Mañana',h:'09:30 NY',p:'🇺🇸',t:'Solicitudes Desempleo',i:'alto'},{f:'Lun',h:'11:00 AR',p:'🇦🇷',t:'IPC INDEC Argentina',i:'critico'},{f:'Mar',h:'14:00 NY',p:'🇺🇸',t:'Decisión Fed FOMC',i:'critico'},{f:'Mié',h:'08:00 EU',p:'🇪🇺',t:'Decisión BCE',i:'alto'}];
 function renderCal(){const el=document.getElementById('cal-content');if(!el)return;const ic={critico:'var(--red)',alto:'var(--amber)',medio:'var(--dim)',bajo:'var(--dim2)'};el.innerHTML=CAL.map(e=>`<div class="cal-item"><div style="width:6px;height:6px;border-radius:50%;background:${ic[e.i]};flex-shrink:0;margin-top:3px"></div><div class="cal-time">${e.f}<br>${e.h}</div><div class="cal-body"><div class="c-title">${e.p} ${e.t}</div></div></div>`).join('');}
-const loaded=new Set();
-function showTab(id){document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===id));document.querySelectorAll('.tab-panel').forEach(p=>p.classList.toggle('active',p.id==='panel-'+id));if(!loaded.has(id)){loaded.add(id);if(TG[id])(async()=>{for(const g of TG[id])await loadGroup(g,G[g]);})();if(id==='geopolitica')genGeo();if(id==='calendario')renderCal();}}
+
+const loadedTabs=new Set();
+function showTab(id){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===id));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.toggle('active',p.id==='panel-'+id));
+  if(!loadedTabs.has(id)){
+    loadedTabs.add(id);
+    if(TG[id])loadTabGroups(id);
+    if(id==='geopolitica')genGeo();
+    if(id==='calendario')renderCal();
+  }
+}
 document.querySelectorAll('.tab-btn').forEach(b=>b.addEventListener('click',()=>showTab(b.dataset.tab)));
+
+// ARRANQUE
 setInterval(updateClock,1000);updateClock();
-loaded.add('usa');(async()=>{for(const g of TG.usa)await loadGroup(g,G[g]);})();
-updateHeroes();genAI();
-setInterval(genAI,REFRESH_AI);
-setInterval(()=>{updateHeroes();const at=document.querySelector('.tab-btn.active')?.dataset.tab;if(at&&TG[at])(async()=>{for(const g of TG[at])await loadGroup(g,G[g]);})();document.getElementById('last-update').textContent='Última act.: '+getAR().toLocaleTimeString('es-AR');},REFRESH);
+updateHeroes();
+genAI();
+// Cargar tab USA al inicio
+loadedTabs.add('usa');
+loadTabGroups('usa');
+// Refresh cada 5 minutos (300s) — en sync con rate limit TD
+setInterval(()=>{
+  Object.keys(CACHE).forEach(k=>delete CACHE[k]); // limpiar cache
+  updateHeroes();
+  const at=document.querySelector('.tab-btn.active')?.dataset.tab;
+  if(at&&TG[at])loadTabGroups(at);
+  document.getElementById('last-update').textContent='Última act.: '+getAR().toLocaleTimeString('es-AR');
+},300000);
 document.getElementById('last-update').textContent='Última act.: '+getAR().toLocaleTimeString('es-AR');
 </script></body></html>
