@@ -6,170 +6,162 @@
 <title>BT Market Terminal</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
 <style>
-:root{--bg:#0a0a0a;--bg2:#111;--bg3:#181818;--border:#2a2a2a;--text:#e8e0cc;--dim:#666;--dim2:#444;--amber:#ffb700;--amber2:#cc9200;--green:#00d084;--red:#ff3b3b;--blue:#4a9eff;--cyan:#00c8d4;--mono:'IBM Plex Mono',monospace;--sans:'IBM Plex Sans',sans-serif;}
+:root{--bg:#0a0a0a;--bg2:#111;--bg3:#181818;--border:#2a2a2a;--text:#e8e0cc;--dim:#666;--dim2:#444;--amber:#ffb700;--green:#00d084;--red:#ff3b3b;--blue:#4a9eff;--cyan:#00c8d4;--mono:'IBM Plex Mono',monospace;--sans:'IBM Plex Sans',sans-serif;}
 *{box-sizing:border-box;margin:0;padding:0;}
 body{background:var(--bg);color:var(--text);font-family:var(--mono);font-size:12px;min-height:100vh;overflow-x:hidden;}
 body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.03) 2px,rgba(0,0,0,.03) 4px);pointer-events:none;z-index:9000;}
-
-/* ── TICKER TAPE ── */
+#login-screen{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:9999;}
+.login-box{background:var(--bg2);border:1px solid var(--amber);padding:40px;width:320px;text-align:center;}
+.login-logo{font-family:var(--sans);font-weight:700;font-size:20px;color:var(--amber);letter-spacing:3px;margin-bottom:4px;}
+.login-sub{font-size:10px;color:var(--dim);letter-spacing:1px;margin-bottom:28px;}
+.login-input{width:100%;background:var(--bg3);border:1px solid var(--border);color:var(--text);font-family:var(--mono);font-size:20px;padding:12px;text-align:center;letter-spacing:8px;margin-bottom:12px;outline:none;}
+.login-input:focus{border-color:var(--amber);}
+.login-btn{width:100%;background:var(--amber);color:#000;font-family:var(--mono);font-weight:700;font-size:12px;letter-spacing:2px;padding:12px;border:none;cursor:pointer;text-transform:uppercase;}
+.login-err{color:var(--red);font-size:11px;margin-top:8px;display:none;}
 #ticker-tape{background:#000;border-bottom:1px solid var(--amber);height:38px;overflow:hidden;}
 #ticker-tape .tradingview-widget-container{height:38px;}
-
-/* ── TOPBAR ── */
 #topbar{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 16px;height:34px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
-.topbar-left{display:flex;align-items:center;gap:12px;}
-.logo{font-family:var(--sans);font-weight:700;font-size:13px;color:var(--amber);letter-spacing:2px;text-transform:uppercase;}
+.logo{font-family:var(--sans);font-weight:700;font-size:13px;color:var(--amber);letter-spacing:2px;}
 .logo span{color:var(--dim);}
 .topbar-clock{font-size:11px;color:var(--dim);border-left:1px solid var(--border);padding-left:12px;}
 #mkt-badge{font-size:10px;font-weight:600;letter-spacing:1px;padding:2px 8px;border-radius:2px;text-transform:uppercase;}
 .badge-open{background:rgba(0,208,132,.15);color:var(--green);border:1px solid rgba(0,208,132,.3);}
 .badge-pre{background:rgba(255,183,0,.15);color:var(--amber);border:1px solid rgba(255,183,0,.3);}
 .badge-closed{background:rgba(102,102,102,.15);color:var(--dim);border:1px solid var(--border);}
-
-/* ── TABS ── */
 #tabs{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 16px;display:flex;overflow-x:auto;scrollbar-width:none;}
-#tabs::-webkit-scrollbar{display:none;}
-.tab-btn{font-family:var(--mono);font-size:11px;font-weight:500;color:var(--dim);padding:9px 14px;border:none;border-bottom:2px solid transparent;background:transparent;cursor:pointer;white-space:nowrap;letter-spacing:.5px;transition:all .15s;text-transform:uppercase;}
-.tab-btn:hover{color:var(--text);}.tab-btn.active{color:var(--amber);border-bottom-color:var(--amber);}
-
-/* ── MAIN LAYOUT ── */
+.tab-btn{font-family:var(--mono);font-size:11px;font-weight:500;color:var(--dim);padding:9px 14px;border:none;border-bottom:2px solid transparent;background:transparent;cursor:pointer;white-space:nowrap;letter-spacing:.5px;text-transform:uppercase;}
+.tab-btn.active{color:var(--amber);border-bottom-color:var(--amber);}
 #main{display:grid;grid-template-columns:1fr 300px;min-height:calc(100vh - 110px);}
 #content{padding:16px;overflow:auto;}
 #sidebar{border-left:1px solid var(--border);background:var(--bg2);padding:16px;overflow-y:auto;}
-
-/* ── SECTION TITLES ── */
 .sec-title{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--amber);font-weight:600;margin:16px 0 10px;padding-bottom:4px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px;}
 .sec-title:first-child{margin-top:0;}
 .sec-dot{width:4px;height:4px;border-radius:50%;background:var(--amber);flex-shrink:0;}
-
-/* ── TV WIDGET CONTAINERS ── */
-.tv-widget{background:var(--bg3);border:1px solid var(--border);margin-bottom:12px;border-radius:2px;overflow:hidden;}
-.tv-widget-sm{height:80px;}
-.tv-widget-md{height:400px;}
-.tv-widget-lg{height:500px;}
-
-/* ── DOLAR GRID ── */
+.tv-wrap{background:var(--bg3);border:1px solid var(--border);margin-bottom:12px;border-radius:2px;overflow:hidden;}
 .dolar-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px;}
-.dolar-card{background:var(--bg3);border:1px solid var(--border);padding:8px 10px;transition:border-color .2s;}
-.dolar-card:hover{border-color:var(--amber2);}
-.dolar-card .dc-lbl{font-size:9px;color:var(--dim);letter-spacing:1px;text-transform:uppercase;margin-bottom:2px;}
-.dolar-card .dc-val{font-size:16px;font-weight:700;color:var(--amber);}
-.dolar-card .dc-comp{font-size:9px;color:var(--dim);margin-top:1px;}
+.dolar-card{background:var(--bg3);border:1px solid var(--border);padding:8px 10px;}
+.dc-lbl{font-size:9px;color:var(--dim);letter-spacing:1px;text-transform:uppercase;margin-bottom:2px;}
+.dc-val{font-size:16px;font-weight:700;color:var(--amber);}
+.dc-comp{font-size:9px;color:var(--dim);margin-top:1px;}
 .brecha-bar{background:var(--bg3);border:1px solid var(--border);padding:8px 10px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;}
-.brecha-bar .b-lbl{font-size:9px;color:var(--dim);letter-spacing:1px;text-transform:uppercase;}
-.brecha-bar .b-val{font-size:13px;font-weight:600;}
-
-/* ── SIDEBAR AI ── */
+.b-lbl{font-size:9px;color:var(--dim);letter-spacing:1px;text-transform:uppercase;}
+.b-val{font-size:13px;font-weight:600;}
 #ai-session-badge{font-size:9px;letter-spacing:1px;padding:2px 6px;border-radius:2px;text-transform:uppercase;font-weight:600;}
 .session-pre{background:rgba(255,183,0,.15);color:var(--amber);border:1px solid rgba(255,183,0,.3);}
 .session-rueda{background:rgba(0,208,132,.15);color:var(--green);border:1px solid rgba(0,208,132,.3);}
 .session-cierre{background:rgba(74,158,255,.15);color:var(--blue);border:1px solid rgba(74,158,255,.3);}
-#ai-content{font-family:var(--sans);font-size:12px;line-height:1.7;color:#c8c0aa;}
-#ai-content p{margin-bottom:10px;}#ai-content strong{color:var(--amber);}#ai-content em{color:var(--cyan);font-style:normal;}
-#ai-loading{display:flex;flex-direction:column;gap:8px;padding:8px 0;}
-.ai-skeleton{height:10px;background:var(--border);border-radius:2px;animation:pulse 1.4s ease-in-out infinite;}
+#ai-box{font-family:var(--sans);font-size:12px;line-height:1.7;color:#c8c0aa;}
+#ai-box p{margin-bottom:8px;}
+#ai-box strong{color:var(--amber);}
+#ai-box em{color:var(--cyan);font-style:normal;}
+.ai-skeleton{height:10px;background:var(--border);border-radius:2px;animation:pulse 1.4s ease-in-out infinite;margin-bottom:6px;}
 @keyframes pulse{0%,100%{opacity:.3;}50%{opacity:.8;}}
 .driver-box{background:linear-gradient(135deg,rgba(255,183,0,.06),rgba(255,183,0,.02));border:1px solid rgba(255,183,0,.2);border-left:3px solid var(--amber);padding:10px 12px;margin-bottom:12px;}
-.driver-box .driver-title{font-size:11px;font-weight:600;color:var(--amber);margin-bottom:4px;}
-.driver-box .driver-body{font-family:var(--sans);font-size:11px;line-height:1.6;color:var(--text);}
-
-/* ── TABS PANELS ── */
-.tab-panel{display:none;}.tab-panel.active{display:block;}
-
-/* ── CALENDAR ── */
-.cal-item{display:flex;gap:12px;padding:8px 0;border-bottom:1px solid var(--border);}
+.driver-title{font-size:11px;font-weight:600;color:var(--amber);margin-bottom:4px;}
+.driver-body{font-family:var(--sans);font-size:11px;line-height:1.6;color:var(--text);}
+.cal-item{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);}
 .cal-item:last-child{border-bottom:none;}
-.cal-time{flex-shrink:0;width:70px;font-size:10px;color:var(--dim);line-height:1.4;}
-.cal-body .c-title{font-size:11px;font-weight:500;margin-bottom:2px;}
-.cal-body .c-detail{font-size:10px;color:var(--dim);}
-
-/* ── GEO ── */
+.cal-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:3px;}
+.cal-time{flex-shrink:0;width:68px;font-size:10px;color:var(--dim);line-height:1.4;}
+.cal-title{font-size:11px;font-weight:500;}
+.cal-detail{font-size:10px;color:var(--dim);}
 .geo-item{background:var(--bg3);border:1px solid var(--border);border-left:3px solid var(--border);padding:10px 12px;margin-bottom:8px;}
-.geo-item.alto{border-left-color:var(--red);}.geo-item.medio{border-left-color:var(--amber);}.geo-item.bajo{border-left-color:var(--green);}
-.geo-item .g-title{font-size:11px;font-weight:600;margin-bottom:4px;}
-.geo-item .g-body{font-family:var(--sans);font-size:11px;color:var(--dim);line-height:1.5;}
+.geo-item.alto{border-left-color:var(--red);}
+.geo-item.medio{border-left-color:var(--amber);}
+.geo-item.bajo{border-left-color:var(--green);}
 .geo-tag{display:inline-block;font-size:8px;letter-spacing:1px;padding:1px 5px;text-transform:uppercase;margin-bottom:4px;font-weight:600;}
 .tag-alto{background:rgba(255,59,59,.1);color:var(--red);border:1px solid rgba(255,59,59,.2);}
 .tag-medio{background:rgba(255,183,0,.1);color:var(--amber);border:1px solid rgba(255,183,0,.2);}
 .tag-bajo{background:rgba(0,208,132,.1);color:var(--green);border:1px solid rgba(0,208,132,.2);}
-
+.geo-body{font-family:var(--sans);font-size:11px;color:var(--dim);line-height:1.5;margin-top:4px;}
+.tab-panel{display:none;}.tab-panel.active{display:block;}
 #footer{border-top:1px solid var(--border);padding:8px 16px;display:flex;justify-content:space-between;font-size:9px;color:var(--dim);}
 @media(max-width:900px){#main{grid-template-columns:1fr;}#sidebar{border-left:none;border-top:1px solid var(--border);}}
 </style>
 </head>
 <body>
-<!-- TICKER TAPE TradingView -->
+<div id="login-screen">
+<div class="login-box">
+<div class="login-logo">BT <span style="color:var(--dim)">//</span> MARKET</div>
+<div class="login-sub">TERMINAL &middot; BT SECURITIES ARGENTINA</div>
+<input type="password" class="login-input" id="pin-input" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;" maxlength="6" autofocus/>
+<button class="login-btn" onclick="checkPin()">INGRESAR</button>
+<div class="login-err" id="pin-err">PIN incorrecto</div>
+</div>
+</div>
+
+<div id="app" style="display:none">
 <div id="ticker-tape">
 <div class="tradingview-widget-container">
 <div class="tradingview-widget-container__widget"></div>
 <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
-{"symbols":[{"proName":"FOREXCOM:SPXUSD","title":"S&P 500"},{"proName":"FOREXCOM:NSXUSD","title":"Nasdaq"},{"proName":"TVC:DJI","title":"Dow Jones"},{"proName":"TVC:VIX","title":"VIX"},{"description":"MERVAL","proName":"BCBA:IMV"},{"proName":"TVC:GOLD","title":"Oro"},{"proName":"TVC:USOIL","title":"WTI"},{"proName":"BITSTAMP:BTCUSD","title":"BTC"},{"description":"GGAL","proName":"NASDAQ:GGAL"},{"description":"YPF","proName":"NYSE:YPF"},{"description":"MELI","proName":"NASDAQ:MELI"},{"proName":"FX:EURUSD","title":"EUR/USD"}],"showSymbolLogo":true,"isTransparent":false,"displayMode":"adaptive","colorTheme":"dark","locale":"es"}
+{"symbols":[{"proName":"FOREXCOM:SPXUSD","title":"S&P 500"},{"proName":"FOREXCOM:NSXUSD","title":"Nasdaq"},{"proName":"TVC:DJI","title":"Dow Jones"},{"proName":"TVC:VIX","title":"VIX"},{"description":"MERVAL","proName":"BCBA:IMV"},{"proName":"TVC:GOLD","title":"Oro"},{"proName":"TVC:USOIL","title":"WTI"},{"proName":"BITSTAMP:BTCUSD","title":"BTC"},{"description":"GGAL","proName":"NASDAQ:GGAL"},{"description":"YPF","proName":"NYSE:YPF"},{"description":"MELI","proName":"NASDAQ:MELI"},{"proName":"FX:EURUSD","title":"EUR/USD"},{"proName":"CBOT:ZS1!","title":"Soja"},{"proName":"CBOT:ZC1!","title":"Maiz"}],"showSymbolLogo":true,"isTransparent":false,"displayMode":"adaptive","colorTheme":"dark","locale":"es"}
 </script>
 </div>
 </div>
 
-<!-- TOPBAR -->
 <div id="topbar">
-<div class="topbar-left">
+<div style="display:flex;align-items:center;gap:12px">
 <div class="logo">BT <span>//</span> Market Terminal</div>
 <div class="topbar-clock" id="clock">--:-- hs AR</div>
 </div>
-<div class="topbar-right">
 <div id="mkt-badge" class="badge-closed">CERRADO</div>
 </div>
-</div>
 
-<!-- TABS -->
 <div id="tabs">
-<button class="tab-btn active" data-tab="usa">🇺🇸 USA</button>
-<button class="tab-btn" data-tab="argentina">🇦🇷 Argentina</button>
-<button class="tab-btn" data-tab="monedas">💱 Monedas</button>
-<button class="tab-btn" data-tab="mundo">🌍 Mundo</button>
-<button class="tab-btn" data-tab="commodities">⚡ Commodities</button>
-<button class="tab-btn" data-tab="geopolitica">🎖️ Geopolítica</button>
-<button class="tab-btn" data-tab="calendario">📅 Calendario</button>
+<button class="tab-btn active" data-tab="usa">&#127482;&#127480; USA</button>
+<button class="tab-btn" data-tab="argentina">&#127462;&#127479; Argentina</button>
+<button class="tab-btn" data-tab="monedas">&#128178; Monedas</button>
+<button class="tab-btn" data-tab="mundo">&#127757; Mundo</button>
+<button class="tab-btn" data-tab="commodities">&#9889; Commodities</button>
+<button class="tab-btn" data-tab="geopolitica">&#127894; Geopolitica</button>
+<button class="tab-btn" data-tab="calendario">&#128197; Calendario</button>
 </div>
-
-<!-- MAIN -->
 <div id="main">
 <div id="content">
 
-<!-- USA -->
 <div class="tab-panel active" id="panel-usa">
-<div class="sec-title"><span class="sec-dot"></span>Índices &amp; Futuros — Tiempo Real</div>
-<div class="tv-widget tv-widget-md">
+<div class="sec-title"><span class="sec-dot"></span>Indices USA &mdash; Tiempo Real</div>
+<div class="tv-wrap" style="height:220px">
 <div class="tradingview-widget-container" style="height:100%">
 <div class="tradingview-widget-container__widget" style="height:100%"></div>
 <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-quotes.js" async>
-{"width":"100%","height":"100%","symbolsGroups":[{"name":"Índices","symbols":[{"name":"FOREXCOM:SPXUSD","displayName":"S&P 500"},{"name":"FOREXCOM:NSXUSD","displayName":"Nasdaq 100"},{"name":"TVC:DJI","displayName":"Dow Jones"},{"name":"TVC:RUT","displayName":"Russell 2000"},{"name":"TVC:VIX","displayName":"VIX"}]},{"name":"Futuros","symbols":[{"name":"CME_MINI:ES1!","displayName":"S&P Fut."},{"name":"CME_MINI:NQ1!","displayName":"Nasdaq Fut."},{"name":"CBOT_MINI:YM1!","displayName":"Dow Fut."}]},{"name":"Bonos USA","symbols":[{"name":"TVC:US10Y","displayName":"T-Note 10Y"},{"name":"TVC:US30Y","displayName":"T-Bond 30Y"},{"name":"TVC:US02Y","displayName":"T-Note 2Y"}]}],"showSymbolLogo":true,"isTransparent":false,"colorTheme":"dark","locale":"es"}
+{"width":"100%","height":"100%","symbolsGroups":[{"name":"Indices","symbols":[{"name":"FOREXCOM:SPXUSD","displayName":"S&P 500"},{"name":"FOREXCOM:NSXUSD","displayName":"Nasdaq 100"},{"name":"TVC:DJI","displayName":"Dow Jones"},{"name":"TVC:RUT","displayName":"Russell 2000"},{"name":"TVC:VIX","displayName":"VIX"}]}],"showSymbolLogo":true,"isTransparent":false,"colorTheme":"dark","locale":"es"}
 </script>
 </div>
 </div>
-<div class="sec-title"><span class="sec-dot"></span>Mega Tech</div>
-<div class="tv-widget tv-widget-md">
+<div class="sec-title"><span class="sec-dot"></span>Futuros &amp; Bonos</div>
+<div class="tv-wrap" style="height:240px">
 <div class="tradingview-widget-container" style="height:100%">
 <div class="tradingview-widget-container__widget" style="height:100%"></div>
 <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-quotes.js" async>
-{"width":"100%","height":"100%","symbolsGroups":[{"name":"Big Tech","symbols":[{"name":"NASDAQ:AAPL","displayName":"Apple"},{"name":"NASDAQ:MSFT","displayName":"Microsoft"},{"name":"NASDAQ:NVDA","displayName":"NVIDIA"},{"name":"NASDAQ:GOOGL","displayName":"Alphabet"},{"name":"NASDAQ:AMZN","displayName":"Amazon"},{"name":"NASDAQ:META","displayName":"Meta"},{"name":"NASDAQ:TSLA","displayName":"Tesla"}]},{"name":"Defensa &amp; Aero","symbols":[{"name":"NYSE:LMT","displayName":"Lockheed"},{"name":"NYSE:RTX","displayName":"RTX Corp"},{"name":"NYSE:NOC","displayName":"Northrop"},{"name":"NYSE:BA","displayName":"Boeing"},{"name":"NYSE:GD","displayName":"Gen. Dynamics"}]}],"showSymbolLogo":true,"isTransparent":false,"colorTheme":"dark","locale":"es"}
+{"width":"100%","height":"100%","symbolsGroups":[{"name":"Futuros CME","symbols":[{"name":"CME_MINI:ES1!","displayName":"S&P Fut."},{"name":"CME_MINI:NQ1!","displayName":"Nasdaq Fut."},{"name":"CBOT_MINI:YM1!","displayName":"Dow Fut."}]},{"name":"Bonos USA","symbols":[{"name":"TVC:US10Y","displayName":"T-Note 10Y"},{"name":"TVC:US30Y","displayName":"T-Bond 30Y"},{"name":"TVC:US02Y","displayName":"T-Note 2Y"}]}],"showSymbolLogo":true,"isTransparent":false,"colorTheme":"dark","locale":"es"}
+</script>
+</div>
+</div>
+<div class="sec-title"><span class="sec-dot"></span>Big Tech &amp; Defensa</div>
+<div class="tv-wrap" style="height:340px">
+<div class="tradingview-widget-container" style="height:100%">
+<div class="tradingview-widget-container__widget" style="height:100%"></div>
+<script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-quotes.js" async>
+{"width":"100%","height":"100%","symbolsGroups":[{"name":"Big Tech","symbols":[{"name":"NASDAQ:AAPL","displayName":"Apple"},{"name":"NASDAQ:MSFT","displayName":"Microsoft"},{"name":"NASDAQ:NVDA","displayName":"NVIDIA"},{"name":"NASDAQ:GOOGL","displayName":"Alphabet"},{"name":"NASDAQ:AMZN","displayName":"Amazon"},{"name":"NASDAQ:META","displayName":"Meta"},{"name":"NASDAQ:TSLA","displayName":"Tesla"}]},{"name":"Defensa","symbols":[{"name":"NYSE:LMT","displayName":"Lockheed"},{"name":"NYSE:RTX","displayName":"RTX"},{"name":"NYSE:NOC","displayName":"Northrop"},{"name":"NYSE:BA","displayName":"Boeing"},{"name":"NYSE:GD","displayName":"Gen. Dynamics"}]}],"showSymbolLogo":true,"isTransparent":false,"colorTheme":"dark","locale":"es"}
 </script>
 </div>
 </div>
 </div>
-
-<!-- ARGENTINA -->
 <div class="tab-panel" id="panel-argentina">
 <div class="sec-title"><span class="sec-dot"></span>Tipo de Cambio</div>
 <div class="dolar-grid">
-<div class="dolar-card"><div class="dc-lbl">Oficial BNA</div><div class="dc-val" id="fx-oficial">—</div><div class="dc-comp" id="fx-oficial-comp">—</div></div>
-<div class="dolar-card"><div class="dc-lbl">Blue</div><div class="dc-val" id="fx-blue">—</div><div class="dc-comp" id="fx-blue-comp">—</div></div>
-<div class="dolar-card"><div class="dc-lbl">MEP / Bolsa</div><div class="dc-val" id="fx-mep">—</div><div class="dc-comp" id="fx-mep-comp">—</div></div>
-<div class="dolar-card"><div class="dc-lbl">CCL</div><div class="dc-val" id="fx-ccl">—</div><div class="dc-comp" id="fx-ccl-comp">—</div></div>
-<div class="dolar-card"><div class="dc-lbl">Cripto / USDT</div><div class="dc-val" id="fx-cripto">—</div><div class="dc-comp" id="fx-cripto-comp">—</div></div>
-<div class="dolar-card"><div class="dc-lbl">Tarjeta</div><div class="dc-val" id="fx-tarjeta">—</div><div class="dc-comp" id="fx-tarjeta-comp">—</div></div>
+<div class="dolar-card"><div class="dc-lbl">Oficial BNA</div><div class="dc-val" id="fx-oficial">-</div><div class="dc-comp" id="fx-oficial-comp">-</div></div>
+<div class="dolar-card"><div class="dc-lbl">Blue</div><div class="dc-val" id="fx-blue">-</div><div class="dc-comp" id="fx-blue-comp">-</div></div>
+<div class="dolar-card"><div class="dc-lbl">MEP / Bolsa</div><div class="dc-val" id="fx-mep">-</div><div class="dc-comp" id="fx-mep-comp">-</div></div>
+<div class="dolar-card"><div class="dc-lbl">CCL</div><div class="dc-val" id="fx-ccl">-</div><div class="dc-comp" id="fx-ccl-comp">-</div></div>
+<div class="dolar-card"><div class="dc-lbl">Cripto / USDT</div><div class="dc-val" id="fx-cripto">-</div><div class="dc-comp" id="fx-cripto-comp">-</div></div>
+<div class="dolar-card"><div class="dc-lbl">Tarjeta</div><div class="dc-val" id="fx-tarjeta">-</div><div class="dc-comp" id="fx-tarjeta-comp">-</div></div>
 </div>
-<div class="brecha-bar"><span class="b-lbl">Brecha Blue/Oficial</span><span class="b-val" id="fx-brecha">—</span></div>
-<div class="sec-title"><span class="sec-dot"></span>ADRs Argentinos — Tiempo Real</div>
-<div class="tv-widget tv-widget-lg">
+<div class="brecha-bar"><span class="b-lbl">Brecha Blue / Oficial</span><span class="b-val" id="fx-brecha">-</span></div>
+<div class="sec-title"><span class="sec-dot"></span>ADRs Argentinos &mdash; Tiempo Real</div>
+<div class="tv-wrap" style="height:480px">
 <div class="tradingview-widget-container" style="height:100%">
 <div class="tradingview-widget-container__widget" style="height:100%"></div>
 <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-quotes.js" async>
@@ -179,161 +171,94 @@ body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradi
 </div>
 </div>
 
-<!-- MONEDAS -->
 <div class="tab-panel" id="panel-monedas">
-<div class="sec-title"><span class="sec-dot"></span>Divisas — Tiempo Real</div>
-<div class="tv-widget tv-widget-lg">
+<div class="sec-title"><span class="sec-dot"></span>Divisas &mdash; Tiempo Real</div>
+<div class="tv-wrap" style="height:440px">
 <div class="tradingview-widget-container" style="height:100%">
 <div class="tradingview-widget-container__widget" style="height:100%"></div>
 <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-quotes.js" async>
-{"width":"100%","height":"100%","symbolsGroups":[{"name":"Latinoamérica","symbols":[{"name":"FX:USDBRL","displayName":"USD/BRL"},{"name":"FX:USDMXN","displayName":"USD/MXN"},{"name":"FX:USDCLP","displayName":"USD/CLP"},{"name":"FX:USDCOP","displayName":"USD/COP"},{"name":"BMFBOVESPA:IBOV","displayName":"Bovespa"}]},{"name":"G10","symbols":[{"name":"FX:EURUSD","displayName":"EUR/USD"},{"name":"FX:GBPUSD","displayName":"GBP/USD"},{"name":"FX:USDJPY","displayName":"USD/JPY"},{"name":"FX:USDCHF","displayName":"USD/CHF"},{"name":"FX:USDCNY","displayName":"USD/CNY"},{"name":"TVC:DXY","displayName":"Dólar Index"}]}],"showSymbolLogo":true,"isTransparent":false,"colorTheme":"dark","locale":"es"}
+{"width":"100%","height":"100%","symbolsGroups":[{"name":"Latinoamerica","symbols":[{"name":"FX:USDBRL","displayName":"USD/BRL"},{"name":"FX:USDMXN","displayName":"USD/MXN"},{"name":"FX:USDCLP","displayName":"USD/CLP"},{"name":"FX:USDCOP","displayName":"USD/COP"},{"name":"BMFBOVESPA:IBOV","displayName":"Bovespa"}]},{"name":"G10","symbols":[{"name":"FX:EURUSD","displayName":"EUR/USD"},{"name":"FX:GBPUSD","displayName":"GBP/USD"},{"name":"FX:USDJPY","displayName":"USD/JPY"},{"name":"FX:USDCHF","displayName":"USD/CHF"},{"name":"FX:AUDUSD","displayName":"AUD/USD"},{"name":"TVC:DXY","displayName":"Dolar Index"}]}],"showSymbolLogo":true,"isTransparent":false,"colorTheme":"dark","locale":"es"}
 </script>
 </div>
 </div>
 </div>
 
-<!-- MUNDO -->
 <div class="tab-panel" id="panel-mundo">
-<div class="sec-title"><span class="sec-dot"></span>Índices Globales — Tiempo Real</div>
-<div class="tv-widget tv-widget-lg">
+<div class="sec-title"><span class="sec-dot"></span>Indices Globales &mdash; Tiempo Real</div>
+<div class="tv-wrap" style="height:380px">
 <div class="tradingview-widget-container" style="height:100%">
 <div class="tradingview-widget-container__widget" style="height:100%"></div>
 <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-quotes.js" async>
-{"width":"100%","height":"100%","symbolsGroups":[{"name":"Europa","symbols":[{"name":"FOREXCOM:EU50","displayName":"Euro Stoxx 50"},{"name":"XETR:DAX","displayName":"DAX"},{"name":"SPREADEX:FTSE","displayName":"FTSE 100"},{"name":"EURONEXT:PX1","displayName":"CAC 40"}]},{"name":"Asia","symbols":[{"name":"TVC:NI225","displayName":"Nikkei 225"},{"name":"TVC:HSI","displayName":"Hang Seng"},{"name":"SSE:000001","displayName":"Shanghai"}]},{"name":"LatAm","symbols":[{"name":"BCBA:IMV","displayName":"Merval"},{"name":"BMFBOVESPA:IBOV","displayName":"Bovespa"}]}],"showSymbolLogo":true,"isTransparent":false,"colorTheme":"dark","locale":"es"}
+{"width":"100%","height":"100%","symbolsGroups":[{"name":"Europa","symbols":[{"name":"FOREXCOM:EU50","displayName":"Euro Stoxx 50"},{"name":"XETR:DAX","displayName":"DAX"},{"name":"SPREADEX:FTSE","displayName":"FTSE 100"},{"name":"EURONEXT:PX1","displayName":"CAC 40"},{"name":"BVMF:IBOV","displayName":"Bovespa"}]},{"name":"Asia","symbols":[{"name":"TVC:NI225","displayName":"Nikkei 225"},{"name":"TVC:HSI","displayName":"Hang Seng"},{"name":"SSE:000001","displayName":"Shanghai"}]},{"name":"LatAm","symbols":[{"name":"BCBA:IMV","displayName":"Merval Argentina"}]}],"showSymbolLogo":true,"isTransparent":false,"colorTheme":"dark","locale":"es"}
 </script>
 </div>
 </div>
 </div>
 
-<!-- COMMODITIES -->
 <div class="tab-panel" id="panel-commodities">
-<div class="sec-title"><span class="sec-dot"></span>Energía, Metales &amp; Agrícolas — Tiempo Real</div>
-<div class="tv-widget tv-widget-lg">
+<div class="sec-title"><span class="sec-dot"></span>Energia, Metales &amp; Agricolas &mdash; Tiempo Real</div>
+<div class="tv-wrap" style="height:420px">
 <div class="tradingview-widget-container" style="height:100%">
 <div class="tradingview-widget-container__widget" style="height:100%"></div>
 <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-quotes.js" async>
-{"width":"100%","height":"100%","symbolsGroups":[{"name":"Energía","symbols":[{"name":"TVC:USOIL","displayName":"WTI Crude"},{"name":"TVC:UKOIL","displayName":"Brent"},{"name":"NYMEX:NG1!","displayName":"Gas Natural"}]},{"name":"Metales","symbols":[{"name":"TVC:GOLD","displayName":"Oro"},{"name":"TVC:SILVER","displayName":"Plata"},{"name":"COMEX:HG1!","displayName":"Cobre"}]},{"name":"Agrícolas CBOT 🇦🇷","symbols":[{"name":"CBOT:ZS1!","displayName":"Soja"},{"name":"CBOT:ZC1!","displayName":"Maíz"},{"name":"CBOT:ZW1!","displayName":"Trigo"}]}],"showSymbolLogo":true,"isTransparent":false,"colorTheme":"dark","locale":"es"}
+{"width":"100%","height":"100%","symbolsGroups":[{"name":"Energia","symbols":[{"name":"TVC:USOIL","displayName":"WTI Crude"},{"name":"TVC:UKOIL","displayName":"Brent"},{"name":"NYMEX:NG1!","displayName":"Gas Natural"}]},{"name":"Metales","symbols":[{"name":"TVC:GOLD","displayName":"Oro"},{"name":"TVC:SILVER","displayName":"Plata"},{"name":"COMEX:HG1!","displayName":"Cobre"}]},{"name":"Agricolas CBOT","symbols":[{"name":"CBOT:ZS1!","displayName":"Soja"},{"name":"CBOT:ZC1!","displayName":"Maiz"},{"name":"CBOT:ZW1!","displayName":"Trigo"}]}],"showSymbolLogo":true,"isTransparent":false,"colorTheme":"dark","locale":"es"}
 </script>
 </div>
 </div>
 </div>
-
-<!-- GEOPOLÍTICA -->
 <div class="tab-panel" id="panel-geopolitica">
-<div id="geo-content"><div style="color:var(--dim);padding:20px 0">Generando análisis geopolítico...</div></div>
+<div class="sec-title"><span class="sec-dot"></span>Riesgos Geopoliticos &mdash; Analisis IA</div>
+<div id="geo-content"><div class="ai-skeleton" style="width:100%;margin-bottom:8px"></div><div class="ai-skeleton" style="width:80%"></div></div>
 </div>
 
-<!-- CALENDARIO -->
 <div class="tab-panel" id="panel-calendario">
-<div class="sec-title"><span class="sec-dot"></span>Agenda Económica</div>
-<div id="cal-content"></div>
+<div class="sec-title"><span class="sec-dot"></span>Agenda Economica &mdash; Esta Semana</div>
+<div id="cal-content"><div class="ai-skeleton" style="width:100%;margin-bottom:8px"></div><div class="ai-skeleton" style="width:75%"></div></div>
 </div>
 
-</div><!-- /content -->
+</div>
 
-<!-- SIDEBAR -->
 <div id="sidebar">
-<div class="sec-title"><span class="sec-dot"></span>Análisis <span id="ai-session-badge" class="session-pre">Pre-Apertura</span></div>
-<div id="ai-loading"><div class="ai-skeleton" style="width:100%"></div><div class="ai-skeleton" style="width:85%"></div><div class="ai-skeleton" style="width:92%"></div><div class="ai-skeleton" style="width:75%"></div></div>
-<div id="ai-content" style="display:none"></div>
-<div style="margin-top:16px;"><div class="sec-title"><span class="sec-dot"></span>Driver del Día</div><div id="driver-content"><div style="color:var(--dim);font-size:11px">Generando...</div></div></div>
-<div style="margin-top:16px;"><div class="sec-title"><span class="sec-dot"></span>Tipo de Cambio AR</div>
-<div id="fx-sidebar-blue" style="margin-bottom:4px"></div>
-<div id="fx-sidebar-ccl" style="margin-bottom:4px"></div>
+<div class="sec-title"><span class="sec-dot"></span>Analisis <span id="ai-session-badge" class="session-pre">Pre-Apertura</span></div>
+<div id="ai-loading-box">
+<div class="ai-skeleton" style="width:100%"></div><div class="ai-skeleton" style="width:85%"></div>
+<div class="ai-skeleton" style="width:92%"></div><div class="ai-skeleton" style="width:70%"></div>
+<div class="ai-skeleton" style="width:88%"></div>
+</div>
+<div id="ai-box" style="display:none"></div>
+<div style="margin-top:14px">
+<div class="sec-title"><span class="sec-dot"></span>Driver del Dia</div>
+<div id="driver-box"><div class="ai-skeleton" style="width:100%"></div><div class="ai-skeleton" style="width:70%"></div></div>
+</div>
+<div style="margin-top:14px">
+<div class="sec-title"><span class="sec-dot"></span>Tipo de Cambio AR</div>
+<div id="fx-sb" style="font-size:13px;line-height:2.2"></div>
 </div>
 </div>
-</div><!-- /main -->
+</div>
 
-<div id="footer"><span>BT Securities Argentina · CNV 232 · BYMA 90 · MAV 487</span><span id="last-update">—</span></div><script>
-const MKT_OH=10,MKT_OM=30,MKT_CH=17,MKT_CM=0;
+<div id="footer"><span>BT Securities Argentina &middot; CNV 232 &middot; BYMA 90 &middot; MAV 487</span><span id="last-update">TradingView &middot; Tiempo real</span></div>
+</div><script>
+var PIN='290585';
+function checkPin(){
+  var v=document.getElementById('pin-input').value;
+  if(v===PIN){document.getElementById('login-screen').style.display='none';document.getElementById('app').style.display='block';init();}
+  else{document.getElementById('pin-err').style.display='block';document.getElementById('pin-input').value='';document.getElementById('pin-input').focus();}
+}
+document.getElementById('pin-input').addEventListener('keydown',function(e){if(e.key==='Enter')checkPin();});
+var MKT_OH=10,MKT_OM=30,MKT_CH=17;
 function getAR(){return new Date(new Date().toLocaleString('en-US',{timeZone:'America/Argentina/Buenos_Aires'}));}
-function getMkt(){const t=getAR(),d=t.getDay();if(d===0||d===6)return'closed';const m=t.getHours()*60+t.getMinutes(),o=MKT_OH*60+MKT_OM,c=MKT_CH*60+MKT_CM;if(m<o)return'pre';if(m>=c)return'closed';return'open';}
-function getSess(){const t=getAR(),m=t.getHours()*60+t.getMinutes(),o=MKT_OH*60+MKT_OM,c=MKT_CH*60+MKT_CM;if(m<o)return{l:'Pre-Apertura',cls:'session-pre'};if(m>=c)return{l:'Post-Cierre',cls:'session-cierre'};return{l:'En Rueda',cls:'session-rueda'};}
-
-function updateClock(){
-  const t=getAR(),hh=String(t.getHours()).padStart(2,'0'),mm=String(t.getMinutes()).padStart(2,'0'),ss=String(t.getSeconds()).padStart(2,'0');
-  document.getElementById('clock').textContent=hh+':'+mm+':'+ss+' hs AR';
-  const b=document.getElementById('mkt-badge'),st=getMkt();
-  if(st==='open'){b.className='badge-open';b.textContent='⬤ MERCADOS ABIERTOS';}
-  else if(st==='pre'){b.className='badge-pre';b.textContent='◐ PRE-APERTURA';}
-  else{b.className='badge-closed';b.textContent='○ MERCADOS CERRADOS';}
-  const sess=getSess(),sb=document.getElementById('ai-session-badge');
-  if(sb){sb.textContent=sess.l;sb.className=sess.cls;}
-}
-
-async function fetchDolares(){
-  try{
-    const r=await fetch('https://dolarapi.com/v1/dolares',{signal:AbortSignal.timeout(8000)});
-    const data=await r.json();const map={};data.forEach(d=>{map[d.casa.toLowerCase()]=d;});
-    const set=(id,cid,casa)=>{const d=map[casa];if(!d)return;const el=document.getElementById(id),elc=document.getElementById(cid);if(el)el.textContent='$'+Math.round(d.venta).toLocaleString('es-AR');if(elc)elc.textContent='C: $'+Math.round(d.compra).toLocaleString('es-AR')+' · V: $'+Math.round(d.venta).toLocaleString('es-AR');};
-    set('fx-oficial','fx-oficial-comp','oficial');set('fx-blue','fx-blue-comp','blue');
-    set('fx-mep','fx-mep-comp','bolsa');set('fx-ccl','fx-ccl-comp','contadoconliqui');
-    set('fx-cripto','fx-cripto-comp','cripto');set('fx-tarjeta','fx-tarjeta-comp','tarjeta');
-    if(map.oficial&&map.blue){
-      const b=((map.blue.venta-map.oficial.venta)/map.oficial.venta*100).toFixed(1);
-      const el=document.getElementById('fx-brecha');
-      if(el){const col=b>100?'var(--red)':b>50?'var(--amber)':'var(--green)';el.innerHTML=`<strong style="color:${col}">${b}%</strong>`;}
-    }
-    const sb=document.getElementById('fx-sidebar-blue'),sc=document.getElementById('fx-sidebar-ccl');
-    if(map.blue&&sb)sb.innerHTML=`<span style="color:var(--dim);font-size:9px">BLUE</span> <strong style="color:var(--amber)">$${Math.round(map.blue.venta).toLocaleString('es-AR')}</strong>`;
-    if(map.contadoconliqui&&sc)sc.innerHTML=`<span style="color:var(--dim);font-size:9px">CCL</span> <strong style="color:var(--amber)">$${Math.round(map.contadoconliqui.venta).toLocaleString('es-AR')}</strong>`;
-  }catch(e){}
-}
-
-async function genAI(){
-  const le=document.getElementById('ai-loading'),ce=document.getElementById('ai-content'),de=document.getElementById('driver-content');
-  if(le)le.style.display='flex';if(ce)ce.style.display='none';
-  const sess=getSess(),fecha=getAR().toLocaleDateString('es-AR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
-  const prompt=`Analista senior BT Securities Argentina. ${fecha}. Sesión: ${sess.l}. JSON exacto al inicio: {"dt":"título driver","db":"texto driver una oración"}. Luego análisis conciso 180 palabras para traders. Usa <strong> y <em>.`;
-  try{
-    const resp=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:700,messages:[{role:'user',content:prompt}]})});
-    const data=await resp.json();const text=data.content?.[0]?.text||'';
-    const jm=text.match(/{"dt":"([^"]+)","db":"([^"]+)"}/);
-    const dt=jm?jm[1]:'Driver del Día',db=jm?jm[2]:'';
-    const at=text.replace(/{[^}]+}/,'').trim();
-    if(de)de.innerHTML=`<div class="driver-box"><div class="driver-title">📌 ${dt}</div><div class="driver-body">${db}</div></div>`;
-    if(le)le.style.display='none';
-    if(ce){ce.style.display='block';ce.innerHTML=at.split('\n').filter(l=>l.trim()).map(l=>`<p>${l}</p>`).join('');}
-  }catch(e){if(le)le.style.display='none';if(ce){ce.style.display='block';ce.innerHTML='<p style="color:var(--dim)">Análisis no disponible.</p>';}}
-}
-
-async function genGeo(){
-  const el=document.getElementById('geo-content');if(!el)return;
-  try{
-    const resp=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:500,messages:[{role:'user',content:'4 riesgos geopolíticos relevantes HOY para mercados argentinos. Solo JSON: [{"titulo":"...","impacto":"alto|medio|bajo","texto":"..."}]'}]})});
-    const data=await resp.json();
-    const items=JSON.parse((data.content?.[0]?.text||'[]').replace(/```json|```/g,'').trim());
-    el.innerHTML=items.map(i=>`<div class="geo-item ${i.impacto}"><span class="geo-tag tag-${i.impacto}">${i.impacto.toUpperCase()}</span><div class="g-title">${i.titulo}</div><div class="g-body">${i.texto}</div></div>`).join('');
-  }catch(e){el.innerHTML='<div style="color:var(--dim)">No disponible.</div>';}
-}
-
-const CAL=[{f:'Hoy',h:'11:00 AR',p:'🇦🇷',t:'IPC INDEC Argentina - Feb',i:'critico'},{f:'Mar 18',h:'14:00 NY',p:'🇺🇸',t:'Decisión Fed — FOMC',i:'critico'},{f:'Mié 19',h:'08:00 EU',p:'🇪🇺',t:'Decisión BCE Tasas',i:'alto'},{f:'Jue 20',h:'09:30 NY',p:'🇺🇸',t:'Ventas Minoristas',i:'alto'},{f:'Vie 21',h:'10:00 AR',p:'🇦🇷',t:'Licitación Tesoro Nacional',i:'alto'}];
-function renderCal(){
-  const el=document.getElementById('cal-content');if(!el)return;
-  const ic={critico:'var(--red)',alto:'var(--amber)',medio:'var(--dim)',bajo:'var(--dim2)'};
-  el.innerHTML=CAL.map(e=>`<div class="cal-item"><div style="width:6px;height:6px;border-radius:50%;background:${ic[e.i]||'var(--dim)'};flex-shrink:0;margin-top:3px"></div><div class="cal-time">${e.f}<br>${e.h}</div><div class="cal-body"><div class="c-title">${e.p} ${e.t}</div></div></div>`).join('');
-}
-
-const loadedTabs=new Set();
-function showTab(id){
-  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===id));
-  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.toggle('active',p.id==='panel-'+id));
-  if(!loadedTabs.has(id)){loadedTabs.add(id);
-    if(id==='geopolitica')genGeo();
-    if(id==='calendario')renderCal();
-    if(id==='argentina')fetchDolares();
-  }
-}
-document.querySelectorAll('.tab-btn').forEach(b=>b.addEventListener('click',()=>showTab(b.dataset.tab)));
-
-// ARRANQUE
-setInterval(updateClock,1000);updateClock();
-fetchDolares();
-setInterval(fetchDolares,120000);
-genAI();
-setInterval(genAI,3600000);
-renderCal();
-document.getElementById('last-update').textContent='TradingView · Tiempo real';
+function getMkt(){var t=getAR(),d=t.getDay();if(d===0||d===6)return'closed';var m=t.getHours()*60+t.getMinutes(),o=MKT_OH*60+MKT_OM,c=MKT_CH*60;if(m<o)return'pre';if(m>=c)return'closed';return'open';}
+function getSess(){var t=getAR(),tot=t.getHours()*60+t.getMinutes(),o=MKT_OH*60+MKT_OM,c=MKT_CH*60;if(tot<o)return{l:'Pre-Apertura',cls:'session-pre',desc:'pre'};if(tot>=c)return{l:'Post-Cierre',cls:'session-cierre',desc:'cierre'};return{l:'En Rueda',cls:'session-rueda',desc:'rueda'};}
+function updateClock(){var t=getAR(),hh=String(t.getHours()).padStart(2,'0'),mm=String(t.getMinutes()).padStart(2,'0'),ss=String(t.getSeconds()).padStart(2,'0');document.getElementById('clock').textContent=hh+':'+mm+':'+ss+' hs AR';var b=document.getElementById('mkt-badge'),st=getMkt();if(st==='open'){b.className='badge-open';b.textContent='MERCADOS ABIERTOS';}else if(st==='pre'){b.className='badge-pre';b.textContent='PRE-APERTURA';}else{b.className='badge-closed';b.textContent='MERCADOS CERRADOS';}var sess=getSess(),sb=document.getElementById('ai-session-badge');if(sb){sb.textContent=sess.l;sb.className=sess.cls;}}
+async function fetchDolares(){try{var r=await fetch('https://dolarapi.com/v1/dolares',{signal:AbortSignal.timeout(8000)});var data=await r.json();var map={};data.forEach(function(d){map[d.casa.toLowerCase()]=d;});function set(id,cid,casa){var d=map[casa];if(!d)return;var el=document.getElementById(id),elc=document.getElementById(cid);if(el)el.textContent='$'+Math.round(d.venta).toLocaleString('es-AR');if(elc)elc.textContent='C:$'+Math.round(d.compra).toLocaleString('es-AR')+' V:$'+Math.round(d.venta).toLocaleString('es-AR');}set('fx-oficial','fx-oficial-comp','oficial');set('fx-blue','fx-blue-comp','blue');set('fx-mep','fx-mep-comp','bolsa');set('fx-ccl','fx-ccl-comp','contadoconliqui');set('fx-cripto','fx-cripto-comp','cripto');set('fx-tarjeta','fx-tarjeta-comp','tarjeta');if(map.oficial&&map.blue){var b=((map.blue.venta-map.oficial.venta)/map.oficial.venta*100).toFixed(1);var el=document.getElementById('fx-brecha');if(el){var col=b>100?'var(--red)':b>50?'var(--amber)':'var(--green)';el.innerHTML='<strong style="color:'+col+'">'+b+'%</strong>';}}var sb=document.getElementById('fx-sb');if(sb){var h='';if(map.blue)h+='<div><span style="color:var(--dim);font-size:9px">BLUE&nbsp;</span><strong style="color:var(--amber)">$'+Math.round(map.blue.venta).toLocaleString('es-AR')+'</strong></div>';if(map.contadoconliqui)h+='<div><span style="color:var(--dim);font-size:9px">CCL&nbsp;</span><strong style="color:var(--amber)">$'+Math.round(map.contadoconliqui.venta).toLocaleString('es-AR')+'</strong></div>';if(map.bolsa)h+='<div><span style="color:var(--dim);font-size:9px">MEP&nbsp;</span><strong style="color:var(--amber)">$'+Math.round(map.bolsa.venta).toLocaleString('es-AR')+'</strong></div>';if(map.oficial)h+='<div><span style="color:var(--dim);font-size:9px">OFICIAL</span><strong style="color:var(--text)">$'+Math.round(map.oficial.venta).toLocaleString('es-AR')+'</strong></div>';sb.innerHTML=h;}}catch(e){}}
+async function callClaude(prompt,maxTok){var resp=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:maxTok||800,messages:[{role:'user',content:prompt}]})});var d=await resp.json();return d.content&&d.content[0]?d.content[0].text:'';}
+async function genAI(){var lb=document.getElementById('ai-loading-box'),ab=document.getElementById('ai-box'),db=document.getElementById('driver-box');if(lb)lb.style.display='block';if(ab)ab.style.display='none';var sess=getSess(),fecha=getAR().toLocaleDateString('es-AR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});var ctx={pre:'Son antes de la apertura NYSE (10:30 AR). Analiza futuros pre-market S&P y Nasdaq, cierre de ayer, noticias overnight Asia/Europa, y perspectivas para hoy.',rueda:'Mercado NYSE abierto (10:30-17:00 AR). Analiza accion del precio en tiempo real, sectores, niveles tecnicos clave S&P y Nasdaq, perspectivas para resto de la rueda.',cierre:'Mercados cerraron. Resume: que paso hoy, movimientos destacados, como cerraron ADRs argentinos, implicancias para manana.'};var prompt='Sos analista senior BT Securities Argentina. '+fecha+'. Sesion: '+sess.l+'.\n'+ctx[sess.desc]+'\n\nFormato EXACTO - primero JSON luego analisis:\n{"dt":"titulo max 8 palabras","db":"driver en una oracion"}\n\nLuego 220 palabras para traders argentinos usando <strong> para cifras y <em> para conceptos. Sin markdown.';try{var text=await callClaude(prompt,1000);var jm=text.match(/\{"dt":"([^"]+)","db":"([^"]+)"\}/);var dt=jm?jm[1]:'Driver',dbd=jm?jm[2]:'';var at=text.replace(/\{"dt":"[^"]+","db":"[^"]+"\}/,'').trim();if(db)db.innerHTML='<div class="driver-box"><div class="driver-title">'+sess.l+' &mdash; '+fecha+'</div><div class="driver-body"><strong>'+dt+'</strong><br>'+dbd+'</div></div>';if(lb)lb.style.display='none';if(ab){ab.style.display='block';ab.innerHTML=at.split('\n').filter(function(l){return l.trim();}).map(function(l){return '<p>'+l+'</p>';}).join('');}}catch(e){if(lb)lb.style.display='none';if(ab){ab.style.display='block';ab.innerHTML='<p style="color:var(--dim)">Analisis no disponible.</p>';}if(db)db.innerHTML='<div style="color:var(--dim);font-size:11px">No disponible</div>';}}
+async function genGeo(){var el=document.getElementById('geo-content');if(!el)return;try{var fecha=getAR().toLocaleDateString('es-AR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});var text=await callClaude('Hoy es '+fecha+'. Sos analista geopolitico de BT Securities Argentina. Lista 5 riesgos geopoliticos y macroeconomicos HOY para mercados argentinos (ADRs, bonos, FX). Se especifico con eventos reales de esta semana. SOLO JSON sin backticks: [{"titulo":"...","impacto":"alto o medio o bajo","texto":"2 oraciones"}]',700);var items=JSON.parse(text.replace(/```json|```/g,'').trim());el.innerHTML=items.map(function(i){return '<div class="geo-item '+i.impacto+'"><span class="geo-tag tag-'+i.impacto+'">'+i.impacto.toUpperCase()+'</span><div style="font-size:11px;font-weight:600;margin-bottom:4px">'+i.titulo+'</div><div class="geo-body">'+i.texto+'</div></div>';}).join('');}catch(e){el.innerHTML='<div style="color:var(--dim);padding:20px 0">No disponible.</div>';}}
+async function genCalendario(){var el=document.getElementById('cal-content');if(!el)return;try{var fecha=getAR().toLocaleDateString('es-AR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});var text=await callClaude('Hoy es '+fecha+'. Lista 8 eventos economicos importantes esta semana para mercados globales y argentinos (Fed FOMC, inflacion USA, INDEC, etc). Incluye fecha y hora NY. SOLO JSON sin backticks: [{"fecha":"Mar 18","hora":"14:00 NY","pais":"us","evento":"nombre","impacto":"critico o alto o medio","previo":"valor o vacio"}]',700);var items=JSON.parse(text.replace(/```json|```/g,'').trim());var flags={us:'&#127482;&#127480;',ar:'&#127462;&#127479;',eu:'&#127466;&#127482;',cn:'&#127464;&#127475;',gb:'&#127468;&#127463;',jp:'&#127471;&#127477;'};var cols={critico:'var(--red)',alto:'var(--amber)',medio:'var(--dim)'};el.innerHTML=items.map(function(i){return '<div class="cal-item"><div class="cal-dot" style="background:'+(cols[i.impacto]||'var(--dim)')+'"></div><div class="cal-time">'+i.fecha+'<br>'+i.hora+'</div><div><div class="cal-title">'+(flags[i.pais]||'&#127760;')+' '+i.evento+'</div>'+(i.previo?'<div class="cal-detail">Prev: '+i.previo+'</div>':'')+'</div></div>';}).join('');}catch(e){el.innerHTML='<div style="color:var(--dim);padding:20px 0">Calendario no disponible.</div>';}}
+var loadedTabs=new Set();function showTab(id){document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.toggle('active',b.dataset.tab===id);});document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active',p.id==='panel-'+id);});if(!loadedTabs.has(id)){loadedTabs.add(id);if(id==='argentina')fetchDolares();if(id==='geopolitica')genGeo();if(id==='calendario')genCalendario();}}
+document.querySelectorAll('.tab-btn').forEach(function(b){b.addEventListener('click',function(){showTab(b.dataset.tab);});});
+function init(){setInterval(updateClock,1000);updateClock();fetchDolares();setInterval(fetchDolares,120000);genAI();setInterval(genAI,3600000);genCalendario();}
 </script>
 </body>
 </html>
