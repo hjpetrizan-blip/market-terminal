@@ -148,37 +148,28 @@ body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradi
 </div>
 </div>
 <div id="footer"><span>BT Securities Argentina · CNV 232 · BYMA 90 · MAV 487</span><span id="last-update">—</span></div><script>
-const TD='e504f37b2f954bfaa12e69dccd2a1efe';
+const YF='https://query1.finance.yahoo.com/v8/finance/chart/';
 const MKT_OH=10,MKT_OM=30,MKT_CH=17,MKT_CM=0;
-let lastTDCall=0;
+const DELAY=400;
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 function getAR(){return new Date(new Date().toLocaleString('en-US',{timeZone:'America/Argentina/Buenos_Aires'}));}
 function getMkt(){const t=getAR(),d=t.getDay();if(d===0||d===6)return'closed';const m=t.getHours()*60+t.getMinutes(),o=MKT_OH*60+MKT_OM,c=MKT_CH*60+MKT_CM;if(m<o)return'pre';if(m>=c)return'closed';return'open';}
 function getSess(){const t=getAR(),m=t.getHours()*60+t.getMinutes(),o=MKT_OH*60+MKT_OM,c=MKT_CH*60+MKT_CM;if(m<o)return{l:'Pre-Apertura',cls:'session-pre'};if(m>=c)return{l:'Post-Cierre',cls:'session-cierre'};return{l:'En Rueda',cls:'session-rueda'};}
-function fmt(n){if(n==null||isNaN(n))return'—';if(n>10000)return n.toLocaleString('en-US',{maximumFractionDigits:0});if(n>1)return n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});return n.toLocaleString('en-US',{minimumFractionDigits:4,maximumFractionDigits:4});}
+function fmt(n,ars=false){if(n==null||isNaN(n))return'—';if(ars)return'$'+Math.round(n).toLocaleString('es-AR');if(n>10000)return n.toLocaleString('en-US',{maximumFractionDigits:0});if(n>1)return n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});return n.toLocaleString('en-US',{minimumFractionDigits:4,maximumFractionDigits:4});}
 function chgHtml(c){if(c==null)return'<span class="flat">—</span>';const s=c>0?'+':'',cls=c>0.05?'up':c<-0.05?'dn':'flat';return `<span class="${cls}">${s}${parseFloat(c).toFixed(2)}%</span>`;}
+function mktTag(s){if(!s)return'';return s==='REGULAR'?'<span class="live-tag">LIVE</span>':'<span class="close-tag">CIERRE</span>';}
 
-// Fetch Twelve Data con rate limiting estricto
-async function tdBatch(symbols){
-  const wait=62000-(Date.now()-lastTDCall);
-  if(lastTDCall>0&&wait>0){console.log('TD wait '+Math.round(wait/1000)+'s');await sleep(wait);}
-  lastTDCall=Date.now();
+async function fetchYahoo(ticker){
+  const url=YF+encodeURIComponent(ticker)+'?interval=1d&range=2d';
   try{
-    const r=await fetch(`https://api.twelvedata.com/quote?symbol=${symbols.join(',')}&apikey=${TD}`,{signal:AbortSignal.timeout(12000)});
-    const d=await r.json();
-    if(d.code===429){console.warn('TD 429, retry 65s');lastTDCall=Date.now();await sleep(65000);return tdBatch(symbols);}
-    if(d.code){console.warn('TD err:',d.message);return{};}
-    const out={};
-    if(symbols.length===1){if(d.close)out[symbols[0]]={price:parseFloat(d.close),chg:parseFloat(d.percent_change||0)};}
-    else{for(const[k,v]of Object.entries(d))if(v.close)out[k]={price:parseFloat(v.close),chg:parseFloat(v.percent_change||0)};}
-    return out;
-  }catch(e){console.warn('TD fetch err:',e.message);return{};}
+    const r=await fetch('https://api.allorigins.win/get?url='+encodeURIComponent(url),{signal:AbortSignal.timeout(9000)});
+    if(r.ok){const w=await r.json();if(w.contents){const d=JSON.parse(w.contents);if(d?.chart?.result?.[0]){const m=d.chart.result[0].meta,prev=m.chartPreviousClose||m.previousClose;return{price:m.regularMarketPrice,chg:prev?(m.regularMarketPrice-prev)/prev*100:0,mktState:m.marketState};}}}
+  }catch(e){}
+  return null;
 }
-
 async function fetchCG(id){
-  try{const r=await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${id}&vs_currencies=usd&include_24hr_change=true`,{signal:AbortSignal.timeout(7000)});const d=await r.json();return{price:d[id].usd,chg:d[id].usd_24h_change};}catch(e){return null;}
+  try{const r=await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${id}&vs_currencies=usd&include_24hr_change=true`,{signal:AbortSignal.timeout(7000)});const d=await r.json();return{price:d[id].usd,chg:d[id].usd_24h_change,mktState:'REGULAR'};}catch(e){return null;}
 }
-
 async function fetchDolares(){
   try{const r=await fetch('https://dolarapi.com/v1/dolares',{signal:AbortSignal.timeout(8000)});const data=await r.json();const map={};data.forEach(d=>{map[d.casa.toLowerCase()]=d;});
   const set=(id,cid,casa)=>{const d=map[casa];if(!d)return;const el=document.getElementById(id),elc=document.getElementById(cid);if(el)el.textContent='$'+Math.round(d.venta).toLocaleString('es-AR');if(elc)elc.textContent='C: $'+Math.round(d.compra).toLocaleString('es-AR')+' · V: $'+Math.round(d.venta).toLocaleString('es-AR');};
@@ -190,145 +181,70 @@ async function fetchDolares(){
   }catch(e){}
 }
 
-function renderGroup(divId,items,prices){
+function renderTable(divId,items,prices){
   const el=document.getElementById(divId);if(!el)return;
-  const rows=items.map(r=>{
-    const p=r.cg?r._cgData:prices[r.td];
-    const sym=r.td||r.cg||'';
-    if(!p)return`<tr><td><div class="td-name">${r.label}</div><div class="td-sub">${r.sector||''}</div></td><td class="td-sym">${sym}</td><td class="td-price no-data">—</td><td class="td-chg no-data">—</td></tr>`;
-    const chg=parseFloat(p.chg||0),s=chg>0?'+':'',cls=chg>0.05?'up':chg<-0.05?'dn':'flat';
-    return`<tr><td><div class="td-name">${r.label}</div><div class="td-sub">${r.sector||''}</div></td><td class="td-sym">${sym}</td><td class="td-price">${fmt(p.price)}</td><td class="td-chg"><span class="${cls}">${s}${chg.toFixed(2)}%</span></td></tr>`;
-  }).join('');
+  const rows=items.map(r=>{const p=prices[r.ticker];const sym=r.ticker.replace('CG:','');if(!p)return`<tr><td><div class="td-name">${r.label}</div><div class="td-sub">${r.sector||''}</div></td><td class="td-sym">${sym}</td><td class="td-price no-data">—</td><td class="td-chg no-data">—</td></tr>`;return`<tr><td><div class="td-name">${r.label}${mktTag(p.mktState)}</div><div class="td-sub">${r.sector||''}</div></td><td class="td-sym">${sym}</td><td class="td-price">${fmt(p.price)}</td><td class="td-chg">${chgHtml(p.chg)}</td></tr>`;}).join('');
   el.innerHTML=`<table class="price-table"><thead><tr><th>ACTIVO</th><th>SÍMBOLO</th><th class="r">PRECIO</th><th class="r">VAR.DÍA</th></tr></thead><tbody>${rows}</tbody></table>`;
+}
+
+async function loadGroup(divId,items){
+  const el=document.getElementById(divId);if(!el)return;
+  el.innerHTML='<div class="loading-pulse" style="color:var(--dim);padding:12px 0">⏳ Cargando...</div>';
+  const prices={};
+  for(const item of items){
+    let p=null;
+    if(item.ticker.startsWith('CG:'))p=await fetchCG(item.ticker.slice(3));
+    else p=await fetchYahoo(item.ticker);
+    prices[item.ticker]=p;
+    await sleep(DELAY);
+  }
+  renderTable(divId,items,prices);
 }
 
 function setHero(id,p){const ve=document.getElementById('hv-'+id),ce=document.getElementById('hc2-'+id);if(ve){ve.classList.remove('loading-pulse');ve.textContent=p?fmt(p.price):'—';}if(ce&&p){const s=p.chg>0?'+':'',cls=p.chg>0.05?'up':p.chg<-0.05?'dn':'flat';ce.className='chg '+cls;ce.textContent=s+parseFloat(p.chg).toFixed(2)+'%';}}
 
-// Grupos con tickers Twelve Data (ETFs para índices, acciones directas para el resto)
 const G={
-  'tbl-usa-indices':[
-    {label:'S&P 500',td:'SPY',sector:'ETF·EEUU'},{label:'Nasdaq 100',td:'QQQ',sector:'ETF·Tech'},
-    {label:'Dow Jones',td:'DIA',sector:'ETF·Industrial'},{label:'Russell 2000',td:'IWM',sector:'ETF·Small Caps'},
-    {label:'VIX (proxy)',td:'UVXY',sector:'ETF·Volatilidad'},{label:'S&P Fut.',td:'ES',sector:'CME'},{label:'Nasdaq Fut.',td:'NQ',sector:'CME'}
-  ],
-  'tbl-usa-bonos':[
-    {label:'T-Bond 20Y',td:'TLT',sector:'ETF·Tesoro'},{label:'T-Note 7-10Y',td:'IEF',sector:'ETF·Tesoro'},{label:'T-Note 1-3Y',td:'SHY',sector:'ETF·Tesoro'}
-  ],
-  'tbl-usa-tech':[
-    {label:'Apple',td:'AAPL',sector:'NASDAQ'},{label:'Microsoft',td:'MSFT',sector:'NASDAQ'},
-    {label:'NVIDIA',td:'NVDA',sector:'NASDAQ'},{label:'Alphabet',td:'GOOGL',sector:'NASDAQ'},
-    {label:'Amazon',td:'AMZN',sector:'NASDAQ'},{label:'Meta',td:'META',sector:'NASDAQ'},{label:'Tesla',td:'TSLA',sector:'NASDAQ'}
-  ],
-  'tbl-usa-defensa':[
-    {label:'Lockheed',td:'LMT',sector:'Defensa'},{label:'RTX Corp',td:'RTX',sector:'Defensa'},
-    {label:'Northrop',td:'NOC',sector:'Defensa'},{label:'Boeing',td:'BA',sector:'Aero'},{label:'Gen. Dynamics',td:'GD',sector:'Defensa'}
-  ],
-  'tbl-adrs':[
-    {label:'Galicia',td:'GGAL',sector:'Banco·NASDAQ'},{label:'Banco Macro',td:'BMA',sector:'Banco·NYSE'},
-    {label:'BBVA Arg',td:'BBAR',sector:'Banco·NYSE'},{label:'Supervielle',td:'SUPV',sector:'Banco·NYSE'},
-    {label:'YPF',td:'YPF',sector:'Energía·NYSE'},{label:'Vista Energy',td:'VIST',sector:'Vaca Muerta'},
-    {label:'Pampa',td:'PAM',sector:'Energía·NYSE'},{label:'TGS',td:'TGS',sector:'Gas·NYSE'},
-    {label:'MercadoLibre',td:'MELI',sector:'Tech·NASDAQ'},{label:'Globant',td:'GLOB',sector:'Tech·NYSE'},
-    {label:'Loma Negra',td:'LOMA',sector:'Cemento·NYSE'},{label:'Cresud',td:'CRESY',sector:'Agro·NASDAQ'},{label:'Tenaris',td:'TS',sector:'Acero·NYSE'}
-  ],
-  'tbl-cripto':[{label:'Bitcoin',cg:'bitcoin',sector:'Cripto'},{label:'Ethereum',cg:'ethereum',sector:'Cripto'},{label:'Solana',cg:'solana',sector:'Cripto'}],
-  'tbl-latam':[{label:'USD/BRL',td:'USD/BRL',sector:'Brasil'},{label:'USD/MXN',td:'USD/MXN',sector:'México'},{label:'USD/CLP',td:'USD/CLP',sector:'Chile'},{label:'Bovespa',td:'EWZ',sector:'ETF Brasil'}],
-  'tbl-g10':[{label:'EUR/USD',td:'EUR/USD',sector:'Forex'},{label:'GBP/USD',td:'GBP/USD',sector:'Forex'},{label:'USD/JPY',td:'USD/JPY',sector:'Forex'},{label:'DXY',td:'UUP',sector:'ETF Dólar'}],
-  'tbl-mundo-indices':[
-    {label:'Euro Stoxx (IEV)',td:'IEV',sector:'ETF Europa'},{label:'DAX (EWG)',td:'EWG',sector:'ETF Alemania'},
-    {label:'UK (EWU)',td:'EWU',sector:'ETF UK'},{label:'Japón (EWJ)',td:'EWJ',sector:'ETF Japón'},
-    {label:'China (FXI)',td:'FXI',sector:'ETF China'},{label:'Brasil (EWZ)',td:'EWZ',sector:'ETF Brasil'},{label:'Galicia',td:'GGAL',sector:'Argentina'}
-  ],
-  'tbl-energia':[
-    {label:'WTI Crude',td:'WTI',sector:'Commodity'},{label:'Brent (BNO)',td:'BNO',sector:'ETF Brent'},
-    {label:'Gas Natural',td:'UNG',sector:'ETF Gas'},{label:'Oro',td:'XAU/USD',sector:'Forex'},{label:'Plata',td:'XAG/USD',sector:'Forex'},{label:'Cobre (CPER)',td:'CPER',sector:'ETF Cobre'}
-  ],
-  'tbl-agricolas':[{label:'Soja (SOYB)',td:'SOYB',sector:'ETF CBOT'},{label:'Maíz (CORN)',td:'CORN',sector:'ETF CBOT'},{label:'Trigo (WEAT)',td:'WEAT',sector:'ETF CBOT'}]
+  'tbl-usa-indices':[{label:'S&P 500',ticker:'^GSPC',sector:'EEUU'},{label:'Nasdaq 100',ticker:'^NDX',sector:'Tech'},{label:'Dow Jones',ticker:'^DJI',sector:'Industrial'},{label:'Russell 2000',ticker:'^RUT',sector:'Small Caps'},{label:'VIX',ticker:'^VIX',sector:'Volatilidad'},{label:'S&P Fut.',ticker:'ES=F',sector:'CME'},{label:'Nasdaq Fut.',ticker:'NQ=F',sector:'CME'}],
+  'tbl-usa-bonos':[{label:'T-Note 10Y',ticker:'^TNX',sector:'Tesoro'},{label:'T-Bond 30Y',ticker:'^TYX',sector:'Tesoro'},{label:'T-Note 2Y',ticker:'^IRX',sector:'Tesoro'}],
+  'tbl-usa-tech':[{label:'Apple',ticker:'AAPL',sector:'NASDAQ'},{label:'Microsoft',ticker:'MSFT',sector:'NASDAQ'},{label:'NVIDIA',ticker:'NVDA',sector:'NASDAQ'},{label:'Alphabet',ticker:'GOOGL',sector:'NASDAQ'},{label:'Amazon',ticker:'AMZN',sector:'NASDAQ'},{label:'Meta',ticker:'META',sector:'NASDAQ'},{label:'Tesla',ticker:'TSLA',sector:'NASDAQ'}],
+  'tbl-usa-defensa':[{label:'Lockheed',ticker:'LMT',sector:'Defensa'},{label:'RTX Corp',ticker:'RTX',sector:'Defensa'},{label:'Northrop',ticker:'NOC',sector:'Defensa'},{label:'Boeing',ticker:'BA',sector:'Aero'},{label:'Gen. Dynamics',ticker:'GD',sector:'Defensa'}],
+  'tbl-adrs':[{label:'Galicia',ticker:'GGAL',sector:'Banco·NASDAQ'},{label:'Banco Macro',ticker:'BMA',sector:'Banco·NYSE'},{label:'BBVA Arg',ticker:'BBAR',sector:'Banco·NYSE'},{label:'Supervielle',ticker:'SUPV',sector:'Banco·NYSE'},{label:'YPF',ticker:'YPF',sector:'Energía·NYSE'},{label:'Vista Energy',ticker:'VIST',sector:'Vaca Muerta'},{label:'Pampa',ticker:'PAM',sector:'Energía·NYSE'},{label:'TGS',ticker:'TGS',sector:'Gas·NYSE'},{label:'MercadoLibre',ticker:'MELI',sector:'Tech·NASDAQ'},{label:'Globant',ticker:'GLOB',sector:'Tech·NYSE'},{label:'Loma Negra',ticker:'LOMA',sector:'Cemento·NYSE'},{label:'Cresud',ticker:'CRESY',sector:'Agro·NASDAQ'},{label:'Tenaris',ticker:'TS',sector:'Acero·NYSE'}],
+  'tbl-cripto':[{label:'Bitcoin',ticker:'CG:bitcoin',sector:'Cripto'},{label:'Ethereum',ticker:'CG:ethereum',sector:'Cripto'},{label:'Solana',ticker:'CG:solana',sector:'Cripto'}],
+  'tbl-latam':[{label:'USD/BRL',ticker:'BRL=X',sector:'Brasil'},{label:'USD/MXN',ticker:'MXN=X',sector:'México'},{label:'USD/CLP',ticker:'CLP=X',sector:'Chile'},{label:'Bovespa',ticker:'^BVSP',sector:'Brasil'}],
+  'tbl-g10':[{label:'EUR/USD',ticker:'EURUSD=X',sector:'Forex'},{label:'GBP/USD',ticker:'GBPUSD=X',sector:'Forex'},{label:'USD/JPY',ticker:'JPY=X',sector:'Forex'},{label:'DXY',ticker:'DX-Y.NYB',sector:'Dólar Index'}],
+  'tbl-mundo-indices':[{label:'Euro Stoxx 50',ticker:'^STOXX50E',sector:'Europa'},{label:'DAX',ticker:'^GDAXI',sector:'Alemania'},{label:'FTSE 100',ticker:'^FTSE',sector:'UK'},{label:'CAC 40',ticker:'^FCHI',sector:'Francia'},{label:'Nikkei 225',ticker:'^N225',sector:'Japón'},{label:'Hang Seng',ticker:'^HSI',sector:'HK'},{label:'Merval',ticker:'^MERV',sector:'Argentina'}],
+  'tbl-energia':[{label:'WTI Crude',ticker:'CL=F',sector:'NYMEX'},{label:'Brent',ticker:'BZ=F',sector:'ICE'},{label:'Gas Natural',ticker:'NG=F',sector:'NYMEX'},{label:'Oro',ticker:'GC=F',sector:'COMEX'},{label:'Plata',ticker:'SI=F',sector:'COMEX'},{label:'Cobre',ticker:'HG=F',sector:'COMEX'}],
+  'tbl-agricolas':[{label:'Soja',ticker:'ZS=F',sector:'CBOT'},{label:'Maíz',ticker:'ZC=F',sector:'CBOT'},{label:'Trigo',ticker:'ZW=F',sector:'CBOT'}]
 };
-
 const TG={usa:['tbl-usa-indices','tbl-usa-bonos','tbl-usa-tech','tbl-usa-defensa'],argentina:['tbl-adrs','tbl-cripto'],monedas:['tbl-latam','tbl-g10'],mundo:['tbl-mundo-indices'],commodities:['tbl-energia','tbl-agricolas']};
 
-// Carga serializada: 5 batches de 7 símbolos, 62s entre cada uno
-async function loadUSA(){
-  // Batch 1: Heroes + índices ETF
-  const b1=await tdBatch(['SPY','QQQ','DIA','IWM','UVXY','WTI','XAU/USD']);
-  setHero('sp500',b1['SPY']);setHero('nasdaq',b1['QQQ']);setHero('vix',b1['UVXY']);setHero('wti',b1['WTI']);setHero('gold',b1['XAU/USD']);
-  renderGroup('tbl-usa-indices',G['tbl-usa-indices'],{...b1,ES:{},NQ:{}});
-  // BTC y dolares sin rate limit
-  fetchCG('bitcoin').then(p=>setHero('btc',p));
+async function updateHeroes(){
+  const heroes=[{id:'sp500',t:'^GSPC'},{id:'nasdaq',t:'^NDX'},{id:'vix',t:'^VIX'},{id:'merval',t:'^MERV'},{id:'wti',t:'CL=F'},{id:'gold',t:'GC=F'},{id:'btc',t:'CG:bitcoin'}];
+  for(const h of heroes){
+    let p=h.t.startsWith('CG:')?await fetchCG(h.t.slice(3)):await fetchYahoo(h.t);
+    setHero(h.id,p);
+    await sleep(DELAY);
+  }
   fetchDolares();
-  console.log('B1 done');
-
-  // Batch 2: Bonos ETF + tech A
-  const b2=await tdBatch(['TLT','IEF','SHY','AAPL','MSFT','NVDA','GOOGL']);
-  renderGroup('tbl-usa-bonos',G['tbl-usa-bonos'],b2);
-  console.log('B2 done');
-
-  // Batch 3: Tech B + defensa
-  const b3=await tdBatch(['AMZN','META','TSLA','LMT','RTX','NOC','BA']);
-  renderGroup('tbl-usa-tech',G['tbl-usa-tech'],{...b2,...b3});
-  renderGroup('tbl-usa-defensa',[...G['tbl-usa-defensa'],{label:'GD',td:'GD',sector:'Defensa'}],{...b3});
-  console.log('B3 done');
-  document.getElementById('last-update').textContent='Última act.: '+getAR().toLocaleTimeString('es-AR');
-}
-
-async function loadArgentina(){
-  const b4=await tdBatch(['GGAL','BMA','BBAR','SUPV','YPF','VIST','PAM']);
-  setHero('merval',b4['GGAL']);
-  console.log('B4 done');
-  const b5=await tdBatch(['TGS','MELI','GLOB','LOMA','CRESY','TS','GD']);
-  renderGroup('tbl-adrs',G['tbl-adrs'],{...b4,...b5});
-  for(const i of G['tbl-cripto']){i._cgData=await fetchCG(i.cg);}
-  renderGroup('tbl-cripto',G['tbl-cripto'],{});
-  console.log('B5 done');
-}
-
-async function loadMonedas(){
-  const b=await tdBatch(['USD/BRL','USD/MXN','USD/CLP','EWZ','EUR/USD','GBP/USD','USD/JPY']);
-  renderGroup('tbl-latam',G['tbl-latam'],b);
-  renderGroup('tbl-g10',[...G['tbl-g10'].slice(0,3),{label:'DXY (UUP)',td:'UUP',sector:'ETF Dólar'}],{...b});
-  console.log('Monedas done');
-}
-
-async function loadMundo(){
-  const b=await tdBatch(['IEV','EWG','EWU','EWJ','FXI','EWZ','GGAL']);
-  renderGroup('tbl-mundo-indices',G['tbl-mundo-indices'],b);
-  console.log('Mundo done');
-}
-
-async function loadCommodities(){
-  const b=await tdBatch(['WTI','BNO','UNG','XAU/USD','XAG/USD','SOYB','WEAT']);
-  renderGroup('tbl-energia',G['tbl-energia'],b);
-  renderGroup('tbl-agricolas',[{label:'Soja',td:'SOYB',sector:'ETF CBOT'},{label:'Trigo',td:'WEAT',sector:'ETF CBOT'}],b);
-  console.log('Commodities done');
 }
 
 function updateClock(){const t=getAR(),hh=String(t.getHours()).padStart(2,'0'),mm=String(t.getMinutes()).padStart(2,'0'),ss=String(t.getSeconds()).padStart(2,'0');document.getElementById('clock').textContent=hh+':'+mm+':'+ss+' hs AR';const b=document.getElementById('mkt-badge'),st=getMkt();if(st==='open'){b.className='badge-open';b.textContent='⬤ MERCADOS ABIERTOS';}else if(st==='pre'){b.className='badge-pre';b.textContent='◐ PRE-APERTURA';}else{b.className='badge-closed';b.textContent='○ MERCADOS CERRADOS';}const sess=getSess(),sb=document.getElementById('ai-session-badge');if(sb){sb.textContent=sess.l;sb.className=sess.cls;}}
 
 async function genAI(){const le=document.getElementById('ai-loading'),ce=document.getElementById('ai-content'),de=document.getElementById('driver-content');if(le)le.style.display='flex';if(ce)ce.style.display='none';const sess=getSess(),fecha=getAR().toLocaleDateString('es-AR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});const prompt=`Analista senior BT Securities Argentina. ${fecha}. Sesión: ${sess.l}. JSON exacto al inicio: {"dt":"título","db":"texto driver"}. Luego análisis 180 palabras para traders. Usa <strong> y <em>.`;try{const resp=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:700,messages:[{role:'user',content:prompt}]})});const data=await resp.json();const text=data.content?.[0]?.text||'';const jm=text.match(/{"dt":"([^"]+)","db":"([^"]+)"}/);const dt=jm?jm[1]:'Driver',db=jm?jm[2]:'';const at=text.replace(/{[^}]+}/,'').trim();if(de)de.innerHTML=`<div class="driver-box"><div class="driver-title">📌 ${dt}</div><div class="driver-body">${db}</div></div>`;if(le)le.style.display='none';if(ce){ce.style.display='block';ce.innerHTML=at.split('\n').filter(l=>l.trim()).map(l=>`<p>${l}</p>`).join('');}}catch(e){if(le)le.style.display='none';if(ce){ce.style.display='block';ce.innerHTML='<p style="color:var(--dim)">Análisis no disponible.</p>';}}}
-
 async function genGeo(){const el=document.getElementById('geo-content');if(!el)return;try{const resp=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:500,messages:[{role:'user',content:'4 riesgos geopolíticos relevantes HOY para mercados argentinos. Solo JSON: [{"titulo":"...","impacto":"alto|medio|bajo","texto":"..."}]'}]})});const data=await resp.json();const items=JSON.parse((data.content?.[0]?.text||'[]').replace(/```json|```/g,'').trim());el.innerHTML=items.map(i=>`<div class="geo-item ${i.impacto}"><span class="geo-tag tag-${i.impacto}">${i.impacto.toUpperCase()}</span><div class="g-title">${i.titulo}</div><div class="g-body">${i.texto}</div></div>`).join('');}catch(e){el.innerHTML='<div style="color:var(--dim)">No disponible.</div>';}}
 
-const CAL=[{f:'Hoy',h:'15:30 NY',p:'🇺🇸',t:'Inventarios Petróleo EIA',i:'medio'},{f:'Mañana',h:'09:30 NY',p:'🇺🇸',t:'Solicitudes Desempleo',i:'alto'},{f:'Lun',h:'11:00 AR',p:'🇦🇷',t:'IPC INDEC Argentina',i:'critico'},{f:'Mar',h:'14:00 NY',p:'🇺🇸',t:'Decisión Fed FOMC',i:'critico'},{f:'Mié',h:'08:00 EU',p:'🇪🇺',t:'Decisión BCE',i:'alto'}];
+const CAL=[{f:'Hoy',h:'09:30 NY',p:'🇺🇸',t:'IPC EEUU Febrero',i:'critico'},{f:'Hoy',h:'11:00 AR',p:'🇦🇷',t:'IPC INDEC Argentina',i:'critico'},{f:'Mar 18',h:'14:00 NY',p:'🇺🇸',t:'Decisión Fed — FOMC',i:'critico'},{f:'Mié 19',h:'08:00 EU',p:'🇪🇺',t:'Decisión BCE',i:'alto'},{f:'Jue 20',h:'09:30 NY',p:'🇺🇸',t:'Ventas Minoristas',i:'alto'}];
 function renderCal(){const el=document.getElementById('cal-content');if(!el)return;const ic={critico:'var(--red)',alto:'var(--amber)',medio:'var(--dim)',bajo:'var(--dim2)'};el.innerHTML=CAL.map(e=>`<div class="cal-item"><div style="width:6px;height:6px;border-radius:50%;background:${ic[e.i]};flex-shrink:0;margin-top:3px"></div><div class="cal-time">${e.f}<br>${e.h}</div><div class="cal-body"><div class="c-title">${e.p} ${e.t}</div></div></div>`).join('');}
 
 const loadedTabs=new Set();
-function showTab(id){
-  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===id));
-  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.toggle('active',p.id==='panel-'+id));
-  if(!loadedTabs.has(id)){loadedTabs.add(id);
-    if(id==='usa')loadUSA();
-    else if(id==='argentina')loadArgentina();
-    else if(id==='monedas')loadMonedas();
-    else if(id==='mundo')loadMundo();
-    else if(id==='commodities')loadCommodities();
-    else if(id==='geopolitica')genGeo();
-    else if(id==='calendario')renderCal();
-  }
-}
+function showTab(id){document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===id));document.querySelectorAll('.tab-panel').forEach(p=>p.classList.toggle('active',p.id==='panel-'+id));if(!loadedTabs.has(id)){loadedTabs.add(id);if(TG[id])(async()=>{for(const g of TG[id])await loadGroup(g,G[g]);})();if(id==='geopolitica')genGeo();if(id==='calendario')renderCal();}}
 document.querySelectorAll('.tab-btn').forEach(b=>b.addEventListener('click',()=>showTab(b.dataset.tab)));
+
 setInterval(updateClock,1000);updateClock();
-loadedTabs.add('usa');loadUSA();
+updateHeroes();
 genAI();
+loadedTabs.add('usa');
+(async()=>{for(const g of TG['usa'])await loadGroup(g,G[g]);})();
+setInterval(()=>{updateHeroes();const at=document.querySelector('.tab-btn.active')?.dataset.tab;if(at&&TG[at]){loadedTabs.delete(at);showTab(at);}document.getElementById('last-update').textContent='Última act.: '+getAR().toLocaleTimeString('es-AR');},300000);
 document.getElementById('last-update').textContent='Cargando precios...';
 </script></body></html>
