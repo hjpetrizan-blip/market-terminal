@@ -699,7 +699,7 @@ async function fetchPrice(ticker){
   const url=YF+encodeURIComponent(ticker)+'?interval=1d&range=2d';
   for(const proxy of PROXIES){
     try{
-      const r=await fetch(proxy(url),{signal:AbortSignal.timeout(8000)});
+      const r=await fetch(proxy(url),{signal:AbortSignal.timeout(15000});
       if(!r.ok)continue;
       const data=await r.json();
       const m=data?.chart?.result?.[0]?.meta;
@@ -885,10 +885,11 @@ async function fetchDolares(){
     }
   }catch(e){console.error('fetchDolares:',e);}
 }
-
 // Arranque
-updateHero();
 fetchDolares();
+if(document.readyState!=='loading'){updateHero();setTimeout(updateHero,5000);setTimeout(updateHero,12000);}
+else{document.addEventListener('DOMContentLoaded',()=>{updateHero();setTimeout(updateHero,5000);});}
+
 </script>
 </body>
 </html>`;
