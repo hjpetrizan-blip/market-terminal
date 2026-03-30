@@ -699,7 +699,7 @@ async function fetchPrice(ticker){
   const url=YF+encodeURIComponent(ticker)+'?interval=1d&range=2d';
   for(const proxy of PROXIES){
     try{
-      const r=await fetch(proxy(url),{signal:AbortSignal.timeout(15000});
+      const r=await fetch(proxy(url),{signal:AbortSignal.timeout(15000)});
       if(!r.ok)continue;
       const data=await r.json();
       const m=data?.chart?.result?.[0]?.meta;
@@ -712,7 +712,7 @@ async function fetchPrice(ticker){
 }
 async function fetchCG(id){
   try{
-    const r=await fetch(\`https://api.coingecko.com/api/v3/simple/price?ids=\${id}&vs_currencies=usd&include_24hr_change=true\`,{signal:AbortSignal.timeout(8000)});
+    const r=await fetch(\`https://api.coingecko.com/api/v3/simple/price?ids=\${id}&vs_currencies=usd&include_24hr_change=true\`,{signal:AbortSignal.timeout(15000)});
     const d=await r.json();
     if(!d[id])return null;
     return{price:d[id].usd,chg:d[id].usd_24h_change||0,mktState:'REGULAR',currency:'USD'};
@@ -855,7 +855,7 @@ function showTab(id,btn){
 // DolarAPI
 async function fetchDolares(){
   try{
-    const r=await fetch('https://dolarapi.com/v1/dolares',{signal:AbortSignal.timeout(8000)});
+    const r=await fetch('https://dolarapi.com/v1/dolares',{signal:AbortSignal.timeout(15000)});
     const data=await r.json();
     const map={};
     data.forEach(d=>{map[d.casa.toLowerCase()]=d;});
@@ -885,11 +885,10 @@ async function fetchDolares(){
     }
   }catch(e){console.error('fetchDolares:',e);}
 }
+
 // Arranque
 fetchDolares();
-if(document.readyState!=='loading'){updateHero();setTimeout(updateHero,5000);setTimeout(updateHero,12000);}
-else{document.addEventListener('DOMContentLoaded',()=>{updateHero();setTimeout(updateHero,5000);});}
-
+if(document.readyState!=="loading"){updateHero();setTimeout(updateHero,5000);setTimeout(updateHero,12000);}else{document.addEventListener("DOMContentLoaded",()=>{updateHero();setTimeout(updateHero,5000);setTimeout(updateHero,12000);});}
 </script>
 </body>
 </html>`;
